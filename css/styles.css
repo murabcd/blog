@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css?family=Inter:ital,wght@0,400;0,900;1,700&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Poppins:ital,wght@0,400;0,900;1,700&display=swap");
 
 /* Variables */
 :root {
@@ -12,7 +12,7 @@
   --links-color: #4756df;
   --highligh-color: #000;
   --primary-color: #282828;
-  --secondary-color: #800080;
+  --secondary-color: #696969;
   --primary-shadow: #8b8eaf;
   --bottom-margin: 0.5rem;
   --bottom-margin-2: 1rem;
@@ -51,7 +51,8 @@ body {
 
 .subtitle {
   text-align: center;
-  color: var(--secondary-color);
+  color: var(--subtitle-color);
+  padding-bottom: 1rem;
 }
 
 /* Navbar section */
@@ -198,7 +199,6 @@ nav ul.show {
 
 /* Blog section */
 .blog {
-  background-color: var(--highligh-color);
   padding: 32px 0;
   margin-top: 2rem;
 }
@@ -217,7 +217,6 @@ nav ul.show {
 .blog-title {
   text-align: center;
   margin-bottom: 1rem;
-  color: #eee;
 }
 
 .project-container {
