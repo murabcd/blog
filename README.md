@@ -47,5 +47,5 @@ This project is licensed under the [MIT](https://choosealicense.com/licenses/mit
 
 If you have any questions, feel free to reach out to me:
 
-- LinkedIn: (https://www.linkedin.com/in/abdulkadyr0v/)
-- Twitter: (https://twitter.com/abdulkadyr0v)
+- [LinkedIn](https://www.linkedin.com/in/abdulkadyr0v/)
+- [Twitter](https://twitter.com/abdulkadyr0v)
