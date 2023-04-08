@@ -41,7 +41,7 @@ git clone https://github.com/muradpm/portfolio-website.git
 
 ## License
 
-This project is released under the [MIT License](LICENSE).
+This project is licensed under the [MIT](https://choosealicense.com/licenses/mit/) License.
 
 ## Contact
 
