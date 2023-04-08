@@ -21,7 +21,7 @@ This is the source code for personal portfolio website, showcasing his skills, e
 
 ## Live Demo
 
-You can visit the live website [here](<your-website-url>).
+You can visit the live website [here](https://muradpm.netlify.app/).
 
 ## Deployment
 
