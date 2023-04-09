@@ -4,6 +4,16 @@
     <!-- Title -->
     <title>Product Management | Portfolio of Murad Abdulkadyrov</title>
 
+    <!-- Responsive design -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      crossorigin="anonymous"
+    />
+
     <!-- CSS styles -->
     <link rel="stylesheet" href="/css/styles.css" />
 
@@ -39,6 +49,7 @@
       <ul class="navigation">
         <li><a href="#about" class="nav-link">About</a></li>
         <li><a href="#skills" class="nav-link">Skills</a></li>
+        <li><a href="#projects" class="nav-link">Projects</a></li>
         <li><a href="#blog" class="nav-link">Blog</a></li>
         <li><a href="#contact" class="nav-link">Contact</a></li>
       </ul>
@@ -68,36 +79,49 @@
 
     <!-- More about -->
     <section class="more-about">
-      <h1>About Me</h1>
-      <p class="subtitle">My introduction</p>
-      <p>
-        I am currently residing in Turkey, where I continue to demonstrate my
-        passion for developing innovative solutions that seamlessly blend
-        cutting-edge technology with a deep understanding of customer needs. I
-        am well-versed in both qualitative and quantitative research, as well as
-        Agile methodology, and have used this knowledge to create new
-        development protocols and effective product roadmaps. I am continuously
-        engaged in self-development, taking courses to improve my
-        qualifications, and strive to become a top-tier product leader.
-      </p>
-      <p class="highlight">Few of my product achievements</p>
-      <ul>
-        <li>
-          * Launched 5 machine translation products from scratch and grew it
-          from 0 to 5k customers; created vision and strategy and scaled in US
-          and EMEA markets.
-        </li>
-        <li>
-          * Launched Edutech platform that grew it from 100k to 1M DAU users;
-          created vision and strategy, set up business/products metrics, and
-          scaled product to 3 countries.
-        </li>
-        <li>
-          * Scaling products and growing revenue; grew subscription MRR from 0
-          to $15k/mo; created pricing strategy for subscription products worked
-          on landing/pricing pages.
-        </li>
-      </ul>
+      <div class="container">
+        <h1>About Me</h1>
+        <p class="subtitle">My introduction</p>
+        <p>
+          I am currently residing in Turkey, where I continue to demonstrate my
+          passion for developing innovative solutions that seamlessly blend
+          cutting-edge technology with a deep understanding of customer needs. I
+          am well-versed in both qualitative and quantitative research, as well
+          as Agile methodology, and have used this knowledge to create new
+          development protocols and effective product roadmaps. I am
+          continuously engaged in self-development, taking courses to improve my
+          qualifications, and strive to become a top-tier product leader.
+        </p>
+
+        <p class="highlight">A few of my product achievements:</p>
+        <ul class="achievements-list">
+          <li>
+            <i class="fas fa-check"></i>
+            Successfully initiated and executed the PLG approach, increasing the
+            customer base by over 100% and boosting total MRR by over 40% while
+            maintaining a high retention rate among acquired customers.
+          </li>
+          <li>
+            <i class="fas fa-check"></i>
+            Launched and scaled five Machine Translation products from scratch
+            using ML, achieving a 30% increase in customer base and successfully
+            entering the US and EMEA markets.
+          </li>
+          <li>
+            <i class="fas fa-check"></i>
+            Developed and launched an EduTech platform, resulting in a 20%
+            increase in DAU and expanding the product to 50 cities in Russia and
+            3 CIS countries.
+          </li>
+          <li>
+            <i class="fas fa-check"></i>
+            Built and managed high-performing teams by implementing a structured
+            approach, breaking down silos, and establishing five product
+            functionality streams, leading to a 50% increase in the average
+            number of delivered features.
+          </li>
+        </ul>
+      </div>
     </section>
 
     <!-- Skills section -->
@@ -125,7 +149,7 @@
             class="icon icon-card"
           />
         </div>
-        <div class="second-set animate__animated animate__pulse">
+        <!-- <div class="second-set animate__animated animate__pulse">
           <img
             src="/assets/icons/icons8-react-native.svg"
             alt="React"
@@ -144,6 +168,53 @@
             loading="lazy"
             class="icon icon-card"
           />
+        </div> -->
+      </div>
+    </section>
+
+    <!-- Projects section -->
+    <section class="projects" id="projects">
+      <h1 class="initiative-title">Projects</h1>
+      <p class="subtitle">Most recent initiatives</p>
+      <div class="initiatives-container">
+        <div class="initiative-container initiative-card">
+          <img
+            src="/images/gptSummary.jpeg"
+            alt="chatGPT summarizator"
+            loading="lazy"
+            class="initiative-pic"
+          />
+          <h3 class="initiative-title">ChatGPT-3 Summary</h3>
+          <p class="initiative-details">
+            A Chrome extension that uses ChatGPT to generate summaries of
+            webpages that displays a generated summary in a popup window.
+          </p>
+          <a
+            href="https://github.com/muradpm/chrome-gpt-3-summary"
+            target="_blank"
+            class="copy"
+            >Open repo</a
+          >
+        </div>
+
+        <div class="initiative-container initiative-card">
+          <img
+            src="/images/weatherApp.jpeg"
+            alt="Weather App"
+            loading="lazy"
+            class="initiative-pic"
+          />
+          <h3 class="initiative-title">Weather App</h3>
+          <p class="initiative-details">
+            A simple weather app that fetches the current weather information
+            based on the user's geolocation using the AccuWeather API.
+          </p>
+          <a
+            href="https://github.com/muradpm/weather-app"
+            target="_blank"
+            class="copy"
+            >Open repo</a
+          >
         </div>
       </div>
     </section>
@@ -173,6 +244,7 @@
             >Read it</a
           >
         </div>
+
         <div class="project-container project-card">
           <img
             src="/assets/images/growthExamples.jpg"
@@ -193,6 +265,7 @@
             >Read it</a
           >
         </div>
+
         <div class="project-container project-card">
           <img
             src="/assets/images/retentionChart.jpg"
@@ -212,58 +285,6 @@
             class="copy"
             >Read it</a
           >
-        </div>
-      </div>
-    </section>
-
-    <!-- Contact section -->
-    <section class="contact" id="contact">
-      <h1>Contact me</h1>
-      <p class="subtitle">Get in touch</p>
-      <div class="contact-form-container">
-        <div class="contact-form">
-          <form action="https://formspree.io/f/xyylngw" method="POST">
-            <div class="form-control">
-              <label for="name">Name</label>
-              <input
-                type="text"
-                id="name"
-                name="sender-name"
-                placeholder="Enter your name"
-                class="input-field"
-                required
-              />
-            </div>
-            <div class="form-control">
-              <label for="email">Email</label>
-              <input
-                type="email"
-                id="email"
-                name="sender-email"
-                placeholder="Enter Your Email"
-                class="input-field"
-                required
-              />
-            </div>
-            <div class="form-control">
-              <label for="message">Message</label>
-              <textarea
-                id="message"
-                cols="60"
-                rows="10"
-                placeholder="Enter Your Message"
-                name="message"
-                class="input-field"
-                required
-              ></textarea>
-            </div>
-            <input
-              type="submit"
-              value="Submit"
-              id="submit-btn"
-              class="submit-btn"
-            />
-          </form>
         </div>
       </div>
     </section>
@@ -318,15 +339,20 @@
 
     <!-- Footer section -->
     <footer>
-      <p>Built with ❤️</p>
-      <p>
-        ©
-        <a class="copy" href="https://twitter.com/abdulkadyr0v" target="_blank"
-          >Murad Abdulkadryrov</a
-        >
-        2023 – today.
-      </p>
-      <p>All Rights Reserved.</p>
+      <section class="contact" id="contact">
+        <p>Built with ❤️</p>
+        <p>
+          ©
+          <a
+            class="copy"
+            href="https://www.linkedin.com/in/abdulkadyr0v/"
+            target="_blank"
+            >Murad Abdulkadryrov</a
+          >
+          2023 – today.
+        </p>
+        <p>All Rights Reserved.</p>
+      </section>
     </footer>
 
     <!-- Website scripts -->
