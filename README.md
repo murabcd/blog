@@ -1,51 +1,36 @@
-# Personal Portfolio Website
-
-This is the source code for personal portfolio website, showcasing his skills, experience, and blog posts. The website is built with HTML, CSS, and JavaScript.
-
-## Features
-
-- About Me: A brief introduction, including his background and achievements.
-- Skills: A visual representation of technical skills.
-- Blog: Displays recent blog posts with links to the full articles.Mur
-- Contact: A contact form for visitors to get in touch.
-- Social Media Icons: Quick links to LinkedIn, Twitter, Substack, Medium, and GitHub profiles.
-- Scroll to Top: A button to help users navigate back to the top of the page.
-
-## Technologies Used
-
-- HTML5
-- CSS3
-- JavaScript
-- Normalize.css (CSS reset library)
-- Ionicons (icon library)
-
-## Live Demo
-
-You can visit the live website [here](https://muradpm.netlify.app/).
-
-## Deployment
-
-The website is deployed using [GitHub Pages](https://pages.github.com/) / [Netlify](https://www.netlify.com/) / [Vercel](https://vercel.com/) or any other hosting service you're using.
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
 
-To set up the project locally for development and testing purposes, follow these steps:
+First, run the development server:
 
-1. Clone the repository:
-git clone https://github.com/muradpm/portfolio-website.git
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-2. Open the `index.html` file in your favorite browser.
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-3. Start editing and testing the website.
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## License
+## Learn More
 
-This project is licensed under the [MIT](https://choosealicense.com/licenses/mit/) License.
+To learn more about Next.js, take a look at the following resources:
 
-## Contact
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-If you have any questions, feel free to reach out to me:
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-- [LinkedIn](https://www.linkedin.com/in/abdulkadyr0v/)
-- [Twitter](https://twitter.com/abdulkadyr0v)
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
