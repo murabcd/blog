@@ -40,7 +40,7 @@ export function GET(request: Request) {
               fontSize: 20,
             }}
           >
-            github.com/muradpm
+            github.com/murabcd
           </span>
         </div>
         <div

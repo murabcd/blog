@@ -35,7 +35,7 @@ export default function Footer() {
             className="flex items-center transition-all hover:text-neutral-800 dark:hover:text-neutral-100"
             rel="noopener noreferrer"
             target="_blank"
-            href="https://x.com/abdulkadyr0v"
+            href="https://x.com/murabcd"
           >
             <ArrowIcon />
             <p className="ml-2 h-7">x</p>
@@ -46,7 +46,18 @@ export default function Footer() {
             className="flex items-center transition-all hover:text-neutral-800 dark:hover:text-neutral-100"
             rel="noopener noreferrer"
             target="_blank"
-            href="https://github.com/muradpm"
+            href="https://www.linkedin.com/in/murabcd/"
+          >
+            <ArrowIcon />
+            <p className="ml-2 h-7">li</p>
+          </a>
+        </li>
+        <li>
+          <a
+            className="flex items-center transition-all hover:text-neutral-800 dark:hover:text-neutral-100"
+            rel="noopener noreferrer"
+            target="_blank"
+            href="https://github.com/murabcd"
           >
             <ArrowIcon />
             <p className="ml-2 h-7">git</p>
