@@ -9,7 +9,7 @@ export default function Page() {
   return (
     <section>
       <h1 className="font-semibold text-2xl mb-8 tracking-tighter">Code</h1>
-      <ul>
+      <ul className="space-y-4">
         <li>
           <Link
             href="https://github.com/murabcd/openchat"
@@ -28,6 +28,16 @@ export default function Page() {
             className="underline"
           >
             Realtime AI Voice Agent
+          </Link>
+        </li>
+        <li>
+          <Link
+            href="https://github.com/murabcd/forms-ai"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline"
+          >
+            Forms Builder with AI
           </Link>
         </li>
       </ul>
