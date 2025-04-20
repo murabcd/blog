@@ -19,8 +19,8 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: "Murad Abdulkadyrov",
-    template: "%s | Murad Abdulkadyrov",
+    default: "Murad's Portfolio",
+    template: "%s | Murad's Portfolio",
   },
   description: "This is Murad's portfolio.",
   icons: {

@@ -24,7 +24,7 @@ export default function Footer() {
             className="flex items-center transition-all hover:text-neutral-800 dark:hover:text-neutral-100"
             rel="noopener noreferrer"
             target="_blank"
-            href="/rss"
+            href="/api/rss"
           >
             <ArrowIcon />
             <p className="ml-2 h-7">rss</p>
@@ -65,7 +65,7 @@ export default function Footer() {
         </li>
       </ul>
       <p className="mt-8 text-neutral-600 dark:text-neutral-300">
-        © {new Date().getFullYear()} blog
+        © {new Date().getFullYear()} Murad. All rights reserved.
       </p>
     </footer>
   );

@@ -53,6 +53,10 @@ export function getBlogPosts() {
   return getMDXData(path.join(process.cwd(), "app", "blog", "posts"));
 }
 
+export function getSpeakingEvents() {
+  return getMDXData(path.join(process.cwd(), "app", "speaking", "events"));
+}
+
 export function formatDate(date: string, includeRelative = false) {
   const currentDate = new Date();
   if (!date.includes("T")) {

@@ -1,14 +1,14 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Code",
-  description: "Check out some of the code I've worked on.",
+  title: "Projects",
+  description: "Check out some of the projects I've worked on.",
 };
 
 export default function Page() {
   return (
     <section>
-      <h1 className="font-semibold text-2xl mb-8 tracking-tighter">Code</h1>
+      <h1 className="font-semibold text-2xl mb-8 tracking-tighter">Projects</h1>
       <ul className="space-y-4">
         <li>
           <Link
