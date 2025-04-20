@@ -11,6 +11,51 @@ type TableProps = {
   };
 };
 
+type CustomLinkProps = React.AnchorHTMLAttributes<HTMLAnchorElement> & {
+  children?: React.ReactNode;
+};
+
+type CodeProps = React.HTMLAttributes<HTMLElement> & {
+  children?: string;
+};
+
+type HeadingProps = {
+  children?: React.ReactNode;
+};
+
+function slugify(str: string): string {
+  return str
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/&/g, "-and-")
+    .replace(/[^\w\-]+/g, "")
+    .replace(/\-\-+/g, "-");
+}
+
+function createHeading(level: number) {
+  const Heading = ({ children }: HeadingProps) => {
+    const slug = slugify(typeof children === "string" ? children : "");
+    return React.createElement(
+      `h${level}`,
+      { id: slug },
+      [
+        React.createElement("a", {
+          href: `#${slug}`,
+          key: `link-${slug}`,
+          className: "anchor",
+        }),
+      ],
+      children
+    );
+  };
+
+  Heading.displayName = `Heading${level}`;
+
+  return Heading;
+}
+
 function Table({ data }: TableProps) {
   const headers = data.headers.map((header: string, index: number) => (
     <th key={index}>{header}</th>
@@ -33,13 +78,8 @@ function Table({ data }: TableProps) {
   );
 }
 
-// Props for CustomLink will include standard anchor attributes plus children
-type CustomLinkProps = React.AnchorHTMLAttributes<HTMLAnchorElement> & {
-  children?: React.ReactNode;
-};
-
 function CustomLink(props: CustomLinkProps) {
-  const href = props.href || ""; // Ensure href is not undefined
+  const href = props.href || "";
 
   if (href.startsWith("/")) {
     const { children, ...rest } = props;
@@ -62,52 +102,13 @@ function RoundedImage(props: ImageProps) {
   return <Image alt={alt} className="rounded-lg" {...rest} />;
 }
 
-type CodeProps = React.HTMLAttributes<HTMLElement> & {
-  children?: string;
-};
-
 function Code({ children, ...props }: CodeProps) {
-  const codeHTML = highlight(children || ""); // Ensure children is not undefined
+  const codeHTML = highlight(children || "");
   return <code dangerouslySetInnerHTML={{ __html: codeHTML }} {...props} />;
 }
 
-function slugify(str: string): string {
-  return str
-    .toString()
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, "-")
-    .replace(/&/g, "-and-")
-    .replace(/[^\w\-]+/g, "")
-    .replace(/\-\-+/g, "-");
-}
-
-function createHeading(level: number) {
-  // Define Heading component props
-  type HeadingProps = {
-    children?: React.ReactNode;
-  };
-
-  const Heading = ({ children }: HeadingProps) => {
-    // Ensure children is a string for slugify
-    const slug = slugify(typeof children === "string" ? children : "");
-    return React.createElement(
-      `h${level}`,
-      { id: slug },
-      [
-        React.createElement("a", {
-          href: `#${slug}`,
-          key: `link-${slug}`,
-          className: "anchor",
-        }),
-      ],
-      children
-    );
-  };
-
-  Heading.displayName = `Heading${level}`;
-
-  return Heading;
+function Blockquote(props: React.BlockquoteHTMLAttributes<HTMLQuoteElement>) {
+  return <blockquote className="border-l-3 border-neutral-300 pl-4 my-4" {...props} />;
 }
 
 const components = {
@@ -121,6 +122,7 @@ const components = {
   a: CustomLink,
   code: Code,
   Table,
+  blockquote: Blockquote,
 };
 
 export function CustomMDX(props: MDXRemoteProps) {
