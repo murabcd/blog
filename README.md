@@ -1,8 +1,6 @@
 ## Portfolio
 
-This is the home for my personal website and public blog using [Next.js](https://nextjs.org/) application bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+This is the home for my personal website and public blog using [Next.js](https://nextjs.org/).
 
 ## Features
 
@@ -12,3 +10,11 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
   - A utility-first CSS framework for rapidly building custom designs.
 - **MDX:**
   - Write JSX in your Markdown documents for interactive components and dynamic content.
+- **Vercel Blob:**
+  - For storing and serving images.
+
+## License
+
+You are free to use this code as inspiration.
+Please do not copy it directly.
+Crediting the author is appreciated.
