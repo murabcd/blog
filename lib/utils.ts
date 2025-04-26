@@ -53,8 +53,8 @@ export function getBlogPosts() {
   return getMDXData(path.join(process.cwd(), "app", "blog", "posts"));
 }
 
-export function getSpeakingEvents() {
-  return getMDXData(path.join(process.cwd(), "app", "speaking", "events"));
+export function getTalksEvents() {
+  return getMDXData(path.join(process.cwd(), "app", "talk", "events"));
 }
 
 export function formatDate(date: string, includeRelative = false) {

@@ -65,7 +65,7 @@ export default function Footer() {
         </li>
       </ul>
       <p className="mt-8 text-neutral-600 dark:text-neutral-300">
-        © {new Date().getFullYear()} Murad. All rights reserved.
+        © {new Date().getFullYear()} Murad Abdulkadyrov's Portfolio.
       </p>
     </footer>
   );

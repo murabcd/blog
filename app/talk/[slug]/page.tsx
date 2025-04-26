@@ -1,12 +1,12 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { formatDate, getSpeakingEvents } from "@/lib/utils";
+import { formatDate, getTalksEvents } from "@/lib/utils";
 import { baseUrl } from "@/app/sitemap";
 import { CustomMDX } from "@/components/mdx";
 
 export async function generateStaticParams() {
-  const events = getSpeakingEvents();
+  const events = getTalksEvents();
 
   return events.map((event) => ({
     slug: event.slug,
@@ -19,7 +19,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata | undefined> {
   const { slug } = await params;
-  const event = getSpeakingEvents().find((event) => event.slug === slug);
+  const event = getTalksEvents().find((event) => event.slug === slug);
   if (!event) {
     return;
   }
@@ -40,7 +40,7 @@ export async function generateMetadata({
       description,
       type: "article",
       publishedTime,
-      url: `${baseUrl}/speaking/${event.slug}`,
+      url: `${baseUrl}/talk/${event.slug}`,
       images: [
         {
           url: ogImage,
@@ -62,7 +62,7 @@ export default async function EventPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const event = getSpeakingEvents().find((event) => event.slug === slug);
+  const event = getTalksEvents().find((event) => event.slug === slug);
 
   if (!event) {
     notFound();
@@ -84,7 +84,7 @@ export default async function EventPage({
             image: event.metadata.image
               ? `${baseUrl}${event.metadata.image}`
               : `/og?title=${encodeURIComponent(event.metadata.title)}`,
-            url: `${baseUrl}/speaking/${event.slug}`,
+            url: `${baseUrl}/talk/${event.slug}`,
             author: {
               "@type": "Person",
               name: "Murad's Portfolio",

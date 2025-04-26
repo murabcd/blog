@@ -7,11 +7,11 @@ const navItems = {
   "/blog": {
     name: "blog",
   },
-  "/projects": {
-    name: "projects",
+  "/talk": {
+    name: "talk",
   },
-  "/speaking": {
-    name: "speaking",
+  "/code": {
+    name: "code",
   },
 };
 
