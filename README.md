@@ -1,17 +1,18 @@
 ## Portfolio
 
-This is the home for my personal website and public blog using [Next.js](https://nextjs.org/).
+This is the home for my personal website and public blog.
 
 ## Features
 
-- **Next.js App Router:**
-  - Advanced routing for seamless navigation and performance.
-- **TailwindCSS:**
-  - A utility-first CSS framework for rapidly building custom designs.
-- **MDX:**
-  - Write JSX in your Markdown documents for interactive components and dynamic content.
-- **Vercel Blob:**
-  - For storing and serving images.
+- [Next.js](https://nextjs.org) App Router
+  - Advanced routing for seamless navigation and performance
+  - React Server Components (RSCs) for server-side rendering and performance improvements
+- [TailwindCSS](https://tailwindcss.com/):
+  - A utility-first CSS framework for rapidly building custom designs
+- [MDX](https://mdxjs.com/):
+  - Write JSX in your Markdown documents for interactive components and dynamic content
+- [Vercel Blob](https://vercel.com/docs/storage/vercel-blob):
+  - For storing and serving images
 
 ## License
 

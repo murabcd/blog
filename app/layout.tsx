@@ -19,16 +19,16 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: "Murad's Portfolio",
-    template: "%s | Murad's Portfolio",
+    default: "Murad Abdulkadyrov",
+    template: "%s | Murad Abdulkadyrov",
   },
-  description: "This is Murad's portfolio.",
+  description: "This is Murad's blog.",
   icons: {
     icon: "/logo.svg",
   },
   openGraph: {
     title: "Murad Abdulkadyrov",
-    description: "This is Murad's portfolio.",
+    description: "This is Murad's blog.",
     url: baseUrl,
     siteName: "Murad Abdulkadyrov",
     locale: "en_US",

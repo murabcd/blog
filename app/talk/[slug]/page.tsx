@@ -87,7 +87,7 @@ export default async function EventPage({
             url: `${baseUrl}/talk/${event.slug}`,
             author: {
               "@type": "Person",
-              name: "Murad's Portfolio",
+              name: "Murad Abdulkadyrov",
             },
           }),
         }}
