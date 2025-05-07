@@ -22,17 +22,23 @@ export const metadata: Metadata = {
     default: "Murad Abdulkadyrov",
     template: "%s | Murad Abdulkadyrov",
   },
-  description: "This is Murad's blog.",
+  description: "Exploring AI, tech, and product building.",
   icons: {
     icon: "/logo.svg",
   },
   openGraph: {
     title: "Murad Abdulkadyrov",
-    description: "This is Murad's blog.",
+    description: "Exploring AI, tech, and product building.",
     url: baseUrl,
     siteName: "Murad Abdulkadyrov",
     locale: "en_US",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Murad Abdulkadyrov",
+    description: "Exploring AI, tech, and product building.",
+    images: ["/api/og"],
   },
   robots: {
     index: true,
