@@ -6,6 +6,8 @@ import { Navbar } from "@/components/navbar";
 import Footer from "@/components/footer";
 import { baseUrl } from "./sitemap";
 
+import { Analytics } from "@vercel/analytics/next";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -66,6 +68,7 @@ export default function RootLayout({
         <main className="flex-auto min-w-0 mt-6 flex flex-col px-2 md:px-0">
           <Navbar />
           {children}
+          <Analytics />
         </main>
         <Footer />
       </body>
