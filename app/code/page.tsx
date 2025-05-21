@@ -32,12 +32,12 @@ export default function Page() {
         </li>
         <li>
           <Link
-            href="https://github.com/murabcd/forms-ai"
+            href="https://github.com/murabcd/vibecoder"
             target="_blank"
             rel="noopener noreferrer"
             className="underline"
           >
-            Forms Builder with AI
+            Vibe Coder
           </Link>
         </li>
       </ul>

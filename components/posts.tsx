@@ -38,7 +38,7 @@ export function BlogPosts({ limit }: { limit?: number }) {
           href="/blog"
           className="mt-4 inline-block hover:text-neutral-800 dark:hover:text-neutral-100"
         >
-          view all
+          view all posts →
         </Link>
       )}
     </div>
