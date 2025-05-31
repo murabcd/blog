@@ -1,0 +1,65 @@
+---
+title: "When Simple Beats Complex"
+publishedAt: "2025-06-01"
+summary: "Why the most effective AI agents aren't built on complex frameworks, but on simple, reliable patterns. Learn from real-world implementations about what actually works."
+---
+
+## The Framework Trap
+
+I've spent the last year watching teams struggle with AI agent implementations. The pattern is always the same: they start by choosing a complex framework, spend months wrestling with abstractions, and end up with something that's harder to maintain than it needs to be. Meanwhile, the teams having the most success are building with surprisingly simple patterns.
+
+Here's the thing about AI agents: they don't need fancy frameworks to be effective. In fact, those frameworks often get in the way. Let me show you what actually works.
+
+## When Agents Are Overkill
+
+Before we dive into patterns, let's address the elephant in the room: you probably don't need an agent. I know, not what you expected to hear. But I've watched too many teams jump straight to building complex agent systems when a simple prompt with good retrieval would do the job better.
+
+The first question isn't "how do we build an agent?" but rather "do we need an agent at all?" Could a well-crafted prompt handle this? Would adding basic tool access be enough? Is the complexity worth the tradeoff in latency and cost?
+
+Remember: agents aren't free. They trade speed and simplicity for capability. Make sure that trade makes sense for your use case.
+
+## Simple Patterns That Actually Work
+
+When you do need agents (and sometimes you genuinely do), I've found these patterns consistently deliver results:
+
+### 1. The Chain of Prompts
+
+This is the simplest pattern, and often the most effective. Break your task into clear steps, validate each step's output, and feed it into the next step. Think of it like a pipeline: process the initial input, validate the results, build on those results, and continue step by step.
+
+![The Chain of Prompts Workflow](https://oj9anrnpmq5owbkj.public.blob.vercel-storage.com/chaining-tWyS8qaD5LmR2jaQLdGh79Vqhi4qep.webp)
+
+I've seen this pattern work beautifully for content generation and refinement, multi-stage data processing, and complex decision workflows. The key is maintaining clear validation points between steps to catch issues early.
+
+### 2. The Router
+
+Sometimes the key to effectiveness isn't clever logic – it's knowing when to delegate. A router pattern is dead simple: it looks at the input and decides where it should go. This shines when different requests need different handling, when you want to optimize costs by routing simple queries to smaller models, or when you need specialized expertise for different tasks.
+
+![The Routing Workflow](https://oj9anrnpmq5owbkj.public.blob.vercel-storage.com/routing-T28fKg9LWI50sGm6ZDf8he5ZM5TtqX.webp)
+
+### 3. The Parallel Processor
+
+I love this pattern for complex tasks. Instead of trying to do everything in one giant prompt, run multiple focused LLMs in parallel. It's like having a team of specialists rather than one overwhelmed generalist. You can either break the task into independent pieces or run the same task multiple times and compare results.
+
+![The Parallelization Workflow](https://oj9anrnpmq5owbkj.public.blob.vercel-storage.com/parallelization-Mm3yD2sDVXdVXEkkaIsx7E5fk2cxc7.webp)
+
+### 4. The Orchestrator
+
+One pattern I've seen work particularly well at scale is what I call the "orchestrator." Think of it as a smart manager coordinating a team of specialists. A central LLM breaks down the task, assigns subtasks to specialized workers, and brings everything together at the end.
+
+![The Orchestration Workflow](https://oj9anrnpmq5owbkj.public.blob.vercel-storage.com/orchestration-GHU9nUlJdefmHIqmx9d5Dp0cm3NqeI.webp)
+
+This pattern really shines for complex coding tasks across multiple files, research requiring multiple sources, and content creation with many components. The key is the orchestrator's ability to understand the big picture while coordinating specialized workers.
+
+## What Actually Matters
+
+The patterns I've described might seem straightforward, but implementing them in production requires careful attention to fundamentals. The teams I've seen succeed focus relentlessly on three things: tool design, error handling, and maintaining simplicity.
+
+Tool design matters more than most realize. Your tools shape how your agent understands and interacts with the world. Clear interfaces, good documentation, and thoughtful constraints do more for reliability than clever architectures ever could.
+
+Error handling isn't just about catching exceptions – it's about designing systems that degrade gracefully. The best implementations I've seen treat errors as expected states rather than exceptional cases. They build feedback loops that help the agent learn from failures and adapt its behavior.
+
+## Conclusion
+
+The key to success isn't finding the perfect framework or building the most sophisticated system. It's about choosing the right patterns for your specific needs and implementing them with a focus on simplicity and reliability.
+
+Start simple, measure everything, and only add complexity when it demonstrably improves outcomes. This approach might not be as exciting as building a fully autonomous system, but it's the one that consistently delivers results in production.

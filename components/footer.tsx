@@ -1,8 +1,8 @@
 function ArrowIcon() {
   return (
     <svg
-      width="12"
-      height="12"
+      width="10"
+      height="10"
       viewBox="0 0 12 12"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -17,7 +17,7 @@ function ArrowIcon() {
 
 export default function Footer() {
   return (
-    <footer className="mb-16 flex flex-col items-center">
+    <footer className="mb-6 flex flex-col items-center">
       <ul className="font-sm mt-8 flex flex-row space-x-4 space-y-0 text-neutral-600 dark:text-neutral-300">
         <li>
           <a
@@ -65,7 +65,7 @@ export default function Footer() {
         </li>
       </ul>
       <p className="mt-8 text-neutral-600 dark:text-neutral-300">
-        © {new Date().getFullYear()} Murad Abdulkadyrov&apos;s Blog.
+        © {new Date().getFullYear()} Murad Abdulkadyrov&apos;s blog.
       </p>
     </footer>
   );
