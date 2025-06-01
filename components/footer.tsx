@@ -1,3 +1,5 @@
+import { ThemeSwitcher } from "@/components/theme-switcher";
+
 function ArrowIcon() {
   return (
     <svg
@@ -18,10 +20,10 @@ function ArrowIcon() {
 export default function Footer() {
   return (
     <footer className="mb-6">
-      <ul className="font-sm mt-8 flex flex-row space-x-4 space-y-0 text-neutral-800 dark:text-neutral-200">
+      <ul className="font-sm mt-8 flex flex-row space-x-4 space-y-0 text-foreground">
         <li>
           <a
-            className="flex items-center transition-all hover:text-neutral-900 dark:hover:text-neutral-100"
+            className="flex items-center transition-all hover:text-primary"
             rel="noopener noreferrer"
             target="_blank"
             href="/api/rss"
@@ -32,7 +34,7 @@ export default function Footer() {
         </li>
         <li>
           <a
-            className="flex items-center transition-all hover:text-neutral-900 dark:hover:text-neutral-100"
+            className="flex items-center transition-all hover:text-primary"
             rel="noopener noreferrer"
             target="_blank"
             href="https://x.com/murabcd"
@@ -43,7 +45,7 @@ export default function Footer() {
         </li>
         <li>
           <a
-            className="flex items-center transition-all hover:text-neutral-900 dark:hover:text-neutral-100"
+            className="flex items-center transition-all hover:text-primary"
             rel="noopener noreferrer"
             target="_blank"
             href="https://www.linkedin.com/in/murabcd/"
@@ -54,7 +56,7 @@ export default function Footer() {
         </li>
         <li>
           <a
-            className="flex items-center transition-all hover:text-neutral-900 dark:hover:text-neutral-100"
+            className="flex items-center transition-all hover:text-primary"
             rel="noopener noreferrer"
             target="_blank"
             href="https://github.com/murabcd"
@@ -64,9 +66,10 @@ export default function Footer() {
           </a>
         </li>
       </ul>
-      <p className="mt-8 text-neutral-800 dark:text-neutral-200">
-        © {new Date().getFullYear()} Murad Abdulkadyrov&apos;s blog
-      </p>
+      <div className="mt-8 flex items-center justify-between text-foreground">
+        <p>© {new Date().getFullYear()} Murad&apos;s blog</p>
+        <ThemeSwitcher />
+      </div>
     </footer>
   );
 }

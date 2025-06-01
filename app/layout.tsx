@@ -3,7 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
 import { Navbar } from "@/components/navbar";
+import { ThemeProvider } from "@/components/theme-provider";
 import Footer from "@/components/footer";
+
 import { baseUrl } from "./sitemap";
 
 import { Analytics } from "@vercel/analytics/next";
@@ -61,16 +63,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased max-w-xl mx-4 lg:mx-auto flex flex-col min-h-screen`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}
       >
-        <main className="flex-auto min-w-0 mt-6 flex flex-col px-2 md:px-0">
-          <Navbar />
-          {children}
-          <Analytics />
-        </main>
-        <Footer />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <div className="mx-4 lg:mx-auto max-w-xl min-h-screen flex flex-col">
+            <Navbar />
+            <div className="flex-grow">
+              <main className="mt-6 px-2 md:px-0">
+                {children}
+                <Analytics />
+              </main>
+            </div>
+            <Footer />
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );
