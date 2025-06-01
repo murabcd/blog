@@ -10,7 +10,7 @@ export default function Page() {
           href="https://flomni.com/en"
           target="_blank"
           rel="noopener noreferrer"
-          className="underline"
+          className="underline hover:text-primary"
         >
           Flomni
         </a>

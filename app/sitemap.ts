@@ -1,4 +1,4 @@
-import { getBlogPosts } from "@/lib/utils";
+import { getBlogPosts } from "@/lib/server-utils";
 
 export const baseUrl = "https://murabcd.vercel.app";
 

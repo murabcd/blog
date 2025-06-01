@@ -15,7 +15,7 @@ export default function Page() {
             href="https://github.com/murabcd/openchat"
             target="_blank"
             rel="noopener noreferrer"
-            className="underline"
+            className="hover:underline"
           >
             AI Chatbot
           </Link>
@@ -25,7 +25,7 @@ export default function Page() {
             href="https://github.com/murabcd/voice-agent"
             target="_blank"
             rel="noopener noreferrer"
-            className="underline"
+            className="hover:underline"
           >
             Realtime AI Voice Agent
           </Link>
@@ -35,7 +35,7 @@ export default function Page() {
             href="https://github.com/murabcd/vibecoder"
             target="_blank"
             rel="noopener noreferrer"
-            className="underline"
+            className="hover:underline"
           >
             Vibe Coder
           </Link>

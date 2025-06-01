@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { formatDate, getBlogPosts } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
+import { getBlogPosts } from "@/lib/server-utils";
 
 export function BlogPosts({ limit }: { limit?: number }) {
   let allBlogs = getBlogPosts();
@@ -16,28 +17,23 @@ export function BlogPosts({ limit }: { limit?: number }) {
   }
 
   return (
-    <div>
-      {allBlogs.map((post) => (
-        <Link
-          key={post.slug}
-          className="flex flex-col space-y-1 mb-4"
-          href={`/blog/${post.slug}`}
-        >
-          <div className="w-full flex flex-col md:flex-row space-x-0 md:space-x-2">
-            <p className="text-neutral-600 dark:text-neutral-400 w-[110px] tabular-nums">
-              {formatDate(post.metadata.publishedAt, false)}
-            </p>
-            <p className="text-neutral-900 dark:text-neutral-100 tracking-tight">
-              {post.metadata.title}
-            </p>
-          </div>
-        </Link>
-      ))}
+    <div className="relative">
+      <div className="space-y-4">
+        {allBlogs.map((post) => (
+          <Link key={post.slug} className="block group" href={`/blog/${post.slug}`}>
+            <div className="flex flex-col md:flex-row gap-2">
+              <p className="text-muted-foreground w-[110px] tabular-nums">
+                {formatDate(post.metadata.publishedAt, false)}
+              </p>
+              <p className="text-foreground tracking-tight group-hover:underline">
+                {post.metadata.title}
+              </p>
+            </div>
+          </Link>
+        ))}
+      </div>
       {limit && (
-        <Link
-          href="/blog"
-          className="mt-4 inline-block hover:text-neutral-800 dark:hover:text-neutral-200"
-        >
+        <Link href="/blog" className="mt-8 block hover:text-foreground">
           view all posts →
         </Link>
       )}
