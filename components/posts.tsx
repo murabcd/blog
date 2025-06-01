@@ -36,7 +36,7 @@ export function BlogPosts({ limit }: { limit?: number }) {
       {limit && (
         <Link
           href="/blog"
-          className="mt-4 inline-block hover:text-neutral-800 dark:hover:text-neutral-100"
+          className="mt-4 inline-block hover:text-neutral-800 dark:hover:text-neutral-200"
         >
           view all posts →
         </Link>

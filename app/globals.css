@@ -1,27 +1,27 @@
 @import "tailwindcss";
 
 ::selection {
-  background-color: #47a3f3;
-  color: #fefefe;
+  background-color: oklch(0.6962 0.1465 248);
+  color: oklch(0.997 0 0);
 }
 
 :root {
-  --sh-class: #7aa2f7;
-  --sh-sign: #89ddff;
-  --sh-string: #9ece6a;
-  --sh-keyword: #bb9af7;
-  --sh-comment: #565f89;
-  --sh-jsxliterals: #7aa2f7;
-  --sh-property: #73daca;
-  --sh-entity: #e0af68;
+  --sh-class: oklch(0.719 0.1322 264.2);
+  --sh-sign: oklch(0.8561 0.0943 225.87);
+  --sh-string: oklch(0.7953 0.1395 130.14);
+  --sh-keyword: oklch(0.7515 0.1344 299.5);
+  --sh-comment: oklch(0.4955 0.0682 274.37);
+  --sh-jsxliterals: oklch(0.719 0.1322 264.2);
+  --sh-property: oklch(0.8217 0.0996 182.49);
+  --sh-entity: oklch(0.7839 0.1057 75.43);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --sh-class: #4c97f8;
-    --sh-identifier: white;
-    --sh-keyword: #f47067;
-    --sh-string: #0fa295;
+    --sh-class: oklch(0.6746 0.1624 255.93);
+    --sh-identifier: oklch(1 0 0);
+    --sh-keyword: oklch(0.7017 0.1642 26.07);
+    --sh-string: oklch(0.6414 0.111 184.74);
   }
   html {
     color-scheme: dark;
