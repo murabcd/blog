@@ -19,7 +19,7 @@ function ArrowIcon() {
 
 export default function Footer() {
   return (
-    <footer className="mb-6">
+    <footer className="mb-6 mt-16">
       <ul className="font-sm mt-8 flex flex-row space-x-4 space-y-0 text-foreground">
         <li>
           <a
@@ -66,8 +66,8 @@ export default function Footer() {
           </a>
         </li>
       </ul>
-      <div className="mt-8 flex items-center justify-between text-foreground">
-        <p>© {new Date().getFullYear()} Murad&apos;s blog</p>
+      <div className="flex items-end justify-between text-xs text-foreground">
+        <p>© {new Date().getFullYear()} Murad&apos;s blog. All rights reserved.</p>
         <ThemeSwitcher />
       </div>
     </footer>
