@@ -74,10 +74,10 @@ export function SearchCommand() {
         </kbd>
       </button>
       <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput placeholder="Search blogs posts and talks..." />
+        <CommandInput placeholder="Search posts and talks..." />
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
-          <CommandGroup heading="Blogs">
+          <CommandGroup heading="Posts">
             {blogs.map((Content) => (
               <CommandItem
                 key={Content.slug}

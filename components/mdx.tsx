@@ -94,7 +94,14 @@ function CustomLink(props: CustomLinkProps) {
     return <a {...props} />;
   }
 
-  return <a target="_blank" rel="noopener noreferrer" {...props} />;
+  return (
+    <a
+      target="_blank"
+      rel="noopener noreferrer"
+      {...props}
+      className="text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-500"
+    />
+  );
 }
 
 function RoundedImage(props: ImageProps) {
