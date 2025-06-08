@@ -82,7 +82,7 @@ export function SearchCommand() {
               <CommandItem
                 key={Content.slug}
                 onSelect={() => {
-                  router.push(`/blogs/${Content.slug}`);
+                  router.push(`/blog/${Content.slug}`);
                   setOpen(false);
                 }}
               >

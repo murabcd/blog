@@ -9,14 +9,14 @@
 }
 
 :root {
-  --sh-class: oklch(0.719 0.1322 264.2);
-  --sh-sign: oklch(0.8561 0.0943 225.87);
-  --sh-string: oklch(0.7953 0.1395 130.14);
-  --sh-keyword: oklch(0.7515 0.1344 299.5);
-  --sh-comment: oklch(0.4955 0.0682 274.37);
-  --sh-jsxliterals: oklch(0.719 0.1322 264.2);
-  --sh-property: oklch(0.8217 0.0996 182.49);
-  --sh-entity: oklch(0.7839 0.1057 75.43);
+  --sh-class: oklch(0.55 0.18 85);
+  --sh-sign: oklch(0.4 0.05 240);
+  --sh-string: oklch(0.5 0.2 150);
+  --sh-keyword: oklch(0.5 0.22 300);
+  --sh-comment: oklch(0.65 0.04 150);
+  --sh-property: oklch(0.45 0.2 245);
+  --sh-entity: oklch(0.55 0.2 30);
+  --sh-jsxliterals: var(--sh-class);
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -99,7 +99,32 @@
 }
 
 .prose code span {
-  @apply font-medium;
+  font-weight: inherit;
+}
+
+.sh-keyword {
+  color: var(--sh-keyword);
+  font-weight: 500;
+}
+.sh-string {
+  color: var(--sh-string);
+}
+.sh-property {
+  color: var(--sh-property);
+}
+.sh-class,
+.sh-jsxliterals {
+  color: var(--sh-class);
+}
+.sh-sign {
+  color: var(--sh-sign);
+}
+.sh-comment {
+  color: var(--sh-comment);
+  font-style: italic;
+}
+.sh-entity {
+  color: var(--sh-entity);
 }
 
 .prose img {
@@ -217,6 +242,14 @@ table {
 }
 
 .dark {
+  --sh-class: oklch(0.8 0.15 90);
+  --sh-sign: oklch(0.8 0.05 240);
+  --sh-string: oklch(0.8 0.18 150);
+  --sh-keyword: oklch(0.75 0.2 300);
+  --sh-comment: oklch(0.6 0.08 150);
+  --sh-property: oklch(0.8 0.15 230);
+  --sh-entity: oklch(0.8 0.15 40);
+  --sh-jsxliterals: var(--sh-class);
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);

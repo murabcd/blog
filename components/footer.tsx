@@ -66,7 +66,7 @@ export default function Footer() {
           </a>
         </li>
       </ul>
-      <div className="flex items-end justify-between text-xs text-foreground">
+      <div className="flex items-end justify-between text-xs text-muted-foreground">
         <p>© {new Date().getFullYear()} Murad&apos;s blog. All rights reserved.</p>
         <ThemeSwitcher />
       </div>
