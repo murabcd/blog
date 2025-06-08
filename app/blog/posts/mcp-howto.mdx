@@ -1,0 +1,90 @@
+---
+title: "Intro to the Model Context Protocol"
+publishedAt: "2025-06-08"
+summary: "APIs are messy for AI agents to use, often leading to errors. The Model Context Protocol (MCP) is a new standard designed to fix this by creating a reliable way for AIs to use tools. Here’s a simple breakdown of what it is, why it matters, and how it works."
+---
+
+## Making AI Tools That Don't Break
+
+If you've ever tried to get a Large Language Model (LLM) to reliably use an external tool, you probably know the pain. You spend hours setting up the perfect prompt, giving it examples of your API, and for a glorious moment, it works. But then you change one small thing, or a user asks a slightly different question, and the whole thing falls apart. The AI starts calling endpoints that don't exist, getting argument names wrong, or just generally making a mess.
+
+This happens because we've been trying to fit a square peg into a round hole. Most APIs were built by human developers, for human developers. They have quirks, inconsistencies, and unwritten rules that we can figure out, but an AI can't. The Model Context Protocol (MCP) is a serious attempt to fix this by creating a new, standardized way for AIs to talk to tools.
+
+### Why Not To Use Traditional API?
+
+Let's get specific about why this is so hard. Imagine you want an AI to do something seemingly simple, like create a calendar event using a standard API. The AI would have to:
+
+1.  **Find the right endpoint.** Is it `/api/v1/events` or `/api/schedule/create`? It has to guess from the documentation.
+2.  **Format the data correctly.** The API might expect a JSON body. The date needs to be in a specific format: is it a Unix timestamp or an ISO 8601 string? Does it need to handle timezones?
+3.  **Handle multi-step processes.** What if you need to invite people? That might be a completely different endpoint, like `/api/events/{id}/invite`, which requires getting the event ID from the _first_ request.
+
+An LLM has to perfectly generate the code or HTTP request for every single one of these steps. A single mistake—a wrong path, a misspelled parameter, an incorrect date format—and the whole workflow fails. OpenAPI specs help by describing the API, but they're like a map of a confusing city; they don't change the fact that the streets are a tangled mess. MCP isn't another map; it's a project to build a clean, simple grid system for that city.
+
+### AI Agents Need a New Protocol
+
+At its core, MCP is a standardized communication protocol. You can think of it as a universal language that all AI tools can agree to speak. Instead of chaos, you get structure. It breaks down the interaction into three simple parts:
+
+- **Host**: This is the main application you're using, like your code editor, a desktop assistant, or a custom app.
+- **Server**: This is the tool itself. It’s a dedicated process that knows how to do one thing well. A perfect example is a server for a powerful web scraping service like [Firecrawl](https://github.com/mendableai/firecrawl-mcp-server).
+- **Client**: This is the middleman inside the Host that talks to the Servers.
+
+A server’s job is straightforward: it tells the client which tools it has, and what information those tools need. The Firecrawl server, for example, has multiple tools like `scrape`, `search`, and `extract`. For its `extract` tool, it provides a clear, machine-readable schema:
+
+```json
+{
+  "name": "firecrawl_extract",
+  "description": "Extract structured information from web pages...",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "urls": { "type": "array", "items": { "type": "string" } },
+      "schema": {
+        "type": "object",
+        "description": "The JSON schema for the data you want to extract."
+      }
+    },
+    "required": ["urls", "schema"]
+  }
+}
+```
+
+This schema is the "menu" the AI gets to choose from. Instead of trying to write a complex Python script with scraping libraries to pull data from a webpage, the AI just has to fill in a form. If a user asks, "Get me the name and price of the product on these pages," the AI's job is to call the `firecrawl_extract` tool with the list of URLs and a simple schema like `{"properties": {"name": "string", "price": "number"}}`. The AI is describing what it wants, not implementing how to get it.
+
+### Braking Down the Benefits
+
+This approach has some huge, practical advantages that directly address the pain points of using traditional APIs.
+
+**1. The AI Can Just Ask What's Possible (Runtime Discovery)**
+No more relying on static, potentially outdated documentation. An MCP client can simply ask a server, "What tools do you have?" at any time. The server responds with a perfect, machine-readable list of its capabilities. This means the AI always has an up-to-date understanding of what it can do.
+
+**2. The AI Can't Mess Up the Execution (Deterministic Execution)**
+This is the biggest win for reliability. The AI’s only job is to _choose_ a tool and provide the arguments. It cannot write a malformed request because it's not writing the request at all. The actual work is done by pre-written, tested code inside the server. This moves the logic from the unpredictable LLM to predictable, safe code.
+
+**3. The Tools Can Talk Back (Bidirectional Communication)**
+Communication isn't just a one-way street. MCP is designed to be bidirectional, meaning a tool can send messages back. A perfect example is when an app like Claude Desktop first tries to use a new tool. It prompts you with a dialog asking for permission. That dialog isn't a random popup; it's the protocol enabling the system to ask for user input before proceeding. This can also be used for progress updates or asking for clarification.
+
+**4. It Works Easily on Your Own Computer (Local-First Design)**
+This is a game-changer. If you want an AI to read a local file using a traditional API, you'd have to set up a local web server, find an open port, and handle authentication. MCP supports a simple "stdio" transport, which means a server can just run as a normal process on your machine. This is why setting up a local server can be as simple as telling the host application to run a command.
+
+**5. It Makes Future AIs Smarter (The Training Advantage)**
+There’s a powerful long-term benefit here. Right now, models learn to use tools by looking at thousands of examples of inconsistent, messy APIs. By standardizing on one clean protocol, we create a consistent dataset. Future models could be trained specifically on this "language," making them far more efficient and reliable at using tools from day one.
+
+### The Growing MCP Ecosystem
+
+This isn't just a theoretical idea. A real ecosystem of tools, servers, and early adopters is already forming because MCP solves a genuine problem.
+
+The open-source community, supported by Anthropic and others, has released a solid foundation to get started. This includes official SDKs for both [TypeScript](https://github.com/modelcontextprotocol/typescript-sdk) and [Python](https://github.com/modelcontextprotocol/python-sdk), along with a developer [Inspector](https://github.com/modelcontextprotocol/inspector) for debugging.
+
+More importantly, there's a growing collection of pre-built servers you can use today. These aren't just toys; they provide real utility:
+
+- **Local Tools**: Servers for the [Filesystem](https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem) and [Puppeteer](https://github.com/modelcontextprotocol/servers/tree/main/src/puppeteer) for browser automation.
+- **Developer APIs**: Integrations for [GitHub](https://github.com/modelcontextprotocol/servers/tree/main/src/github), [PostgreSQL](https://github.com/modelcontextprotocol/servers/tree/main/src/postgres), and even [Cloudflare](https://github.com/cloudflare/mcp-server-cloudflare).
+- **General Services**: Servers for [Google Drive](https://github.com/modelcontextprotocol/servers/tree/main/src/gdrive) and [Slack](https://github.com/modelcontextprotocol/servers/tree/main/src/slack).
+
+Leading developer tools are already putting this ecosystem to work. [Convex](https://www.convex.dev/blog/convex-mcp-server), a backend development platform, integrates an MCP server into its CLI, allowing an AI agent to safely inspect database schemas and run sandboxed queries. Similarly, AI-native code editors like [Cursor](https://cursor.sh/docs/mcp) use MCP as a core plugin system, enabling its agent to perform full-stack tasks by understanding both the code and the connected backend context.
+
+### Conclusion
+
+Let's be real — MCP is still new, and it's not perfect yet. The setup process can be a bit manual, and many of the most accessible use cases are focused on servers running locally on your own machine. The vision of a one-click "app store" for AI tools isn't here today.
+
+But the long-term vision is compelling. The protocol is building the foundation for a future where you could browse for tools—for project management, data analysis, or social media—and with a single click, add that capability to your AI assistant. That's the future MCP is building toward: a universal, plug-and-play ecosystem for AI tools.
