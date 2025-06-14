@@ -18,7 +18,7 @@ Let's get specific about why this is so hard. Imagine you want an AI to do somet
 2.  **Format the data correctly.** The API might expect a JSON body. The date needs to be in a specific format: is it a Unix timestamp or an ISO 8601 string? Does it need to handle timezones?
 3.  **Handle multi-step processes.** What if you need to invite people? That might be a completely different endpoint, like `/api/events/{id}/invite`, which requires getting the event ID from the _first_ request.
 
-An LLM has to perfectly generate the code or HTTP request for every single one of these steps. A single mistake—a wrong path, a misspelled parameter, an incorrect date format—and the whole workflow fails. OpenAPI specs help by describing the API, but they're like a map of a confusing city; they don't change the fact that the streets are a tangled mess. MCP isn't another map; it's a project to build a clean, simple grid system for that city.
+An LLM has to perfectly generate the code or HTTP request for every single one of these steps. A single mistake a wrong path, a misspelled parameter, an incorrect date format and the whole workflow fails. OpenAPI specs help by describing the API, but they're like a map of a confusing city; they don't change the fact that the streets are a tangled mess. MCP isn't another map; it's a project to build a clean, simple grid system for that city.
 
 ### AI Agents Need a New Protocol
 
@@ -87,4 +87,4 @@ Leading developer tools are already putting this ecosystem to work. [Convex](htt
 
 Let's be real — MCP is still new, and it's not perfect yet. The setup process can be a bit manual, and many of the most accessible use cases are focused on servers running locally on your own machine. The vision of a one-click "app store" for AI tools isn't here today.
 
-But the long-term vision is compelling. The protocol is building the foundation for a future where you could browse for tools—for project management, data analysis, or social media—and with a single click, add that capability to your AI assistant. That's the future MCP is building toward: a universal, plug-and-play ecosystem for AI tools.
+But the long-term vision is compelling. The protocol is building the foundation for a future where you could browse for tool for project management, data analysis, or social media and with a single click, add that capability to your AI assistant. That's the future MCP is building toward: a universal, plug-and-play ecosystem for AI tools.
