@@ -1,0 +1,51 @@
+---
+title: "On the Road to AGI"
+publishedAt: "2025-06-14"
+summary: "Despite the hype, I believe true AGI is further than we think. Based on hands-on experience, fundamental roadblocks like the inability for AI to truly learn and reliably use tools are being seriously underestimated."
+---
+
+## The Hype vs. The Reality
+
+Everywhere you look, people are debating AGI timelines. Some say it's two years away, others say twenty. After spending countless hours trying to build genuinely useful AI tools, I've become more skeptical of the near-term predictions. The models we have today are incredible, but trying to integrate them into real-world workflows reveals fundamental limitations that aren't just minor hurdles. They are roadblocks.
+
+Many argue that even if AI progress stopped today, current models would transform the economy more than the internet. I disagree. The reason large companies aren't completely rebuilding their operations around LLMs isn't because they're slow to adapt. It's because getting reliable, human-like work out of these models is genuinely hard.
+
+## AI Doesn't Actually Learn
+
+The single biggest issue is that LLMs don't improve with experience the way a person does. The lack of continual learning is a massive bottleneck. I've tried to build LLM agents for simple, repetitive tasks: cleaning up customer feedback from different sources, drafting release notes, or co-writing product requirement documents. These are language-in, language-out tasks that should be a perfect fit. And the models are maybe 7/10 at them. Impressive, but not transformative.
+
+The problem is you're stuck with the out-of-the-box capability. You can endlessly tweak the system prompt, but you can't give the model high-level feedback that leads to genuine improvement. A human's real value isn't just their baseline intelligence; it's their ability to build context, learn from mistakes, and discover small efficiencies over time. AI can't do this.
+
+### Onboarding Analogy
+
+Think about how you onboard a new junior software engineer. You don't just point them to the entire codebase documentation and assign them a critical bug fix. That would be a recipe for disaster.
+
+Instead, you start them with a small, well-defined task. They submit a pull request. A senior engineer reviews it, not just for correctness, but for style, adherence to unwritten conventions, and efficiency. Through this interactive feedback loop of code reviews and pair programming, the junior engineer gradually learns the team's specific "way of doing things." They build a mental model of the system's architecture and the team's philosophy.
+
+This would never work with today's AI. No amount of documentation fed into a prompt can replace that dynamic, iterative learning process. Yet this is the only way we can "teach" an LLM. It can read the manual, but it can't truly become a contributing member of the team.
+
+This is why in-context learning, while useful, is a temporary fix. An LLM might grasp my product's tone of voice by the fourth paragraph of a session, but that understanding vanishes the moment the session ends. Compacting that rich, tacit knowledge into a text summary is a brittle and lossy process.
+
+## The Next Hurdle: Reliable Computer Use
+
+Another popular forecast is that we'll have reliable computer-use agents by the end of next year. The idea is you could give an AI a high-level business task, like, "Prepare the slide deck for the Quarterly Business Review."
+
+Imagine an agent that could do this. It would need to pull sales data from Salesforce, product engagement metrics from Pendo, support ticket trends from Zendesk, and financial numbers from your ERP. It would then have to synthesize this information, create charts, identify key insights, and build a coherent narrative in a Google Slides presentation, even asking for clarification on data anomalies it discovers along the way.
+
+I'm skeptical. While I'm not a researcher at a major lab, I see three major challenges that make this timeline feel overly optimistic:
+
+1.  **The Data Gap.** The success of LLMs was built on a massive, freely available corpus of internet text. We don't have a comparable dataset for complex, multi-application business workflows. You can't train a model on all the text from 1990 and expect it to produce GPT-4. I suspect the same data limitations apply here.
+2.  **The Feedback Loop Problem.** Training an agent requires a reward signal. For a complex task like building a QBR deck, the AI might need to perform hours of work across multiple systems before a human can even evaluate the output for quality and accuracy. This makes the feedback loop incredibly slow, sparse, and expensive.
+3.  **The "Simple is Hard" Reality.** We've seen how long it takes to nail down algorithmic innovations that seem simple in retrospect. It took two years after GPT-4 for the ideas in DeepSeek's R1 paper to be widely implemented. Seeing how long it took to solve for verifiable math and code problems makes me think we're underestimating the difficulty of the much messier, less-defined problem of general business computer use.
+
+## But Don't Get Me Wrong, The Magic is Real
+
+This skepticism shouldn't be mistaken for pessimism. The reasoning abilities of models like o3 or Gemini 2.5 are astounding. They break down problems, consider user intent, and correct their own course of action. You can give a model a vague spec, and it can zero-shot a working application.
+
+The only concise and accurate explanation is that we are witnessing the emergence of a baby general intelligence. You have to step back and admit: we are actually making machines that can think.
+
+## Conclusion
+
+The path to AGI isn't a smooth, exponential curve. It's a road filled with fundamental, challenging roadblocks. While today's models are capable of amazing feats of reasoning, their inability to learn continuously and act reliably in complex environments keeps them from being truly transformative agents.
+
+Solving these problems will unleash a wave of progress unlike anything we've seen. But we shouldn't underestimate how difficult they are. For now, a sober assessment of the real-world limitations is more useful than getting lost in the hype.
