@@ -8,9 +8,9 @@ summary: "APIs are messy for AI agents to use, often leading to errors. The Mode
 
 If you've ever tried to get a Large Language Model (LLM) to reliably use an external tool, you probably know the pain. You spend hours setting up the perfect prompt, giving it examples of your API, and for a glorious moment, it works. But then you change one small thing, or a user asks a slightly different question, and the whole thing falls apart. The AI starts calling endpoints that don't exist, getting argument names wrong, or just generally making a mess.
 
-This happens because we've been trying to fit a square peg into a round hole. Most APIs were built by human developers, for human developers. They have quirks, inconsistencies, and unwritten rules that we can figure out, but an AI can't. The Model Context Protocol (MCP) is a serious attempt to fix this by creating a new, standardized way for AIs to talk to tools.
+This happens because we've been trying to fit a square peg into a round hole. Most APIs were built by human developers for human developers. They have quirks, inconsistencies, and unwritten rules that we can figure out, but an AI can't. The Model Context Protocol (MCP) is a serious attempt to fix this by creating a new, standardized way for AIs to talk to tools.
 
-### Why Not To Use Traditional API?
+## Why Not To Use Traditional API?
 
 Let's get specific about why this is so hard. Imagine you want an AI to do something seemingly simple, like create a calendar event using a standard API. The AI would have to:
 
@@ -20,7 +20,7 @@ Let's get specific about why this is so hard. Imagine you want an AI to do somet
 
 An LLM has to perfectly generate the code or HTTP request for every single one of these steps. A single mistake a wrong path, a misspelled parameter, an incorrect date format and the whole workflow fails. OpenAPI specs help by describing the API, but they're like a map of a confusing city; they don't change the fact that the streets are a tangled mess. MCP isn't another map; it's a project to build a clean, simple grid system for that city.
 
-### AI Agents Need a New Protocol
+## AI Agents Need a New Protocol
 
 At its core, MCP is a standardized communication protocol. You can think of it as a universal language that all AI tools can agree to speak. Instead of chaos, you get structure. It breaks down the interaction into three simple parts:
 
@@ -50,7 +50,7 @@ A server’s job is straightforward: it tells the client which tools it has, and
 
 This schema is the "menu" the AI gets to choose from. Instead of trying to write a complex Python script with scraping libraries to pull data from a webpage, the AI just has to fill in a form. If a user asks, "Get me the name and price of the product on these pages," the AI's job is to call the `firecrawl_extract` tool with the list of URLs and a simple schema like `{"properties": {"name": "string", "price": "number"}}`. The AI is describing what it wants, not implementing how to get it.
 
-### Braking Down the Benefits
+## Braking Down the Benefits
 
 This approach has some huge, practical advantages that directly address the pain points of using traditional APIs.
 
@@ -69,7 +69,7 @@ This is a game-changer. If you want an AI to read a local file using a tradition
 **5. It Makes Future AIs Smarter (The Training Advantage)**
 There’s a powerful long-term benefit here. Right now, models learn to use tools by looking at thousands of examples of inconsistent, messy APIs. By standardizing on one clean protocol, we create a consistent dataset. Future models could be trained specifically on this "language," making them far more efficient and reliable at using tools from day one.
 
-### The Growing MCP Ecosystem
+## The Growing MCP Ecosystem
 
 This isn't just a theoretical idea. A real ecosystem of tools, servers, and early adopters is already forming because MCP solves a genuine problem.
 
@@ -83,7 +83,7 @@ More importantly, there's a growing collection of pre-built servers you can use 
 
 Leading developer tools are already putting this ecosystem to work. [Convex](https://www.convex.dev/blog/convex-mcp-server), a backend development platform, integrates an MCP server into its CLI, allowing an AI agent to safely inspect database schemas and run sandboxed queries. Similarly, AI-native code editors like [Cursor](https://cursor.sh/docs/mcp) use MCP as a core plugin system, enabling its agent to perform full-stack tasks by understanding both the code and the connected backend context.
 
-### Conclusion
+## Conclusion
 
 Let's be real — MCP is still new, and it's not perfect yet. The setup process can be a bit manual, and many of the most accessible use cases are focused on servers running locally on your own machine. The vision of a one-click "app store" for AI tools isn't here today.
 

@@ -3,8 +3,11 @@ import { notFound } from "next/navigation";
 
 import { formatDate } from "@/lib/utils";
 import { getBlogPosts } from "@/lib/server-utils";
+
 import { baseUrl } from "@/app/sitemap";
+
 import { CustomMDX } from "@/components/mdx";
+import { Toc } from "@/components/toc";
 
 export async function generateStaticParams() {
   const posts = getBlogPosts();
@@ -97,9 +100,19 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
           {formatDate(post.metadata.publishedAt)}
         </p>
       </div>
-      <article className="prose">
-        <CustomMDX source={post.content} />
-      </article>
+
+      <div className="relative">
+        <div className="max-w-xl mx-auto">
+          <article className="prose">
+            <CustomMDX source={post.content} />
+          </article>
+        </div>
+        <aside className="hidden md:block absolute top-0 left-full h-full pl-8">
+          <div className="sticky top-24 w-72">
+            <Toc mdxContent={post.content} />
+          </div>
+        </aside>
+      </div>
     </section>
   );
 }

@@ -3,6 +3,7 @@ import Image, { ImageProps } from "next/image";
 import { MDXRemote, MDXRemoteProps } from "next-mdx-remote/rsc";
 import { highlight } from "sugar-high";
 import React from "react";
+import { slugify } from "@/lib/utils";
 
 type TableProps = {
   data: {
@@ -23,23 +24,12 @@ type HeadingProps = {
   children?: React.ReactNode;
 };
 
-function slugify(str: string): string {
-  return str
-    .toString()
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, "-")
-    .replace(/&/g, "-and-")
-    .replace(/[^\w\-]+/g, "")
-    .replace(/\-\-+/g, "-");
-}
-
 function createHeading(level: number) {
   const Heading = ({ children }: HeadingProps) => {
     const slug = slugify(typeof children === "string" ? children : "");
     return React.createElement(
       `h${level}`,
-      { id: slug },
+      { id: slug, style: { scrollMarginTop: "6rem" } },
       [
         React.createElement("a", {
           href: `#${slug}`,

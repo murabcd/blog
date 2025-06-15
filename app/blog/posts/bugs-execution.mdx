@@ -1,0 +1,63 @@
+---
+title: "Managing Unplanned Work"
+publishedAt: "2023-09-23"
+summary: "Features get roadmaps, but what about the constant stream of bugs and urgent requests? Here's a practical framework to tame the chaos of unplanned work, from frictionless intake to ruthless prioritization."
+---
+
+## Types of Work
+
+In product development, there are two distinct types of work: the work you plan for, and the work that plans for you.
+
+**Planned work** is the world of roadmaps and strategic initiatives. It’s a predictable process where we define goals, scope projects, and allocate resources to move the company forward. It’s the work we love to talk about.
+
+**Unplanned work** is the messy reality. It’s the constant stream of bug reports, urgent customer requests, and system alerts that arrive without warning. It’s the chaos that threatens to derail even the best-laid plans.
+
+Ignoring this reality is a recipe for failure. You can't escape unplanned work, but you can manage it. Having a systematic approach is the difference between being constantly reactive and staying in control.
+
+## Friction is the Enemy
+
+Before you can manage unplanned work, you have to capture it effectively. The biggest challenge here is friction. If reporting a bug or a customer issue is difficult, it simply won't happen. The issue will fester in a Slack thread, a support ticket, or a salesperson's notes, but it will never make it into your system.
+
+This creates a dangerous blind spot. Your issue tracker should be a source of truth about the state of your product. When intake is difficult, it becomes a source of half-truths, reflecting only a fraction of reality.
+
+The solution is to create a zero-friction intake process. This means instrumenting your organization to capture issues directly at their source.
+
+- **Integrate Everything:** Your issue tracker should be the central hub. Connect it directly to your customer support tools (like Zendesk or Intercom), your performance monitoring platforms (like Sentry), and your internal communication channels.
+- **Empower the Front Lines:** Your sales, support, and customer success teams are on the front lines. Give them a simple, one-click way to convert a customer conversation into a well-formed issue without leaving their primary tool.
+
+The goal is to ensure that every piece of unplanned work is captured explicitly and actionably, turning scattered noise into structured signal.
+
+## Prioritization
+
+Once an issue is captured, the next question is: what do we do with it? Without a clear framework, prioritization descends into chaos. The "loudest voice" often wins, or worse, everything gets dumped into a black-hole backlog, never to be seen again.
+
+To bring order to this process, we use a simple but powerful prioritization matrix. It forces a decision by evaluating every issue against two key axes: the **number of affected users** (impact) and the **severity of the bug** (criticality).
+
+![Prioritization Matrix](https://oj9anrnpmq5owbkj.public.blob.vercel-storage.com/prioritization-3rdlBgBPy8XsC89g5XA6fRyHEuS53Y.webp)
+
+### Handle Unplanned Work
+
+Here’s how we break down the severity axis at [Juro](https://juro.com/):
+
+- **Can't Communicate:** Core communication channels fail (e.g., integration goes down).
+- **Can't Automate:** Core automation workflows are broken (e.g., workflow don't trigger).
+- **Can't Analyze:** Analytics or reporting is broken (e.g., dashboards fail to load).
+- **Can't Configure:** Key configuration UIs are broken or painfully slow.
+
+By plotting these severity levels against the percentage of affected users, we get a clear action plan.
+
+**1. Fix Immediately (High Severity, High Impact)**
+This is a crisis. A core function of the product is broken for a large portion of your user base. This isn't a task for the next sprint; it's an "all hands on deck" emergency that requires immediate attention.
+
+**2. Fix This Sprint (High Severity, Low Impact)**
+The issue is critical, but the blast radius is small. A key feature might be broken for a specific customer segment or a new enterprise account. It's urgent and needs to be addressed within the current development cycle, but it doesn't need to stop all other work.
+
+**3. Fix Next Sprint (Low Severity, High Impact)**
+The problem affects many users but isn't a showstopper. This could be a significant UI annoyance, a performance degradation in a non-critical area, or a misleading error message. It impacts the user experience and should be prioritized, but it can be scheduled for the next cycle.
+
+**4. Backlog (Low Severity, Low Impact)**
+This is the quadrant for minor issues affecting a small number of users. It might be a typo, a minor alignment issue, or an edge-case bug in a rarely used feature. These items go to the backlog. It’s crucial to accept that many of these issues may never be fixed, and that's okay. Your resources are better spent elsewhere.
+
+## Conclusion
+
+Unplanned work will never disappear, but it doesn't have to be a source of constant disruption. By implementing a two-part system a frictionless intake process to capture everything and a ruthless prioritization framework to decide what matters you can transform chaos into a predictable workflow. It’s how you stay responsive to customer needs without sacrificing your strategic direction.
