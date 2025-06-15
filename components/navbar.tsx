@@ -30,7 +30,7 @@ export function Navbar() {
                 <Link
                   key={path}
                   href={path}
-                  className="transition-all hover:text-foreground"
+                  className="transition-all hover:text-primary"
                 >
                   {name}
                 </Link>

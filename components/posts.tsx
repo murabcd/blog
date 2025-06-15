@@ -33,7 +33,7 @@ export function BlogPosts({ limit }: { limit?: number }) {
         ))}
       </div>
       {limit && (
-        <Link href="/blog" className="mt-8 block hover:text-foreground">
+        <Link href="/blog" className="mt-8 block hover:text-primary">
           view all posts →
         </Link>
       )}

@@ -77,14 +77,14 @@ export function Toc({ mdxContent }: TocProps) {
 
   return (
     <div className="sticky top-24 hidden lg:block">
-      <p className="font-semibold mb-2 tracking-tight text-sm">On this page</p>
+      <p className="mb-2 tracking-tight text-sm">On this post</p>
       <ul className="space-y-1">
         {toc.map(({ level, text, slug }) => (
           <li
             key={slug}
             style={{ marginLeft: `${(level - 2) * 1}rem` }}
             className={`text-xs hover:text-foreground transition-colors ${
-              activeId === slug ? "text-foreground font-medium" : "text-muted-foreground"
+              activeId === slug ? "text-foreground" : "text-muted-foreground"
             }`}
           >
             <a href={`#${slug}`}>{text}</a>
