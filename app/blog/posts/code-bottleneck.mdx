@@ -1,0 +1,57 @@
+---
+title: "Think Harder"
+publishedAt: "2025-06-23"
+summary: "AI agents can write code faster than any human, but this hasn't solved our biggest problem. The bottleneck has shifted from implementation to specification, and our old product development processes are breaking."
+---
+
+## The Promise and the Paradox
+
+The age of AI-powered software development is here. Agents can generate code on demand, turning complex prompts into functional software in minutes. The promise is intoxicating: a world where we can build products at an unprecedented speed.
+
+But a paradox has emerged. While the speed of _coding_ has increased dramatically, the speed of shipping high-quality, valuable products often hasn't. Teams find themselves churning through AI-generated code, caught in endless cycles of revision, rework, and integration nightmares.
+
+The reason is simple. The bottleneck in product development has moved. It's no longer about how fast we can write code; it's about how clearly we can specify what needs to be built. Our entire way of working from Agile rituals to Git workflows was built on a fundamental assumption that is no longer true: that a human would be interpreting our instructions.
+
+## Why Our Old Ways Are Breaking
+
+For decades, our processes have been designed to accommodate ambiguity. A product manager could write a user story with a bit of "you know what I mean" baked in. A designer could hand over a mockup, knowing the engineer would ask clarifying questions. We relied on hallway conversations, stand-ups, and human intuition to fill in the gaps between the spec and the implementation.
+
+AI agents don't have intuition. They don't "know what you mean."
+
+Feed an agent a vague prompt like "simplify the onboarding flow," and it won't schedule a meeting to understand the user's pain points. It will invent a solution based on its training data, which may or may not align with your product strategy, design system, or technical architecture. This sounds like a small distinction, but it breaks everything. The human "interpretation layer" that our processes depended on has been removed, and the cracks are starting to show.
+
+## The Fragmentation Problem
+
+This problem is massively amplified by our tools and workflows, particularly the branching models common in code-first development like GitFlow.
+
+In a typical setup, you have multiple long-lived branches: `main`, `develop`, and several feature branches. Each branch represents a slightly different version of reality. A human developer can navigate this complexity, intuitively knowing which branch to work from and how to merge changes.
+
+An AI agent sees only conflicting sources of truth. If you ask it to implement a feature, which reality should it use? The one in `main`? The one in `develop`? The one in your colleague's feature branch? This fragmentation of context forces the AI to guess, leading to incorrect implementations, painful merges, and constant rework. We are spending more time managing the AI's confusion than benefiting from its speed.
+
+## A Unified Source of Truth
+
+The solution isn't better prompting; it's a better system. We need to shift from a code-first model to an **intent-first** one. The future of effective product development lies in creating a single, unified source of truth that both humans and AI agents can understand and execute against.
+
+The repository no longer just holds the implementation; it holds the entire specification of intent, contributed by everyone.
+
+- **Product's Role:** We no longer just write user stories. We contribute testable specifications of user behavior. These are precise, unambiguous descriptions of what the system must do to be considered correct.
+- **Design's Role:** Designers contribute more than static mockups. They provide coded design components and interaction patterns that serve as rules for the AI to follow.
+- **Engineering's Role:** Engineers focus less on writing boilerplate code and more on defining the high-level architecture, constraints, and interfaces that the AI will build upon.
+
+In this model, the specification itself the collective intent of product, design, and engineering becomes a first-class citizen, versioned right alongside the code. There is no room for ambiguity, and no place for context to hide in branches.
+
+## The Product Leader's New Job
+
+This shift fundamentally changes the role of a product leader. Our job is no longer just to define the "what." Our job is to orchestrate the creation of a precise, machine-readable intent.
+
+The human edge has moved up the stack. It's no longer about managing a backlog of features; it's about:
+
+- **Domain Modeling:** Deeply understanding the business, the user, and the market, and translating that understanding into a coherent architectural vision.
+- **Strategic Specification:** Writing specs that are precise enough for an agent to execute but flexible enough to allow for elegant solutions.
+- **Owning the Definition of "Correct":** Tests are the ultimate executable specification. As product leaders, we must own the intent behind the tests. We define the business rules and acceptance criteria that prove the software is working as intended.
+
+## Conclusion
+
+Robert C. Martin famously wrote that "specifying requirements in such detail that a machine can execute them is programming." We have arrived at that future.
+
+The bottleneck is no longer code; it's clarity. The teams that will win in this new era are not the ones with the best AI prompters, but the ones with the most rigorous processes for collaborative, precise specification. As product leaders, our primary responsibility has shifted from managing the implementation of features to orchestrating the creation of a unified, machine-executable intent. The companies that master this will not just build faster; they will build better.
