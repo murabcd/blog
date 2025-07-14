@@ -1,0 +1,62 @@
+---
+title: "Context is the New Code"
+publishedAt: "2025-07-01"
+summary: "The term 'prompt engineering' is a dangerous misnomer. It trivializes the real work of building with AI, which is about architecting the entire context an agent operates in. This is not a tactical skill; it is a core product discipline."
+---
+
+## The Problem with Prompt Engineering
+
+The term "prompt engineering" has done our industry a disservice. It suggests a narrow, tactical skill of crafting clever sentences, implying that building with AI is little more than a wordsmithing game. This perception is not only wrong; it's strategically dangerous. It causes leaders to underestimate the complexity and importance of the real work.
+
+The truth is, a simple prompt is just the tip of the iceberg. The substantive work lies beneath the surface in architecting the entire ecosystem of information that an AI model needs to perform a task reliably and effectively.
+
+This is why "context engineering" is a far more accurate and useful term. It reframes the work from a tactical exercise to a core engineering and product discipline. It's not about the prompt; it's about everything that surrounds the prompt.
+
+## Redefining the Work of Building with AI
+
+I don't think about prompts. I think about building reliable, scalable systems. From this perspective, context engineering is the practice of designing and managing the complete set of inputs an AI agent uses to make a decision.
+
+This goes far beyond a simple instruction. It is a structured, iterative process of providing the AI with a clear understanding of its role, the knowledge it needs, and the real-time environment it's operating in. The quality of this context is directly proportional to the quality of the AI's output. Garbage in, garbage out has never been more true.
+
+## The Rise of Context Engineering
+
+I find it helpful to break down context engineering into three core pillars. A failure in any one of these pillars leads to a flawed AI feature.
+
+**1. Clear Instructions and Guardrails:**
+This is the foundational layer. It's where we define the AI's persona, its objectives, and the rules of engagement. This is not just a single instruction; it's a comprehensive brief.
+
+For example, imagine we're building an AI-powered assistant to guide new users through our product. The instructions would need to specify:
+
+-   **Persona:** "You are a friendly and helpful onboarding specialist. Your tone is encouraging, not salesy."
+-   **Objective:** "Your goal is to guide the user to complete three key setup tasks to reach their 'aha!' moment."
+-   **Guardrails:** "You must not invent features that do not exist. If a user asks about a capability we don't have, guide them back to the core workflow."
+-   **Output Structure:** "Your final response must be a numbered list of recommended next steps, each with a direct link to the relevant part."
+
+Without these clear guardrails, the AI might act like a pushy salesperson, hallucinate features, or provide a vague, unhelpful response.
+
+**2. High-Quality Knowledge:**
+An AI without relevant knowledge is like an employee on their first day with no training. This pillar is about providing the AI with the specific information it needs to perform its task intelligently. This is where Retrieval-Augmented Generation (RAG) comes into play.
+
+Consider an AI agent designed to summarize incoming customer support tickets for the product team. For its summary to be useful, it needs access to a curated knowledge base.
+
+-   **Without Knowledge:** The AI can only summarize the user's complaint. "User is angry that they can't export their data."
+-   **With Knowledge:** The AI can access the user's account details from our CRM and our technical documentation from a vector database. Its summary becomes far more valuable: "This is a **Tier 1 enterprise customer** who is unable to export their data. This is likely related to the **known bug documented in FL-7923**. The relevant help article is **'How to Export Data for Enterprise Plans'.**"
+
+The second response is not just a summary; it's an actionable insight, powered by well-engineered context.
+
+**3. Real-Time State:**
+The final pillar is providing the AI with an awareness of the "here and now." AI models are stateless by default; they have no memory of the past and no knowledge of the present moment unless we provide it.
+
+Imagine an AI feature designed to help our sales team with their quarterly forecasting. For it to be effective, it needs access to dynamic, real-time context.
+
+-   **The Current Date:** The AI needs to know today's date to understand what "next quarter" means.
+-   **The User's Data:** It needs a live feed of the specific sales representative's current pipeline from Salesforce.
+-   **Historical Context:** It might need access to the user's previous forecast to identify what has changed.
+
+Without this dynamic state, the AI is operating in a vacuum, providing generic advice instead of a personalized, actionable forecast.
+
+## Conclusion
+
+Context engineering is not a niche skill for a few specialists, it is a core competency for the entire product development team. It is our responsibility to ensure that the context we provide our AI agents is as well-designed, well-tested, and well-maintained as any other part of our codebase.
+
+This is where the new competitive moat will be built. The best AI products won't be built by the teams with the best models, but by the teams with the best context. They will be the ones who understand that context isn't just a prompt; it's the entire architecture of information that turns a powerful model into a truly intelligent and valuable product.

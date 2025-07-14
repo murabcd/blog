@@ -74,7 +74,7 @@ export function SearchCommand() {
         </kbd>
       </button>
       <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput placeholder="Search posts and talks..." />
+        <CommandInput placeholder="Search content..." />
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
           <CommandGroup heading="Posts">
