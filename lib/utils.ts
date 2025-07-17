@@ -50,3 +50,12 @@ export function slugify(text: string) {
     .replace(/[^\w-]+/g, "")
     .replace(/--+/g, "-");
 }
+
+export function calculateReadingTime(content: string): string {
+  const wordsPerMinute = 200;
+  const words = content.replace(/[^\w\s]/g, "").split(/\s+/).filter(word => word.length > 0);
+  const wordCount = words.length;
+  const readingTime = Math.ceil(wordCount / wordsPerMinute);
+  
+  return `${readingTime} min read`;
+}

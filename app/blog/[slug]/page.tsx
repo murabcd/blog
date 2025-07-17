@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { formatDate } from "@/lib/utils";
+import { formatDate, calculateReadingTime } from "@/lib/utils";
 import { getBlogPosts } from "@/lib/server-utils";
 
 import { baseUrl } from "@/app/sitemap";
@@ -98,6 +98,9 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
       <div className="flex justify-between items-center mt-2 mb-8 text-sm">
         <p className="text-sm text-muted-foreground">
           {formatDate(post.metadata.publishedAt)}
+        </p>
+        <p className="text-sm text-muted-foreground">
+          {calculateReadingTime(post.content)}
         </p>
       </div>
 
