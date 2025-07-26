@@ -12,6 +12,7 @@ import {
 	DialogContent,
 	DialogHeader,
 	DialogTitle,
+	DialogDescription,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -77,43 +78,51 @@ export function EmbedDialog({
 				<DialogHeader>
 					<DialogTitle>Embed post</DialogTitle>
 				</DialogHeader>
+				<DialogDescription>
+					Embed this post on your website or blog.
+				</DialogDescription>
 
 				<div className="space-y-4">
 					{/* Preview */}
-					<div className="border rounded-lg p-4 bg-background max-w-md">
-						<div className="flex-1 min-w-0">
-							<h3 className="font-semibold text-foreground text-sm mb-1 line-clamp-2">
-								{title}
-							</h3>
-							<p className="text-sm text-muted-foreground mb-1">{author}</p>
-							{description && (
-								<p className="text-sm text-muted-foreground mb-2 line-clamp-2">
-									{description}
-								</p>
-							)}
-							<div className="flex items-center justify-between mb-2">
-								<p className="text-xs text-muted-foreground">{publishedAt}</p>
-								<div className="flex items-center gap-2">
-									<span className="text-xs text-muted-foreground">
-										{likeCount || 0} likes
-									</span>
+					<div className="space-y-2">
+						<Label htmlFor="embed-code" className="text-sm font-medium">
+							Preview
+						</Label>
+						<div className="border rounded-lg p-4 bg-background max-w-md">
+							<div className="flex-1 min-w-0">
+								<h3 className="font-semibold text-foreground text-sm mb-1 line-clamp-2">
+									{title}
+								</h3>
+								<p className="text-sm text-muted-foreground mb-1">{author}</p>
+								{description && (
+									<p className="text-sm text-muted-foreground mb-2 line-clamp-2">
+										{description}
+									</p>
+								)}
+								<div className="flex items-center justify-between mb-2">
+									<p className="text-xs text-muted-foreground">{publishedAt}</p>
+									<div className="flex items-center gap-2">
+										<span className="text-xs text-muted-foreground">
+											{likeCount || 0} likes
+										</span>
+									</div>
 								</div>
+								<a
+									href={fullUrl}
+									className="text-sm text-primary hover:text-primary/80 font-medium no-underline"
+									target="_blank"
+									rel="noopener noreferrer"
+								>
+									Read full post
+								</a>
 							</div>
-							<a
-								href={fullUrl}
-								className="text-sm text-primary hover:text-primary/80 font-medium no-underline"
-								target="_blank"
-								rel="noopener noreferrer"
-							>
-								Read full post
-							</a>
 						</div>
 					</div>
 
 					{/* Embed Code */}
 					<div className="space-y-2">
 						<Label htmlFor="embed-code" className="text-sm font-medium">
-							Embed code
+							Code
 						</Label>
 						<div className="flex gap-2">
 							<Input
