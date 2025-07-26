@@ -25,19 +25,17 @@
   - Write JSX in your Markdown documents for interactive components and dynamic content
 - [Vercel Blob](https://vercel.com/docs/storage/vercel-blob):
   - For storing and serving images
-- [Vercel Analytics](https://vercel.com/analytics)
-  - For tracking website and user behavior metrics
 - [Convex](https://www.convex.dev/)
   - Real-time database for storing like counting and visitor interactions
 
 
-  ## Running locally
+## Running locally
 
 You will need to use the environment variables [defined in `.env.example`](.env.example) to run OpenChat. It's recommended you use [Vercel Environment Variables](https://vercel.com/docs/projects/environment-variables) for this, but a `.env` file is all that is necessary.
 
 > Note: You should not commit your `.env` file or it will expose secrets that will allow others to control access to your various OpenAI and authentication provider accounts.
 
-1. Install Vercel CLI: `npm i -g vercel`
+1. Install Vercel CLI: `bun i -g vercel`
 2. Link local instance with Vercel and GitHub accounts (creates `.vercel` directory): `vercel link`
 3. Download your environment variables: `vercel env pull`
 
