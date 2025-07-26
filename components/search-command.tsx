@@ -74,7 +74,11 @@ export function SearchCommand() {
 					<span className="text-xs">⌘</span>K
 				</kbd>
 			</button>
-			<CommandDialog open={open} onOpenChange={setOpen}>
+			<CommandDialog
+				open={open}
+				onOpenChange={setOpen}
+				className="sm:max-w-[450px]"
+			>
 				<CommandInput placeholder="Search content..." />
 				<CommandList>
 					<CommandEmpty>No results found.</CommandEmpty>

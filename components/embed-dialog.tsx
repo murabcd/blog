@@ -1,11 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Copy } from "lucide-react";
-import { toast } from "sonner";
+
+import { Copy } from "lucide-react";
 import { useQuery } from "convex/react";
 
 import { api } from "@/convex/_generated/api";
+
+import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -36,8 +39,6 @@ export function EmbedDialog({
 	publishedAt,
 	author,
 }: EmbedDialogProps) {
-	const [copied, setCopied] = useState(false);
-
 	const likeCount = useQuery(api.posts.getLikeCount, { postSlug });
 
 	const fullUrl =
@@ -63,9 +64,7 @@ export function EmbedDialog({
 	const handleCopy = async () => {
 		try {
 			await navigator.clipboard.writeText(embedCode);
-			setCopied(true);
 			toast.success("Embed code copied to clipboard");
-			setTimeout(() => setCopied(false), 2000);
 		} catch (error) {
 			console.error("Failed to copy embed code:", error);
 			toast.error("Failed to copy embed code");
@@ -74,21 +73,20 @@ export function EmbedDialog({
 
 	return (
 		<Dialog open={isOpen} onOpenChange={onOpenChange}>
-			<DialogContent className="max-w-2xl">
+			<DialogContent className="sm:max-w-[450px]">
 				<DialogHeader>
 					<DialogTitle>Embed post</DialogTitle>
+					<DialogDescription>
+						Embed this post on your website or blog.
+					</DialogDescription>
 				</DialogHeader>
-				<DialogDescription>
-					Embed this post on your website or blog.
-				</DialogDescription>
-
 				<div className="space-y-4">
 					{/* Preview */}
 					<div className="space-y-2">
 						<Label htmlFor="embed-code" className="text-sm font-medium">
 							Preview
 						</Label>
-						<div className="border rounded-lg p-4 bg-background max-w-md">
+						<div className="border rounded-lg p-4 bg-muted/40 max-w-md">
 							<div className="flex-1 min-w-0">
 								<h3 className="font-semibold text-foreground text-sm mb-1 line-clamp-2">
 									{title}
@@ -124,24 +122,20 @@ export function EmbedDialog({
 						<Label htmlFor="embed-code" className="text-sm font-medium">
 							Code
 						</Label>
-						<div className="flex gap-2">
+						<div className="flex flex-col gap-2 sm:flex-row sm:gap-2">
 							<Input
 								id="embed-code"
 								value={embedCode}
 								readOnly
-								className="flex-1 text-xs font-mono"
+								className="text-xs cursor-not-allowed flex-1"
 							/>
 							<Button
 								onClick={handleCopy}
-								size="icon"
-								className="h-8 w-8 p-0"
-								variant="secondary"
+								size="sm"
+								className="w-full sm:w-auto"
 							>
-								{copied ? (
-									<Check className="w-3 h-3" />
-								) : (
-									<Copy className="w-3 h-3" />
-								)}
+								<Copy className="w-4 h-4 sm:block hidden" />
+								<span className="sm:hidden">Copy</span>
 							</Button>
 						</div>
 					</div>
