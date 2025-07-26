@@ -1,6 +1,19 @@
-## Blog
+<a href="https://murabcd.vercel.app">
+  <img alt="An Open-source AI Chatbot Built With Next.js." src="./public/preview/blog.png">
+  <h1 align="center">Blog</h1>
+</a>
 
-This is the home for my personal website and public blog.
+<p align="center">
+  Blog Built with Next.js and Convex.
+</p>
+
+<p align="center">
+  <a href="#features"><strong>Features</strong></a> ·
+  <a href="#running-locally"><strong>Running locally</strong></a> ·
+  <a href="#license"><strong>License</strong></a>
+</p>
+<br/>
+
 
 ## Features
 
@@ -16,6 +29,24 @@ This is the home for my personal website and public blog.
   - For tracking website and user behavior metrics
 - [Convex](https://www.convex.dev/)
   - Real-time database for storing like counting and visitor interactions
+
+
+  ## Running locally
+
+You will need to use the environment variables [defined in `.env.example`](.env.example) to run OpenChat. It's recommended you use [Vercel Environment Variables](https://vercel.com/docs/projects/environment-variables) for this, but a `.env` file is all that is necessary.
+
+> Note: You should not commit your `.env` file or it will expose secrets that will allow others to control access to your various OpenAI and authentication provider accounts.
+
+1. Install Vercel CLI: `npm i -g vercel`
+2. Link local instance with Vercel and GitHub accounts (creates `.vercel` directory): `vercel link`
+3. Download your environment variables: `vercel env pull`
+
+```bash
+bun install
+bun dev
+```
+
+Your app should now be running on [localhost:3000](http://localhost:3000/)
 
 
 ## License
