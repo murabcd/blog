@@ -1,13 +1,14 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { formatDate, calculateReadingTime } from "@/lib/utils";
-import { getBlogPosts } from "@/lib/server-utils";
-
 import { baseUrl } from "@/app/sitemap";
-
 import { CustomMDX } from "@/components/mdx";
+import { LikeButton } from "@/components/like-button";
+import { ShareButton } from "@/components/share-button";
 import { Toc } from "@/components/toc";
+import { Separator } from "@/components/ui/separator";
+import { getBlogPosts } from "@/lib/server-utils";
+import { calculateReadingTime, formatDate } from "@/lib/utils";
 
 export async function generateStaticParams() {
   const posts = getBlogPosts();
@@ -73,6 +74,7 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
       <script
         type="application/ld+json"
         suppressHydrationWarning
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD structured data
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
@@ -95,7 +97,7 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
       <h1 className="title font-semibold text-2xl tracking-tighter">
         {post.metadata.title}
       </h1>
-      <div className="flex justify-between items-center mt-2 mb-8 text-sm">
+      <div className="flex justify-between items-center mt-2 mb-4 text-sm">
         <p className="text-sm text-muted-foreground">
           {formatDate(post.metadata.publishedAt)}
         </p>
@@ -103,6 +105,19 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
           {calculateReadingTime(post.content)}
         </p>
       </div>
+
+      <div className="flex items-center gap-2 mb-4">
+        <LikeButton postSlug={post.slug} />
+        <ShareButton 
+          postSlug={post.slug} 
+          title={post.metadata.title}
+          description={post.metadata.summary}
+          publishedAt={formatDate(post.metadata.publishedAt)}
+          author="Murad Abdulkadyrov"
+        />
+      </div>
+
+      <Separator className="mb-6" />
 
       <div className="relative">
         <div className="max-w-xl mx-auto">

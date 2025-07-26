@@ -14,6 +14,9 @@ This is the home for my personal website and public blog.
   - For storing and serving images
 - [Vercel Analytics](https://vercel.com/analytics)
   - For tracking website and user behavior metrics
+- [Convex](https://www.convex.dev/)
+  - Real-time database for storing like counting and visitor interactions
+
 
 ## License
 

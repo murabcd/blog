@@ -5,10 +5,12 @@ import "./globals.css";
 import { Navbar } from "@/components/navbar";
 import { ThemeProvider } from "@/components/theme-provider";
 import Footer from "@/components/footer";
+import { Toaster } from "@/components/ui/sonner"
 
 import { baseUrl } from "./sitemap";
 
 import { Analytics } from "@vercel/analytics/next";
+import { ConvexClientProvider } from "./convex-client-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -67,6 +69,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}
       >
+        <ConvexClientProvider>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -79,11 +82,13 @@ export default function RootLayout({
               <main className="mt-6 px-2 md:px-0">
                 {children}
                 <Analytics />
-              </main>
+                </main>  
+              </div>
+              <Toaster />
+              <Footer />
             </div>
-            <Footer />
-          </div>
-        </ThemeProvider>
+          </ThemeProvider>
+        </ConvexClientProvider>
       </body>
     </html>
   );
