@@ -52,18 +52,16 @@ export function ShareButton({
 		<>
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
-					<Button variant="ghost" size="sm">
+					<Button variant="ghost" size="sm" className="cursor-pointer">
 						<Share2 className="w-4 h-4 mr-1 text-muted-foreground" />
 						<span className="text-xs">Share</span>
 					</Button>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align="end" className="w-40">
-					<DropdownMenuItem onClick={handleCopyLink} className="cursor-pointer">
+					<DropdownMenuItem onClick={handleCopyLink}>
 						Copy link
 					</DropdownMenuItem>
-					<DropdownMenuItem onClick={handleEmbed} className="cursor-pointer">
-						Embed
-					</DropdownMenuItem>
+					<DropdownMenuItem onClick={handleEmbed}>Embed</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>
 
