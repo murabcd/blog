@@ -22,7 +22,7 @@ Remember: agents aren't free. They trade speed and simplicity for capability. Ma
 
 When you do need agents (and sometimes you genuinely do), I've found these patterns consistently deliver results:
 
-### 1. The Chain of Prompts
+## 1. The Chain of Prompts
 
 This is the simplest pattern, and often the most effective. Break your task into clear steps, validate each step's output, and feed it into the next step. Think of it like a pipeline: process the initial input, validate the results, build on those results, and continue step by step.
 
@@ -30,19 +30,19 @@ This is the simplest pattern, and often the most effective. Break your task into
 
 I've seen this pattern work beautifully for content generation and refinement, multi-stage data processing, and complex decision workflows. The key is maintaining clear validation points between steps to catch issues early.
 
-### 2. The Router
+## 2. The Router
 
 Sometimes the key to effectiveness isn't clever logic – it's knowing when to delegate. A router pattern is dead simple: it looks at the input and decides where it should go. This shines when different requests need different handling, when you want to optimize costs by routing simple queries to smaller models, or when you need specialized expertise for different tasks.
 
 ![The Routing Workflow](https://oj9anrnpmq5owbkj.public.blob.vercel-storage.com/routing-T28fKg9LWI50sGm6ZDf8he5ZM5TtqX.webp)
 
-### 3. The Parallel Processor
+## 3. The Parallel Processor
 
 I love this pattern for complex tasks. Instead of trying to do everything in one giant prompt, run multiple focused LLMs in parallel. It's like having a team of specialists rather than one overwhelmed generalist. You can either break the task into independent pieces or run the same task multiple times and compare results.
 
 ![The Parallelization Workflow](https://oj9anrnpmq5owbkj.public.blob.vercel-storage.com/parallelization-Mm3yD2sDVXdVXEkkaIsx7E5fk2cxc7.webp)
 
-### 4. The Orchestrator
+## 4. The Orchestrator
 
 One pattern I've seen work particularly well at scale is what I call the "orchestrator." Think of it as a smart manager coordinating a team of specialists. A central LLM breaks down the task, assigns subtasks to specialized workers, and brings everything together at the end.
 
