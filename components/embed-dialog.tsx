@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useId } from "react";
 
 import { Copy } from "lucide-react";
 import { useQuery } from "convex/react";
@@ -39,6 +39,7 @@ export function EmbedDialog({
 	publishedAt,
 	author,
 }: EmbedDialogProps) {
+	const embedCodeId = useId();
 	const likeCount = useQuery(api.posts.getLikeCount, { postSlug });
 
 	const fullUrl =
@@ -51,12 +52,6 @@ export function EmbedDialog({
     <h3 style="font-weight: 600; color: hsl(var(--foreground)); font-size: 14px; margin: 0 0 4px 0; line-height: 1.3;">${title}</h3>
     <p style="font-size: 14px; color: hsl(var(--muted-foreground)); margin: 0 0 4px 0;">From ${author}</p>
     ${description ? `<p style="font-size: 14px; color: hsl(var(--muted-foreground)); margin: 0 0 8px 0; line-height: 1.4;">${description}</p>` : ""}
-    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-      <p style="font-size: 12px; color: hsl(var(--muted-foreground)); margin: 0;">${publishedAt}</p>
-      <div style="display: flex; align-items: center; gap: 8px;">
-        <span style="font-size: 12px; color: hsl(var(--muted-foreground));">${likeCount || 0} likes</span>
-      </div>
-    </div>
     <a href="${fullUrl}" style="font-size: 14px; color: hsl(var(--primary)); text-decoration: none; font-weight: 500;" target="_blank">Read full post</a>
   </div>
 </div>`;
@@ -86,7 +81,7 @@ export function EmbedDialog({
 						<Label htmlFor="embed-code" className="text-sm font-medium">
 							Preview
 						</Label>
-						<div className="border rounded-lg p-4 bg-muted/40 max-w-md">
+						<div className="border rounded-lg p-4 bg-muted/40 shadow-sm max-w-md">
 							<div className="flex-1 min-w-0">
 								<h3 className="font-semibold text-foreground text-sm mb-1 line-clamp-2">
 									{title}
@@ -97,14 +92,7 @@ export function EmbedDialog({
 										{description}
 									</p>
 								)}
-								<div className="flex items-center justify-between mb-2">
-									<p className="text-xs text-muted-foreground">{publishedAt}</p>
-									<div className="flex items-center gap-2">
-										<span className="text-xs text-muted-foreground">
-											{likeCount || 0} likes
-										</span>
-									</div>
-								</div>
+
 								<a
 									href={fullUrl}
 									className="text-sm text-primary hover:text-primary/80 font-medium no-underline"
@@ -119,12 +107,12 @@ export function EmbedDialog({
 
 					{/* Embed Code */}
 					<div className="space-y-2">
-						<Label htmlFor="embed-code" className="text-sm font-medium">
+						<Label htmlFor={embedCodeId} className="text-sm font-medium">
 							Code
 						</Label>
 						<div className="flex flex-col gap-2 sm:flex-row sm:gap-2">
 							<Input
-								id="embed-code"
+								id={embedCodeId}
 								value={embedCode}
 								readOnly
 								className="text-xs cursor-not-allowed flex-1"
