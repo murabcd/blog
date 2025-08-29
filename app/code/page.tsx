@@ -40,16 +40,6 @@ export default function Page() {
 						Vibe Coder
 					</Link>
 				</li>
-				<li>
-					<Link
-						href="https://github.com/murabcd/compass"
-						target="_blank"
-						rel="noopener noreferrer"
-						className="hover:underline"
-					>
-						AI Recruiter
-					</Link>
-				</li>
 			</ul>
 		</section>
 	);
