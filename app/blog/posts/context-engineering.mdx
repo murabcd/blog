@@ -27,10 +27,10 @@ This is the foundational layer. It's where we define the AI's persona, its objec
 
 For example, imagine we're building an AI-powered assistant to guide new users through our product. The instructions would need to specify:
 
--   **Persona:** "You are a friendly and helpful onboarding specialist. Your tone is encouraging, not salesy."
--   **Objective:** "Your goal is to guide the user to complete three key setup tasks to reach their 'aha!' moment."
--   **Guardrails:** "You must not invent features that do not exist. If a user asks about a capability we don't have, guide them back to the core workflow."
--   **Output Structure:** "Your final response must be a numbered list of recommended next steps, each with a direct link to the relevant part."
+- **Persona:** "You are a friendly and helpful onboarding specialist. Your tone is encouraging, not salesy."
+- **Objective:** "Your goal is to guide the user to complete three key setup tasks to reach their 'aha!' moment."
+- **Guardrails:** "You must not invent features that do not exist. If a user asks about a capability we don't have, guide them back to the core workflow."
+- **Output Structure:** "Your final response must be a numbered list of recommended next steps, each with a direct link to the relevant part."
 
 Without these clear guardrails, the AI might act like a pushy salesperson, hallucinate features, or provide a vague, unhelpful response.
 
@@ -39,8 +39,8 @@ An AI without relevant knowledge is like an employee on their first day with no 
 
 Consider an AI agent designed to summarize incoming customer support tickets for the product team. For its summary to be useful, it needs access to a curated knowledge base.
 
--   **Without Knowledge:** The AI can only summarize the user's complaint. "User is angry that they can't export their data."
--   **With Knowledge:** The AI can access the user's account details from our CRM and our technical documentation from a vector database. Its summary becomes far more valuable: "This is a **Tier 1 enterprise customer** who is unable to export their data. This is likely related to the **known bug documented in FL-7923**. The relevant help article is **'How to Export Data for Enterprise Plans'.**"
+- **Without Knowledge:** The AI can only summarize the user's complaint. "User is angry that they can't export their data."
+- **With Knowledge:** The AI can access the user's account details from our CRM and our technical documentation from a vector database. Its summary becomes far more valuable: "This is a **Tier 1 enterprise customer** who is unable to export their data. This is likely related to the **known bug documented in FL-7923**. The relevant help article is **'How to Export Data for Enterprise Plans'.**"
 
 The second response is not just a summary; it's an actionable insight, powered by well-engineered context.
 
@@ -49,9 +49,9 @@ The final pillar is providing the AI with an awareness of the "here and now." AI
 
 Imagine an AI feature designed to help our sales team with their quarterly forecasting. For it to be effective, it needs access to dynamic, real-time context.
 
--   **The Current Date:** The AI needs to know today's date to understand what "next quarter" means.
--   **The User's Data:** It needs a live feed of the specific sales representative's current pipeline from Salesforce.
--   **Historical Context:** It might need access to the user's previous forecast to identify what has changed.
+- **The Current Date:** The AI needs to know today's date to understand what "next quarter" means.
+- **The User's Data:** It needs a live feed of the specific sales representative's current pipeline from Salesforce.
+- **Historical Context:** It might need access to the user's previous forecast to identify what has changed.
 
 Without this dynamic state, the AI is operating in a vacuum, providing generic advice instead of a personalized, actionable forecast.
 

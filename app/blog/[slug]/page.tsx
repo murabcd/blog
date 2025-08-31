@@ -103,13 +103,11 @@ export default async function Blog({
 			<Separator className="mb-6" />
 
 			<div className="relative">
-				<div className="max-w-xl mx-auto">
-					<article className="prose">
-						<CustomMDX source={post.content} />
-					</article>
-				</div>
-				<aside className="hidden md:block absolute top-0 left-full h-full pl-8">
-					<div className="sticky top-24 w-72">
+				<article className="prose max-w-xl mx-auto">
+					<CustomMDX source={post.content} />
+				</article>
+				<aside className="hidden lg:block absolute top-0 left-full h-full pl-8">
+					<div className="sticky top-24 w-64">
 						<Toc mdxContent={post.content} />
 					</div>
 				</aside>
