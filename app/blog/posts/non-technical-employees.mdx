@@ -1,0 +1,42 @@
+---
+title: "The End of the Non-Technical Product Team"
+publishedAt: "2025-09-24"
+summary: "For years, product teams have operated as requesters, dependent on engineering for every tool and data pull. In an AI-native company, this model is a fatal bottleneck. It's time to onboard everyone like an engineer."
+---
+
+## The Great Divide
+
+In most tech companies, a subtle but powerful divide exists. There are the "builders," the engineers who write the code, and then there is everyone else. The product organization, for all its strategic importance, often operates on the other side of this divide. We write specs, create mockups, and analyze data, but we are fundamentally dependent on engineering for the tools, access, and data we need to do our jobs.
+
+This dependency is a source of constant friction. It manifests as a product manager waiting weeks for a new analytics dashboard, a designer unable to query production data to validate a hypothesis, or a product marketer begging for engineering time to build a simple internal tool. This model creates a bottleneck that slows down the entire product development lifecycle.
+
+In an AI-native world, this dependency is no longer just a source of friction; it is a strategic liability. The new generation of code-assisted AI tools is erasing the line between builder and user, and it's time for the structure of our product teams to catch up.
+
+## The New Mandate: Everyone is a Builder
+
+The thesis is simple but profound: **onboard every member of the product organization as if they are an engineer.** This does not mean everyone needs to become a senior software developer. It means that the expectation is now that you will leverage code-assisted tools to directly access data, automate tasks, and solve your own problems.
+
+We recently put this into practice. A new product manager joined our team. Traditionally, their first week would be a marathon of getting access to a dozen different SaaS tools, learning the intricacies of our analytics dashboards, and scheduling meetings with engineers to understand the data schema.
+
+Instead, we set them up with a Github account, cloned our repository, and gave them access to Cursor.
+
+Within their first week, without writing a single line of production code, they were able to use AI to:
+-   Write complex SQL queries to analyze user retention for a feature they were researching.
+-   Build a small script to pull a list of users who had requested a specific integration.
+-   Identify a gap in our API documentation that was causing confusion for a new partner.
+
+At most companies, each of these tasks would have resulted in a ticket in the engineering backlog. Here, they were accomplished in minutes, not weeks. The PM was not a requester; they were a builder, empowered to find their own answers.
+
+## Your APIs Are Your Internal Tools
+
+This approach forces a critical shift in thinking. The best internal tools you have are your own APIs. By providing safe, well-documented API endpoints and empowering the entire team with AI assistants that can interact with them, you eliminate the need for a sprawling, disconnected suite of third-party tools.
+
+Instead of building a one-off Retool app for the marketing team, you give them the tools to query the marketing API themselves. Instead of waiting for an engineer to build a custom dashboard, you empower the product manager to use AI to generate the data visualizations they need on the fly.
+
+This triggers a common and valid concern: what about security and safety? Giving more people access to the codebase can feel risky. This is where the product leader's job is crucial. Our responsibility is to provide safe, powerful tools. This means enforcing access through a well-designed API layer with clear permissions, not allowing direct database writes. The goal is not to unleash chaos, but to provide a secure and sandboxed environment where the entire team can build.
+
+## Conclusion
+
+In the AI-native company, the distinction between "technical" and "non-technical" roles is becoming obsolete. Code is the ultimate form of leverage, and that leverage is now accessible to everyone. The product teams that will win in this new era are not the ones who are best at writing tickets, but the ones who are best at solving problems directly.
+
+This is more than just an efficiency gain; it is a cultural shift. It fosters a deeper sense of ownership, increases the technical fluency of the entire organization, and dramatically shortens the feedback loop between an idea and its validation. It blurs the lines between product management, design, and engineering, creating a single, cohesive team of builders. The age of the non-technical product team is over.
