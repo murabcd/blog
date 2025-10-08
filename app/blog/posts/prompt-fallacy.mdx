@@ -47,7 +47,7 @@ The most advanced challenge is enabling agents to tackle long, multi-step tasks 
 Let's say an agent is tasked with a complex codebase migration. The full project scope, all related files, and every status update would overwhelm any context window. Instead of trying to stuff everything in at once ("pre-inference retrieval"), a "just-in-time" approach is more effective:
 
 -   **Structured Note-Taking:** The agent is given a tool to maintain its own state file, `AGENTS.md`. After completing a major task, it writes a summary of the outcome, key decisions, and next steps to this file. Before starting a new task, it reads `AGENTS.md` to re-orient itself.
--   **Agentic Search:** The agent doesn't have the entire project folder in its context. Instead, it has a tool that can search the file system. When it needs a specific utility function, it actively searches for `utils.py`, reads it, and loads only that specific document into its context for that specific task.
+-   **Agentic Search:** The agent doesn't have the entire project folder in its context. Instead, it has a tool that can search the file system. When it needs a specific utility function, it actively searches, reads it, and loads only that specific document into its context for that specific task.
 
 This mirrors how an effective engineer works. They don't keep every detail in their head; they use an external system of notes and files to retrieve information as needed.
 
