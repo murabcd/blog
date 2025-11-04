@@ -32,12 +32,12 @@ export default function Page() {
 				</li>
 				<li>
 					<Link
-						href="https://github.com/murabcd/vibecoder"
+						href="https://github.com/murabcd/vibestack"
 						target="_blank"
 						rel="noopener noreferrer"
 						className="hover:underline"
 					>
-						Vibe Coder
+						VibeStack
 					</Link>
 				</li>
 			</ul>
