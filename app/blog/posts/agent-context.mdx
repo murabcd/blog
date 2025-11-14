@@ -1,0 +1,55 @@
+---
+title: Agent Context
+publishedAt: "2025-11-13"
+summary: An AI agent's performance depends entirely on its "context," or working memory. But this memory is limited, gets cluttered, and can degrade over time. Learning to manage it is the key to building reliable agents.
+---
+
+## What is Context
+
+The single most important concept in building with AI is the **context window**. Think of it as the agent's active, short-term memory for a single conversation or task. Everything the AI is aware of at any given moment exists within this window. This includes:
+
+*   Your messages and instructions
+*   The agent's previous replies
+*   The specific tools the agent has decided to use, the inputs it gave them, and the results it got back
+*   The agent's own hidden "chain of thought" or reasoning steps
+
+The process is deceptively simple: with every new message you send, the *entire* history in the context window is bundled up and sent back to the model. The AI doesn't just read your latest message; it must re-read the whole conversation from the beginning to understand the current situation and decide what to do next.
+
+This fundamental process has three rules that are critical for any builder to understand:
+
+1.  **It Has a Hard Limit.** Every language model has a maximum context size. A conversation cannot continue indefinitely. Once the limit is reached, older information must be dropped, or the process will fail.
+2.  **Everything Inside Has an Influence.** Every word and token in the context window affects the final output. The model weighs everything, meaning irrelevant information isn't just ignored, but actively distracts the agent and can pull it off course.
+3.  **Quality Degrades with Size.** For most models, performance is highest when the context is clean and focused. As the context window grows larger and more cluttered, the agent is more likely to get confused, forget earlier instructions, contradict itself, or generate low-quality responses.
+
+## An Agent's Context is More Than Just Chat
+
+While a simple chatbot's context might just be the conversation history, a true AI agent's context is pre-loaded with much more information that gives it identity and capability. Before you type a single word, its memory already contains:
+
+*   **The System Prompt:** This is the agent's core programming. It's a detailed set of instructions that tells the model *how* to behave, what its purpose is, what persona to adopt, and how it should use its tools.
+*   **Tool Definitions:** An agent can't use a tool it doesn't know about. The context contains a list of available tools, detailed descriptions of what each one does, and the specific inputs they require.
+*   **Background Knowledge:** You can inject project-specific information directly into the context. This could be an `AGENTS.md` file that explains your codebase's architecture or a document outlining your company's brand voice. This gives the agent relevant knowledge from the start.
+*   **Environmental Data:** The agent is often aware of its immediate surroundings. The context can include information like your operating system, the list of files in the current directory, or even the specific block of code you have highlighted in your editor.
+
+## Add Information with Purpose
+
+The most basic form of context management is explicitly telling the agent what to focus on. An agent left to its own devices has to guess which information is relevant, but you can remove that guesswork. By directly injecting the content of a file or the output of a terminal command into the context window, you are giving the agent a powerful instruction: "Pay attention to *this*. This is what matters for the next step." This is the most reliable way to ground the agent's reasoning in concrete, accurate information.
+
+## Rewrite the Past to Correct the Course
+
+Inevitably, a conversation with an agent will take a wrong turn. You might give a vague instruction, or the agent might fundamentally misunderstand your goal. In a normal conversation, this mistake would remain in the history forever, a piece of "poisoned" context that could confuse the agent later on. The ability to **edit a previous message** is a powerful solution. When you edit a message, the conversation history is effectively pruned, and the agent's memory is reset to that point. The dead end is erased, and the agent can re-run its thinking process down a new, more productive path, creating a cleaner and more accurate final result.
+
+## Branch Conversations to Explore Options
+
+Often in a complex project, you'll reach a fork in the road where you want to explore two different solutions. Without a good context management strategy, this would require starting two entirely new conversations. A more effective pattern is to **branch** (or "fork") the conversation. This action creates a perfect, independent copy of the context window up to that point. You can then safely explore a new approach in the new branch, testing out a different idea, while your original train of thought remains untouched and available to return to. This allows for parallel experimentation without losing any work.
+
+## Distill and Refocus for Complex Projects
+
+For any large, multi-stage project, a single, continuous context window will eventually become a liability. It will grow too large, too cluttered, and too confusing for the agent to navigate effectively. The solution is to break the project into focused phases using **distillation**. At the end of a phase, you can use an agent to analyze the entire conversation and extract only the most critical information — the final code, key decisions, and relevant files. This distilled summary is then used to "handoff" the project to a new, clean context window. This ensures the agent begins the next phase with perfect clarity and no unnecessary baggage from the past.
+
+## Retrieve Specific Knowledge
+
+Imagine you need a specific function that was written in a long, complex conversation from last week. Copying that entire messy conversation into your current one would be a terrible idea. This is where **cross-context retrieval** comes in. Instead of importing the whole history, you can reference the old conversation and give the agent a specific task, like "Find and extract the final database schema from thread T-1234." A specialized process can then search that other context window, retrieve only the specific piece of information you asked for, and place it into your current context. This gives you the precise knowledge you need without the distracting noise.
+
+## Conclusion
+
+Managing an AI agent's memory is not an optional feature; it is a fundamental skill for building reliable systems. A smaller, cleaner, more focused context will almost always produce better results than a massive, cluttered one. By learning and applying these patterns, you move from simply prompting an AI to actively architecting its thought process. This is the essential step in turning powerful models into dependable agents.

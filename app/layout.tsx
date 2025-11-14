@@ -65,7 +65,7 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en" suppressHydrationWarning>
+		<html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}
 			>
@@ -78,7 +78,7 @@ export default function RootLayout({
 					>
 						<div className="mx-4 lg:mx-auto max-w-xl min-h-screen flex flex-col">
 							<Navbar />
-							<div className="flex-grow">
+							<div className="grow">
 								<main className="mt-6 px-2 md:px-0">
 									{children}
 									<Analytics />

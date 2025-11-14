@@ -13,13 +13,13 @@ html {
 }
 
 :root {
-	--sh-class: oklch(0.55 0.18 85);
-	--sh-sign: oklch(0.4 0.05 240);
-	--sh-string: oklch(0.5 0.2 150);
-	--sh-keyword: oklch(0.5 0.22 300);
-	--sh-comment: oklch(0.65 0.04 150);
-	--sh-property: oklch(0.45 0.2 245);
-	--sh-entity: oklch(0.55 0.2 30);
+	--sh-class: oklch(0.4 0 0);
+	--sh-sign: oklch(0.45 0 0);
+	--sh-string: oklch(0.5 0 0);
+	--sh-keyword: oklch(0.35 0 0);
+	--sh-comment: oklch(0.55 0 0);
+	--sh-property: oklch(0.4 0 0);
+	--sh-entity: oklch(0.45 0 0);
 	--sh-jsxliterals: var(--sh-class);
 	--radius: 0.625rem;
 	--background: oklch(1 0 0);
@@ -246,13 +246,13 @@ table {
 }
 
 .dark {
-	--sh-class: oklch(0.8 0.15 90);
-	--sh-sign: oklch(0.8 0.05 240);
-	--sh-string: oklch(0.8 0.18 150);
-	--sh-keyword: oklch(0.75 0.2 300);
-	--sh-comment: oklch(0.6 0.08 150);
-	--sh-property: oklch(0.8 0.15 230);
-	--sh-entity: oklch(0.8 0.15 40);
+	--sh-class: oklch(0.7 0 0);
+	--sh-sign: oklch(0.75 0 0);
+	--sh-string: oklch(0.8 0 0);
+	--sh-keyword: oklch(0.65 0 0);
+	--sh-comment: oklch(0.55 0 0);
+	--sh-property: oklch(0.7 0 0);
+	--sh-entity: oklch(0.75 0 0);
 	--sh-jsxliterals: var(--sh-class);
 	--background: oklch(0.145 0 0);
 	--foreground: oklch(0.985 0 0);
