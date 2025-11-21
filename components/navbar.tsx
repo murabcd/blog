@@ -15,6 +15,9 @@ const navItems = {
 	"/code": {
 		name: "code",
 	},
+	"/chat": {
+		name: "chat",
+	},
 };
 
 export function Navbar() {
