@@ -8,7 +8,7 @@ export default function Page() {
 		<section>
 			<h1 className="mb-8 text-2xl font-semibold tracking-tighter">Chat</h1>
 			<p className="mb-4">
-				My focus is on AI tools in production at{" "}
+				My current focus is on AI tools in production at{" "}
 				<a
 					href="https://flomni.com/en"
 					target="_blank"
