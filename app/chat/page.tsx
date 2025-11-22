@@ -70,7 +70,7 @@ export default function Page() {
 				>
 					Southern Federal University
 				</a>
-				, where I stidied Computer Science. I'm active on{" "}
+				, where I studied Computer Science. I'm active on{" "}
 				<a
 					href="https://github.com/murabcd"
 					target="_blank"
