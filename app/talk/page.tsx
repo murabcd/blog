@@ -2,7 +2,21 @@ import { TalksEvents } from "@/components/events";
 
 export const metadata = {
 	title: "Talk",
-	description: "Talks and events.",
+	description:
+		"Talks, presentations, and events where I share insights on AI, product building, and technology.",
+	openGraph: {
+		title: "Talk | Murad Abdulkadyrov",
+		description:
+			"Talks, presentations, and events where I share insights on AI, product building, and technology.",
+		type: "website",
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: "Talk | Murad Abdulkadyrov",
+		description:
+			"Talks, presentations, and events where I share insights on AI, product building, and technology.",
+		creator: "@murabcd",
+	},
 };
 
 export default function Page() {

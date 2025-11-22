@@ -1,4 +1,26 @@
+import type { Metadata } from "next";
 import { BlogPosts } from "@/components/posts";
+import { baseUrl } from "./sitemap";
+
+export const metadata: Metadata = {
+	title: "Home",
+	description:
+		"Chief Product Officer at Flomni. Exploring AI, tech, and product building. Sharing real experiences, ideas, and lessons from building products and leading teams.",
+	openGraph: {
+		title: "Murad Abdulkadyrov",
+		description:
+			"Chief Product Officer at Flomni. Exploring AI, tech, and product building. Sharing real experiences, ideas, and lessons from building products and leading teams.",
+		url: baseUrl,
+		type: "website",
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: "Murad Abdulkadyrov",
+		description:
+			"Chief Product Officer at Flomni. Exploring AI, tech, and product building. Sharing real experiences, ideas, and lessons from building products and leading teams.",
+		creator: "@murabcd",
+	},
+};
 
 export default function Page() {
 	return (

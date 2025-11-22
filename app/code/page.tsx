@@ -1,9 +1,26 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { formatDate } from "@/lib/utils";
+import { baseUrl } from "@/app/sitemap";
 
-export const metadata = {
+export const metadata: Metadata = {
 	title: "Code",
-	description: "Check out some of the code I've written.",
+	description:
+		"Open source projects and code I've written. Including AI agents, voice applications, and other tools.",
+	openGraph: {
+		title: "Code | Murad Abdulkadyrov",
+		description:
+			"Open source projects and code I've written. Including AI agents, voice applications, and other tools.",
+		url: `${baseUrl}/code`,
+		type: "website",
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: "Code | Murad Abdulkadyrov",
+		description:
+			"Open source projects and code I've written. Including AI agents, voice applications, and other tools.",
+		creator: "@murabcd",
+	},
 };
 
 const codeProjects = [

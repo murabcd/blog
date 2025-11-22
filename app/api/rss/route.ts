@@ -27,7 +27,8 @@ export async function GET() {
     <channel>
         <title>Murad Abdulkadyrov</title>
         <link>${baseUrl}</link>
-        <description>This is Murad's RSS feed</description>
+        <description>Articles on AI, tech, product building, and leadership. Exploring practical insights from building products and leading teams.</description>
+        <language>en-US</language>
         ${itemsXml}
     </channel>
   </rss>`;

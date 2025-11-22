@@ -45,6 +45,7 @@ export const metadata: Metadata = {
 		title: "Murad Abdulkadyrov",
 		description: "Exploring AI, tech, and product building.",
 		images: ["/api/og"],
+		creator: "@murabcd",
 	},
 	robots: {
 		index: true,

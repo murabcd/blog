@@ -1,6 +1,24 @@
-export const metadata = {
+import type { Metadata } from "next";
+import { baseUrl } from "@/app/sitemap";
+
+export const metadata: Metadata = {
 	title: "Chat",
-	description: "Get in touch with me.",
+	description:
+		"Get in touch with me. I help startups with product advising and enjoy collaborating on interesting technical challenges.",
+	openGraph: {
+		title: "Chat | Murad Abdulkadyrov",
+		description:
+			"Get in touch with me. I help startups with product advising and enjoy collaborating on interesting technical challenges.",
+		url: `${baseUrl}/chat`,
+		type: "website",
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: "Chat | Murad Abdulkadyrov",
+		description:
+			"Get in touch with me. I help startups with product advising and enjoy collaborating on interesting technical challenges.",
+		creator: "@murabcd",
+	},
 };
 
 export default function Page() {

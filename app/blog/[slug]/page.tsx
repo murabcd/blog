@@ -38,16 +38,22 @@ export async function generateMetadata({
 	const ogImage = image
 		? image
 		: `${baseUrl}/og?title=${encodeURIComponent(title)}`;
+	const url = `${baseUrl}/blog/${post.slug}`;
 
 	return {
 		title,
 		description,
+		authors: [{ name: "Murad Abdulkadyrov" }],
 		openGraph: {
 			title,
 			description,
 			type: "article",
 			publishedTime,
-			url: `${baseUrl}/blog/${post.slug}`,
+			modifiedTime: publishedTime,
+			url,
+			siteName: "Murad Abdulkadyrov",
+			locale: "en_US",
+			authors: ["Murad Abdulkadyrov"],
 			images: [
 				{
 					url: ogImage,
@@ -59,6 +65,10 @@ export async function generateMetadata({
 			title,
 			description,
 			images: [ogImage],
+			creator: "@murabcd",
+		},
+		alternates: {
+			canonical: url,
 		},
 	};
 }
@@ -75,43 +85,74 @@ export default async function Blog({
 		notFound();
 	}
 
+	const ogImage = post.metadata.image
+		? post.metadata.image
+		: `${baseUrl}/og?title=${encodeURIComponent(post.metadata.title)}`;
+	const url = `${baseUrl}/blog/${post.slug}`;
+
+	const jsonLd = {
+		"@context": "https://schema.org",
+		"@type": "BlogPosting",
+		headline: post.metadata.title,
+		description: post.metadata.summary,
+		image: ogImage,
+		datePublished: post.metadata.publishedAt,
+		dateModified: post.metadata.publishedAt,
+		author: {
+			"@type": "Person",
+			name: "Murad Abdulkadyrov",
+		},
+		publisher: {
+			"@type": "Person",
+			name: "Murad Abdulkadyrov",
+		},
+		url,
+	};
+
 	return (
-		<section>
-			<h1 className="title font-semibold text-2xl tracking-tighter">
-				{post.metadata.title}
-			</h1>
-			<div className="flex justify-between items-center mt-2 mb-4 text-sm">
-				<p className="text-sm text-muted-foreground">
-					{formatDate(post.metadata.publishedAt)}
-				</p>
-				<p className="text-sm text-muted-foreground">
-					{calculateReadingTime(post.content)}
-				</p>
-			</div>
+		<>
+			<script
+				type="application/ld+json"
+				// biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD structured data requires dangerouslySetInnerHTML
+				dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+			/>
+			<section>
+				<h1 className="title font-semibold text-2xl tracking-tighter">
+					{post.metadata.title}
+				</h1>
+				<div className="flex justify-between items-center mt-2 mb-4 text-sm">
+					<p className="text-sm text-muted-foreground">
+						{formatDate(post.metadata.publishedAt)}
+					</p>
+					<p className="text-sm text-muted-foreground">
+						{calculateReadingTime(post.content)}
+					</p>
+				</div>
 
-			<div className="flex items-center gap-2 mb-4">
-				<LikeButton postSlug={post.slug} />
-				<ShareButton
-					postSlug={post.slug}
-					title={post.metadata.title}
-					description={post.metadata.summary}
-					publishedAt={formatDate(post.metadata.publishedAt)}
-					author="Murad Abdulkadyrov"
-				/>
-			</div>
+				<div className="flex items-center gap-2 mb-4">
+					<LikeButton postSlug={post.slug} />
+					<ShareButton
+						postSlug={post.slug}
+						title={post.metadata.title}
+						description={post.metadata.summary}
+						publishedAt={formatDate(post.metadata.publishedAt)}
+						author="Murad Abdulkadyrov"
+					/>
+				</div>
 
-			<Separator className="mb-6" />
+				<Separator className="mb-6" />
 
-			<div className="relative">
-				<article className="prose max-w-xl mx-auto">
-					<CustomMDX source={post.content} />
-				</article>
-				<aside className="hidden lg:block absolute top-0 left-full h-full pl-8">
-					<div className="sticky top-24 w-64">
-						<Toc mdxContent={post.content} />
-					</div>
-				</aside>
-			</div>
-		</section>
+				<div className="relative">
+					<article className="prose max-w-xl mx-auto">
+						<CustomMDX source={post.content} />
+					</article>
+					<aside className="hidden lg:block absolute top-0 left-full h-full pl-8">
+						<div className="sticky top-24 w-64">
+							<Toc mdxContent={post.content} />
+						</div>
+					</aside>
+				</div>
+			</section>
+		</>
 	);
 }
