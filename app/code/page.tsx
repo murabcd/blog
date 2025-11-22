@@ -8,6 +8,11 @@ export const metadata = {
 
 const codeProjects = [
 	{
+		title: "Lead Agent",
+		href: "https://github.com/murabcd/lead-agent",
+		date: "2025-11-22",
+	},
+	{
 		title: "VibeStack",
 		href: "https://github.com/murabcd/vibestack",
 		date: "2025-11-02",
