@@ -1,7 +1,6 @@
 import { getBlogPosts } from "@/lib/server-utils";
-import { NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(): Promise<Response> {
 	const posts = getBlogPosts();
-	return NextResponse.json(posts);
+	return Response.json(posts);
 }

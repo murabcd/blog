@@ -1,7 +1,8 @@
 import { ImageResponse } from "next/og";
+import type { NextRequest } from "next/server";
 
-export function GET(request: Request) {
-	const url = new URL(request.url);
+export async function GET(request: NextRequest): Promise<Response> {
+	const url = request.nextUrl;
 	const title = url.searchParams.get("title") || "Build. Ship. Iterate.";
 
 	return new ImageResponse(
