@@ -176,15 +176,15 @@ html {
 }
 
 .prose > :first-child {
-	margin-top: 1.25em !important;
-	margin-bottom: 1.25em !important;
+	margin-top: 1.25em;
+	margin-bottom: 1.25em;
 }
 
-pre::-webkit-scrollbar {
+.prose pre::-webkit-scrollbar {
 	display: none;
 }
 
-pre {
+.prose pre {
 	-ms-overflow-style: none;
 	scrollbar-width: none;
 }
