@@ -1,10 +1,32 @@
+"use client";
+
+import { redirect } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import {
+	Empty,
+	EmptyContent,
+	EmptyDescription,
+	EmptyHeader,
+	EmptyTitle,
+} from "@/components/ui/empty";
+
 export default function NotFound() {
 	return (
-		<section>
-			<h1 className="mb-8 text-2xl font-semibold tracking-tighter">
-				404 - Page Not Found
-			</h1>
-			<p className="mb-4">The page you are looking for does not exist.</p>
-		</section>
+		<div className="flex flex-1 flex-col items-center justify-center px-4 py-10">
+			<Empty>
+				<EmptyHeader>
+					<EmptyTitle>404 - Not Found</EmptyTitle>
+					<EmptyDescription>
+						The page you&apos;re looking for doesn&apos;t exist. Use the
+						navigation or search.
+					</EmptyDescription>
+				</EmptyHeader>
+				<EmptyContent>
+					<Button onClick={() => redirect("/")} size="sm">
+						Go back
+					</Button>
+				</EmptyContent>
+			</Empty>
+		</div>
 	);
 }

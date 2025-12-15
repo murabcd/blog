@@ -5,6 +5,7 @@ import { baseUrl } from "@/app/sitemap";
 import { CustomMDX } from "@/components/mdx";
 import { LikeButton } from "@/components/like-button";
 import { ShareButton } from "@/components/share-button";
+import { CopyPageButton } from "@/components/copy-page-button";
 import { Toc } from "@/components/toc";
 import { Separator } from "@/components/ui/separator";
 import { getBlogPosts } from "@/lib/server-utils";
@@ -120,11 +121,9 @@ export default async function Blog({
 				<h1 className="title font-semibold text-2xl tracking-tighter">
 					{post.metadata.title}
 				</h1>
-				<div className="flex justify-between items-center mt-2 mb-4 text-sm">
+				<div className="mt-2 mb-4 text-sm">
 					<p className="text-sm text-muted-foreground">
-						{formatDate(post.metadata.publishedAt)}
-					</p>
-					<p className="text-sm text-muted-foreground">
+						{formatDate(post.metadata.publishedAt)} ·{" "}
 						{calculateReadingTime(post.content)}
 					</p>
 				</div>
@@ -138,6 +137,9 @@ export default async function Blog({
 						publishedAt={formatDate(post.metadata.publishedAt)}
 						author="Murad Abdulkadyrov"
 					/>
+					<div className="ml-auto">
+						<CopyPageButton page={post.content} url={url} />
+					</div>
 				</div>
 
 				<Separator className="mb-6" />

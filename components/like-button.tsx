@@ -57,7 +57,12 @@ export function LikeButton({ postSlug }: LikeButtonProps) {
 
 	if (!visitorId || likeCount === undefined || isLiked === undefined) {
 		return (
-			<Button variant="ghost" size="sm" disabled>
+			<Button
+				variant="ghost"
+				size="sm"
+				disabled
+				className="h-8 shadow-none md:h-7 md:text-[0.8rem]"
+			>
 				<Heart className="w-4 h-4 mr-1 text-muted-foreground" />
 				<span className="text-xs">0</span>
 			</Button>
@@ -76,7 +81,7 @@ export function LikeButton({ postSlug }: LikeButtonProps) {
 					size="sm"
 					onClick={handleLike}
 					aria-pressed={!!isLiked}
-					className="cursor-pointer p-0 h-auto"
+					className="cursor-pointer h-8 shadow-none md:h-7 md:text-[0.8rem]"
 				>
 					<motion.div
 						animate={isLiked ? { scale: [1, 1.2, 1] } : { scale: 1 }}

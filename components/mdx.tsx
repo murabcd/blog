@@ -51,7 +51,7 @@ function Table({ data }: TableProps) {
 		<th key={header}>{header}</th>
 	));
 	const rows = data.rows.map((row: string[]) => (
-		<tr key={row.join('-')}>
+		<tr key={row.join("-")}>
 			{row.map((cell: string) => (
 				<td key={cell}>{cell}</td>
 			))}

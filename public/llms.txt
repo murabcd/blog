@@ -1,0 +1,21 @@
+# llms.txt - Information for AI assistants and LLMs
+# Learn more: https://llmstxt.org/
+
+# Site Information
+- Name: Murad Abdulkadyrov Blog
+- URL: https://murabcd.vercel.app
+- Description: Articles on AI, tech, product building, and leadership.
+- Topics: AI, agents, product, leadership, engineering
+
+# Content Access
+- RSS Feed: /rss.xml (all posts with descriptions)
+- Full RSS: /rss-full.xml (all posts with full content)
+- Posts API: /api/post (JSON list of published posts)
+- Single Post: /api/post/{slug} (JSON)
+- Single Post Markdown: /api/post/{slug}?format=md (raw markdown/MDX)
+- Sitemap: /sitemap.xml
+
+# How to Use This Site
+1. Fetch /api/post to discover published posts
+2. Fetch /api/post/{slug}?format=md for full markdown/MDX content
+3. Use /rss-full.xml for full-content syndication
