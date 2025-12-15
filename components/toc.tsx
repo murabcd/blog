@@ -92,36 +92,44 @@ export function Toc({ mdxContent }: TocProps) {
 	};
 
 	return (
-		<div className="sticky top-24 hidden lg:block gap-4">
-			<Separator orientation="vertical" className="self-stretch" />
-			<div>
-				<p className="mb-2 tracking-tight text-sm font-medium">On this page</p>
-				<ul className="space-y-1">
-					{toc.map(({ level, text, slug }) => (
-						<li
-							key={slug}
-							style={{ marginLeft: `${(level - 2) * 1}rem` }}
-							className={`text-xs hover:text-foreground transition-colors ${
-								activeId === slug ? "text-foreground" : "text-muted-foreground"
-							}`}
-						>
-							<a href={`#${slug}`}>{text}</a>
-						</li>
-					))}
-				</ul>
-				{showBackToTop && (
-					<div className="mt-4">
-						<button
-							type="button"
-							onClick={scrollToTop}
-							className="flex items-center text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer bg-transparent border-none p-0 w-auto"
-						>
-							<CircleArrowUp className="h-3 w-3 mr-1" />
-							Back to top
-						</button>
-					</div>
-				)}
+		<div className="sticky top-24 hidden lg:block">
+			<div className="flex items-stretch gap-4">
+				<div className="flex items-center">
+					<Separator orientation="vertical" className="h-full" />
+				</div>
+				<div>
+					<p className="mb-2 tracking-tight text-sm font-medium">
+						On this page
+					</p>
+					<ul className="space-y-1">
+						{toc.map(({ level, text, slug }) => (
+							<li
+								key={slug}
+								style={{ marginLeft: `${(level - 2) * 1}rem` }}
+								className={`text-xs hover:text-foreground transition-colors ${
+									activeId === slug
+										? "text-foreground"
+										: "text-muted-foreground"
+								}`}
+							>
+								<a href={`#${slug}`}>{text}</a>
+							</li>
+						))}
+					</ul>
+				</div>
 			</div>
+			{showBackToTop && (
+				<div className="mt-4 pl-[calc(1rem+1px)]">
+					<button
+						type="button"
+						onClick={scrollToTop}
+						className="flex items-center text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer bg-transparent border-none p-0 w-auto"
+					>
+						<CircleArrowUp className="h-3 w-3 mr-1" />
+						Back to top
+					</button>
+				</div>
+			)}
 		</div>
 	);
 }

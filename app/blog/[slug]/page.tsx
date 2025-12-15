@@ -7,7 +7,6 @@ import { LikeButton } from "@/components/like-button";
 import { ShareButton } from "@/components/share-button";
 import { CopyPageButton } from "@/components/copy-page-button";
 import { Toc } from "@/components/toc";
-import { Separator } from "@/components/ui/separator";
 import { getBlogPosts } from "@/lib/server-utils";
 import { calculateReadingTime, formatDate } from "@/lib/utils";
 
@@ -141,8 +140,6 @@ export default async function Blog({
 						<CopyPageButton page={post.content} url={url} />
 					</div>
 				</div>
-
-				<Separator className="mb-6" />
 
 				<div className="relative">
 					<article className="prose max-w-xl mx-auto">
