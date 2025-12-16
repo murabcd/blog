@@ -10,15 +10,25 @@ const isProduction = process.env.SYNC_ENV === "production";
 const isVerbose =
 	process.env.VERBOSE === "true" || process.argv.includes("--verbose");
 
+const envFile = isProduction ? ".env.production.local" : ".env.local";
+dotenv.config({ path: envFile, override: true });
+
 if (isProduction) {
-	// Production: load .env.production.local first
-	dotenv.config({ path: ".env.production.local" });
 	console.log("Syncing to PRODUCTION deployment...\n");
-} else {
-	// Development: load .env.local
-	dotenv.config({ path: ".env.local" });
 }
-dotenv.config();
+if (isVerbose) {
+	console.log(`Loaded env from ${envFile}`);
+	if (process.env.CONVEX_DEPLOYMENT) {
+		console.log(`CONVEX_DEPLOYMENT=${process.env.CONVEX_DEPLOYMENT}`);
+	}
+	if (process.env.NEXT_PUBLIC_CONVEX_URL) {
+		console.log(`NEXT_PUBLIC_CONVEX_URL=${process.env.NEXT_PUBLIC_CONVEX_URL}`);
+	}
+	if (process.env.CONVEX_URL) {
+		console.log(`CONVEX_URL=${process.env.CONVEX_URL}`);
+	}
+	console.log("");
+}
 
 // Content directories
 const BLOG_DIR = path.join(process.cwd(), "content", "blog");

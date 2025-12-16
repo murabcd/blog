@@ -41,7 +41,6 @@ export default async function Page() {
 		return (
 			<section>
 				<h1 className="mb-8 text-2xl font-semibold tracking-tighter">Chat</h1>
-				<p>Page content not found.</p>
 			</section>
 		);
 	}
