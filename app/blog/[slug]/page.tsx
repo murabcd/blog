@@ -38,7 +38,7 @@ export async function generateMetadata({
 	} = post;
 	const ogImage = image
 		? image
-		: `${baseUrl}/og?title=${encodeURIComponent(title)}`;
+		: `${baseUrl}/api/og?title=${encodeURIComponent(title)}`;
 	const url = `${baseUrl}/blog/${post.slug}`;
 
 	return {
@@ -88,7 +88,7 @@ export default async function Blog({
 
 	const ogImage = post.image
 		? post.image
-		: `${baseUrl}/og?title=${encodeURIComponent(post.title)}`;
+		: `${baseUrl}/api/og?title=${encodeURIComponent(post.title)}`;
 	const url = `${baseUrl}/blog/${post.slug}`;
 
 	const jsonLd = {

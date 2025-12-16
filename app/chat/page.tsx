@@ -4,6 +4,8 @@ import { api } from "@/convex/_generated/api";
 import { baseUrl } from "@/app/sitemap";
 import { CustomMDX } from "@/components/mdx";
 
+const ogImage = new URL("/api/og", baseUrl).toString();
+
 export const metadata: Metadata = {
 	title: "Chat",
 	description:
@@ -13,13 +15,21 @@ export const metadata: Metadata = {
 		description:
 			"Get in touch with me. I help startups with product advising and enjoy collaborating on interesting technical challenges.",
 		url: `${baseUrl}/chat`,
+		siteName: "Murad Abdulkadyrov",
+		locale: "en_US",
 		type: "website",
+		images: [
+			{
+				url: ogImage,
+			},
+		],
 	},
 	twitter: {
 		card: "summary_large_image",
 		title: "Chat | Murad Abdulkadyrov",
 		description:
 			"Get in touch with me. I help startups with product advising and enjoy collaborating on interesting technical challenges.",
+		images: [ogImage],
 		creator: "@murabcd",
 	},
 };

@@ -22,6 +22,8 @@ const geistMono = Geist_Mono({
 	subsets: ["latin"],
 });
 
+const ogImage = new URL("/api/og", baseUrl).toString();
+
 export const metadata: Metadata = {
 	metadataBase: new URL(baseUrl),
 	title: {
@@ -39,12 +41,17 @@ export const metadata: Metadata = {
 		siteName: "Murad Abdulkadyrov",
 		locale: "en_US",
 		type: "website",
+		images: [
+			{
+				url: ogImage,
+			},
+		],
 	},
 	twitter: {
 		card: "summary_large_image",
 		title: "Murad Abdulkadyrov",
 		description: "Exploring AI, tech, and product building.",
-		images: ["/api/og"],
+		images: [ogImage],
 		creator: "@murabcd",
 	},
 	robots: {

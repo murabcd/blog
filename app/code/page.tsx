@@ -5,6 +5,8 @@ import { api } from "@/convex/_generated/api";
 import { formatDate } from "@/lib/utils";
 import { baseUrl } from "@/app/sitemap";
 
+const ogImage = new URL("/api/og", baseUrl).toString();
+
 export const metadata: Metadata = {
 	title: "Code",
 	description:
@@ -14,13 +16,21 @@ export const metadata: Metadata = {
 		description:
 			"Open source projects and code I've written. Including AI agents, voice applications, and other tools.",
 		url: `${baseUrl}/code`,
+		siteName: "Murad Abdulkadyrov",
+		locale: "en_US",
 		type: "website",
+		images: [
+			{
+				url: ogImage,
+			},
+		],
 	},
 	twitter: {
 		card: "summary_large_image",
 		title: "Code | Murad Abdulkadyrov",
 		description:
 			"Open source projects and code I've written. Including AI agents, voice applications, and other tools.",
+		images: [ogImage],
 		creator: "@murabcd",
 	},
 };

@@ -4,6 +4,8 @@ import { api } from "@/convex/_generated/api";
 import { BlogPosts } from "@/components/posts";
 import { baseUrl } from "./sitemap";
 
+const ogImage = new URL("/api/og", baseUrl).toString();
+
 export const metadata: Metadata = {
 	title: "Home",
 	description:
@@ -14,12 +16,20 @@ export const metadata: Metadata = {
 			"Chief Product Officer at Flomni. Exploring AI, tech, and product building. Sharing real experiences, ideas, and lessons from building products and leading teams.",
 		url: baseUrl,
 		type: "website",
+		siteName: "Murad Abdulkadyrov",
+		locale: "en_US",
+		images: [
+			{
+				url: ogImage,
+			},
+		],
 	},
 	twitter: {
 		card: "summary_large_image",
 		title: "Murad Abdulkadyrov",
 		description:
 			"Chief Product Officer at Flomni. Exploring AI, tech, and product building. Sharing real experiences, ideas, and lessons from building products and leading teams.",
+		images: [ogImage],
 		creator: "@murabcd",
 	},
 };

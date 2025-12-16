@@ -34,7 +34,7 @@ export async function generateMetadata({
 	} = event;
 	const ogImage = image
 		? image
-		: `${baseUrl}/og?title=${encodeURIComponent(title)}`;
+		: `${baseUrl}/api/og?title=${encodeURIComponent(title)}`;
 	const url = `${baseUrl}/talk/${event.slug}`;
 
 	return {
@@ -84,7 +84,7 @@ export default async function EventPage({
 
 	const ogImage = event.image
 		? event.image
-		: `${baseUrl}/og?title=${encodeURIComponent(event.title)}`;
+		: `${baseUrl}/api/og?title=${encodeURIComponent(event.title)}`;
 	const url = `${baseUrl}/talk/${event.slug}`;
 
 	const jsonLd = {

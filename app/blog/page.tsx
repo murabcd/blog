@@ -1,6 +1,9 @@
 import { fetchQuery } from "convex/nextjs";
 import { api } from "@/convex/_generated/api";
 import { BlogPosts } from "@/components/posts";
+import { baseUrl } from "@/app/sitemap";
+
+const ogImage = new URL("/api/og", baseUrl).toString();
 
 export const metadata = {
 	title: "Blog",
@@ -10,13 +13,22 @@ export const metadata = {
 		title: "Blog | Murad Abdulkadyrov",
 		description:
 			"Articles on AI, tech, product building, and leadership. Exploring practical insights from building products and leading teams.",
+		url: `${baseUrl}/blog`,
+		siteName: "Murad Abdulkadyrov",
+		locale: "en_US",
 		type: "website",
+		images: [
+			{
+				url: ogImage,
+			},
+		],
 	},
 	twitter: {
 		card: "summary_large_image",
 		title: "Blog | Murad Abdulkadyrov",
 		description:
 			"Articles on AI, tech, product building, and leadership. Exploring practical insights from building products and leading teams.",
+		images: [ogImage],
 		creator: "@murabcd",
 	},
 };
