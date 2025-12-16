@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { slugify } from "@/lib/utils";
-import { CircleArrowUp } from "lucide-react";
+import { CircleArrowUp, ChartNoAxesGantt } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
 interface TocEntry {
@@ -93,14 +93,15 @@ export function Toc({ mdxContent }: TocProps) {
 
 	return (
 		<div className="sticky top-24 hidden lg:block">
+			<div className="mb-2 flex items-center gap-2">
+				<ChartNoAxesGantt className="h-4 w-4" />
+				<p className="tracking-tight text-sm font-medium">On this page</p>
+			</div>
 			<div className="flex items-stretch gap-4">
 				<div className="flex items-center">
 					<Separator orientation="vertical" className="h-full" />
 				</div>
 				<div>
-					<p className="mb-2 tracking-tight text-sm font-medium">
-						On this page
-					</p>
 					<ul className="space-y-1">
 						{toc.map(({ level, text, slug }) => (
 							<li
