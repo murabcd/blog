@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { fetchQuery } from "convex/nextjs";
+import { api } from "@/convex/_generated/api";
 
 import { formatDate } from "@/lib/utils";
-import { getTalksEvents } from "@/lib/server-utils";
 import { baseUrl } from "@/app/sitemap";
 import { CustomMDX } from "@/components/mdx";
 
 export async function generateStaticParams() {
-	const events = getTalksEvents();
+	const events = await fetchQuery(api.talk.getAllEvents);
 
 	return events.map((event) => ({
 		slug: event.slug,
@@ -20,7 +21,7 @@ export async function generateMetadata({
 	params: Promise<{ slug: string }>;
 }): Promise<Metadata | undefined> {
 	const { slug } = await params;
-	const event = getTalksEvents().find((event) => event.slug === slug);
+	const event = await fetchQuery(api.talk.getEventBySlug, { slug });
 	if (!event) {
 		return;
 	}
@@ -30,7 +31,7 @@ export async function generateMetadata({
 		publishedAt: publishedTime,
 		summary: description,
 		image,
-	} = event.metadata;
+	} = event;
 	const ogImage = image
 		? image
 		: `${baseUrl}/og?title=${encodeURIComponent(title)}`;
@@ -75,24 +76,24 @@ export default async function EventPage({
 	params: Promise<{ slug: string }>;
 }) {
 	const { slug } = await params;
-	const event = getTalksEvents().find((event) => event.slug === slug);
+	const event = await fetchQuery(api.talk.getEventBySlug, { slug });
 
 	if (!event) {
 		notFound();
 	}
 
-	const ogImage = event.metadata.image
-		? event.metadata.image
-		: `${baseUrl}/og?title=${encodeURIComponent(event.metadata.title)}`;
+	const ogImage = event.image
+		? event.image
+		: `${baseUrl}/og?title=${encodeURIComponent(event.title)}`;
 	const url = `${baseUrl}/talk/${event.slug}`;
 
 	const jsonLd = {
 		"@context": "https://schema.org",
 		"@type": "Event",
-		name: event.metadata.title,
-		description: event.metadata.summary,
+		name: event.title,
+		description: event.summary,
 		image: ogImage,
-		startDate: event.metadata.publishedAt,
+		startDate: event.publishedAt,
 		organizer: {
 			"@type": "Person",
 			name: "Murad Abdulkadyrov",
@@ -109,11 +110,11 @@ export default async function EventPage({
 			/>
 			<section>
 				<h1 className="title font-semibold text-2xl tracking-tighter">
-					{event.metadata.title}
+					{event.title}
 				</h1>
 				<div className="flex justify-between items-center mt-2 mb-8 text-sm">
 					<p className="text-sm text-muted-foreground">
-						{formatDate(event.metadata.publishedAt)}{" "}
+						{formatDate(event.publishedAt)}{" "}
 					</p>
 				</div>
 				<article className="prose">

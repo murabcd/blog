@@ -3,6 +3,8 @@
   <h1 align="center">Blog</h1>
 </a>
 
+This blog uses a CMS-style workflow where content is stored in Convex and synced from markdown/MDX files.
+
 <p align="center">
   Blog Built with Next.js and Convex.
 </p>
@@ -10,6 +12,7 @@
 <p align="center">
   <a href="#features"><strong>Features</strong></a> ·
   <a href="#running-locally"><strong>Running locally</strong></a> ·
+  <a href="#syncing-content"><strong>Syncing content</strong></a> ·
   <a href="#license"><strong>License</strong></a>
 </p>
 <br/>
@@ -31,9 +34,9 @@
 
 ## Running locally
 
-You will need to use the environment variables [defined in `.env.example`](.env.example) to run OpenChat. It's recommended you use [Vercel Environment Variables](https://vercel.com/docs/projects/environment-variables) for this, but a `.env` file is all that is necessary.
+You will need to use the environment variables [defined in `.env.example`](.env.example) to run the blog. It's recommended you use [Vercel Environment Variables](https://vercel.com/docs/projects/environment-variables) for this, but a `.env` file is all that is necessary.
 
-> Note: You should not commit your `.env` file or it will expose secrets that will allow others to control access to your various OpenAI and authentication provider accounts.
+> Note: You should not commit your `.env` file or it will expose secrets.
 
 1. Install Vercel CLI: `bun i -g vercel`
 2. Link local instance with Vercel and GitHub accounts (creates `.vercel` directory): `vercel link`
@@ -46,6 +49,12 @@ bun dev
 
 Your app should now be running on [localhost:3000](http://localhost:3000/)
 
+## Syncing content
+
+- `sync` / `sync:prod`: Use when you only changed content files (MDX/markdown)
+- `deploy` / `deploy:prod`: Use when you changed code, Convex functions, or schema
+
+Make sure you have `.env.production.local` with your production Convex URL:
 
 ## License
 

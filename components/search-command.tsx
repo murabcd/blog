@@ -2,6 +2,8 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
 import { Search, NotebookText, Presentation } from "lucide-react";
 
@@ -15,40 +17,11 @@ import {
 	CommandSeparator,
 } from "@/components/ui/command";
 
-type Content = {
-	metadata: {
-		title: string;
-		publishedAt: string;
-		summary: string;
-	};
-	slug: string;
-};
-
 export function SearchCommand() {
 	const router = useRouter();
 	const [open, setOpen] = React.useState(false);
-	const [blogs, setBlog] = React.useState<Content[]>([]);
-	const [talks, setTalks] = React.useState<Content[]>([]);
-
-	React.useEffect(() => {
-		const fetchContent = async () => {
-			try {
-				const [blogResponse, talksResponse] = await Promise.all([
-					fetch("/api/blog"),
-					fetch("/api/talk"),
-				]);
-				const [blogData, talksData] = await Promise.all([
-					blogResponse.json(),
-					talksResponse.json(),
-				]);
-				setBlog(blogData);
-				setTalks(talksData);
-			} catch (error) {
-				console.error("Failed to fetch content:", error);
-			}
-		};
-		fetchContent();
-	}, []);
+	const blogs = useQuery(api.blog.getAllPosts) ?? [];
+	const talks = useQuery(api.talk.getAllEvents) ?? [];
 
 	React.useEffect(() => {
 		const down = (e: KeyboardEvent) => {
@@ -83,16 +56,16 @@ export function SearchCommand() {
 				<CommandList>
 					<CommandEmpty>No results found.</CommandEmpty>
 					<CommandGroup heading="Posts">
-						{blogs.map((Content) => (
+						{blogs.map((post) => (
 							<CommandItem
-								key={Content.slug}
+								key={post.slug}
 								onSelect={() => {
-									router.push(`/blog/${Content.slug}`);
+									router.push(`/blog/${post.slug}`);
 									setOpen(false);
 								}}
 							>
 								<NotebookText className="mr-2 h-4 w-4" />
-								<span>{Content.metadata.title}</span>
+								<span>{post.title}</span>
 							</CommandItem>
 						))}
 					</CommandGroup>
@@ -107,7 +80,7 @@ export function SearchCommand() {
 								}}
 							>
 								<Presentation className="mr-2 h-4 w-4" />
-								<span>{talk.metadata.title}</span>
+								<span>{talk.title}</span>
 							</CommandItem>
 						))}
 					</CommandGroup>

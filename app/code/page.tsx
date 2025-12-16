@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { fetchQuery } from "convex/nextjs";
+import { api } from "@/convex/_generated/api";
 import { formatDate } from "@/lib/utils";
 import { baseUrl } from "@/app/sitemap";
 
@@ -23,36 +25,15 @@ export const metadata: Metadata = {
 	},
 };
 
-const codeProjects = [
-	{
-		title: "Lead Agent",
-		href: "https://github.com/murabcd/lead-agent",
-		date: "2025-11-22",
-	},
-	{
-		title: "VibeStack",
-		href: "https://github.com/murabcd/vibestack",
-		date: "2025-11-02",
-	},
-	{
-		title: "Realtime AI Voice Agent",
-		href: "https://github.com/murabcd/voice-agent",
-		date: "2025-06-19",
-	},
-	{
-		title: "AI Chatbot",
-		href: "https://github.com/murabcd/openchat",
-		date: "2025-05-21",
-	},
-];
+export default async function Page() {
+	const projects = await fetchQuery(api.code.getAllProjects);
 
-export default function Page() {
 	return (
 		<section>
 			<h1 className="font-semibold text-2xl mb-8 tracking-tighter">Code</h1>
 			<div className="relative">
 				<div className="space-y-4">
-					{codeProjects.map((project) => (
+					{projects.map((project) => (
 						<Link
 							key={project.href}
 							href={project.href}

@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { fetchQuery } from "convex/nextjs";
+import { api } from "@/convex/_generated/api";
 import { BlogPosts } from "@/components/posts";
 import { baseUrl } from "./sitemap";
 
@@ -22,7 +24,9 @@ export const metadata: Metadata = {
 	},
 };
 
-export default function Page() {
+export default async function Page() {
+	const posts = await fetchQuery(api.blog.getAllPosts);
+
 	return (
 		<section>
 			<h1 className="mb-8 text-2xl font-semibold tracking-tighter">
@@ -47,7 +51,7 @@ export default function Page() {
 				{`This blog is where I share what I'm learning from working with AI and tech, to building products and leading teams. Nothing fancy - just real experiences, ideas, and lessons worth sharing.`}
 			</p>
 			<div className="my-8">
-				<BlogPosts limit={5} />
+				<BlogPosts posts={posts} limit={5} />
 			</div>
 		</section>
 	);

@@ -82,24 +82,32 @@ html {
 	@apply visible;
 }
 
-.prose pre {
+.prose pre code[class*="language-"] {
+	@apply p-0;
+	border: initial;
+	line-height: 1.5;
+	background-color: transparent;
+	padding: 0;
+}
+
+.prose pre:not(:has(code[class*="language-"])) {
 	@apply rounded-lg overflow-x-auto text-sm;
 	background-color: var(--secondary);
 	border: 1px solid var(--border);
 	padding: 0.5rem 0.75rem;
 }
 
-.prose code {
-	@apply rounded-lg;
-	padding: 0.125rem 0.25rem;
-	background-color: var(--secondary);
-}
-
-.prose pre code {
+.prose pre:not(:has(code[class*="language-"])) code {
 	@apply p-0;
 	border: initial;
 	line-height: 1.5;
 	background-color: transparent;
+}
+
+.prose code:not([class*="language-"]) {
+	@apply rounded-lg;
+	padding: 0.125rem 0.25rem;
+	background-color: var(--secondary);
 }
 
 .prose code span {

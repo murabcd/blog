@@ -1,3 +1,5 @@
+import { fetchQuery } from "convex/nextjs";
+import { api } from "@/convex/_generated/api";
 import { TalksEvents } from "@/components/events";
 
 export const metadata = {
@@ -19,11 +21,13 @@ export const metadata = {
 	},
 };
 
-export default function Page() {
+export default async function Page() {
+	const events = await fetchQuery(api.talk.getAllEvents);
+
 	return (
 		<section>
 			<h1 className="font-semibold text-2xl mb-8 tracking-tighter">Talk</h1>
-			<TalksEvents />
+			<TalksEvents events={events} />
 		</section>
 	);
 }

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { fetchQuery } from "convex/nextjs";
+import { api } from "@/convex/_generated/api";
 
 import { baseUrl } from "@/app/sitemap";
 import { CustomMDX } from "@/components/mdx";
@@ -7,11 +9,10 @@ import { LikeButton } from "@/components/like-button";
 import { ShareButton } from "@/components/share-button";
 import { CopyPageButton } from "@/components/copy-page-button";
 import { Toc } from "@/components/toc";
-import { getBlogPosts } from "@/lib/server-utils";
 import { calculateReadingTime, formatDate } from "@/lib/utils";
 
 export async function generateStaticParams() {
-	const posts = getBlogPosts();
+	const posts = await fetchQuery(api.blog.getAllPosts);
 
 	return posts.map((post) => ({
 		slug: post.slug,
@@ -24,7 +25,7 @@ export async function generateMetadata({
 	params: Promise<{ slug: string }>;
 }): Promise<Metadata | undefined> {
 	const { slug } = await params;
-	const post = getBlogPosts().find((post) => post.slug === slug);
+	const post = await fetchQuery(api.blog.getPostBySlug, { slug });
 	if (!post) {
 		return;
 	}
@@ -34,7 +35,7 @@ export async function generateMetadata({
 		publishedAt: publishedTime,
 		summary: description,
 		image,
-	} = post.metadata;
+	} = post;
 	const ogImage = image
 		? image
 		: `${baseUrl}/og?title=${encodeURIComponent(title)}`;
@@ -79,25 +80,25 @@ export default async function Blog({
 	params: Promise<{ slug: string }>;
 }) {
 	const { slug } = await params;
-	const post = getBlogPosts().find((post) => post.slug === slug);
+	const post = await fetchQuery(api.blog.getPostBySlug, { slug });
 
 	if (!post) {
 		notFound();
 	}
 
-	const ogImage = post.metadata.image
-		? post.metadata.image
-		: `${baseUrl}/og?title=${encodeURIComponent(post.metadata.title)}`;
+	const ogImage = post.image
+		? post.image
+		: `${baseUrl}/og?title=${encodeURIComponent(post.title)}`;
 	const url = `${baseUrl}/blog/${post.slug}`;
 
 	const jsonLd = {
 		"@context": "https://schema.org",
 		"@type": "BlogPosting",
-		headline: post.metadata.title,
-		description: post.metadata.summary,
+		headline: post.title,
+		description: post.summary,
 		image: ogImage,
-		datePublished: post.metadata.publishedAt,
-		dateModified: post.metadata.publishedAt,
+		datePublished: post.publishedAt,
+		dateModified: post.publishedAt,
 		author: {
 			"@type": "Person",
 			name: "Murad Abdulkadyrov",
@@ -118,11 +119,11 @@ export default async function Blog({
 			/>
 			<section>
 				<h1 className="title font-semibold text-2xl tracking-tighter">
-					{post.metadata.title}
+					{post.title}
 				</h1>
 				<div className="mt-2 mb-4 text-sm">
 					<p className="text-sm text-muted-foreground">
-						{formatDate(post.metadata.publishedAt)} ·{" "}
+						{formatDate(post.publishedAt)} ·{" "}
 						{calculateReadingTime(post.content)}
 					</p>
 				</div>
@@ -131,9 +132,9 @@ export default async function Blog({
 					<LikeButton postSlug={post.slug} />
 					<ShareButton
 						postSlug={post.slug}
-						title={post.metadata.title}
-						description={post.metadata.summary}
-						publishedAt={formatDate(post.metadata.publishedAt)}
+						title={post.title}
+						description={post.summary}
+						publishedAt={formatDate(post.publishedAt)}
 						author="Murad Abdulkadyrov"
 					/>
 					<div className="ml-auto">

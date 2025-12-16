@@ -2,7 +2,7 @@ import Image, { type ImageProps } from "next/image";
 import Link from "next/link";
 import { MDXRemote, type MDXRemoteProps } from "next-mdx-remote/rsc";
 import React from "react";
-import { highlight } from "sugar-high";
+import { CodeBlock } from "@/components/code-block";
 import { slugify } from "@/lib/utils";
 
 type TableProps = {
@@ -17,7 +17,8 @@ type CustomLinkProps = React.AnchorHTMLAttributes<HTMLAnchorElement> & {
 };
 
 type CodeProps = React.HTMLAttributes<HTMLElement> & {
-	children?: string;
+	children?: string | React.ReactNode;
+	className?: string;
 };
 
 type HeadingProps = {
@@ -99,10 +100,57 @@ function RoundedImage(props: ImageProps) {
 	return <Image alt={alt} className="rounded-lg" {...rest} />;
 }
 
-function Code({ children, ...props }: CodeProps) {
-	const codeHTML = highlight(children || "");
-	// biome-ignore lint/security/noDangerouslySetInnerHtml: syntax highlighting HTML
-	return <code dangerouslySetInnerHTML={{ __html: codeHTML }} {...props} />;
+function Code({ children, className, ...props }: CodeProps) {
+	// Check if this is a code block (has language class) or inline code
+	const isCodeBlock = className?.startsWith("language-");
+
+	if (isCodeBlock) {
+		// Code block - extract text content
+		const codeString =
+			typeof children === "string"
+				? children
+				: typeof children === "object" &&
+						children !== null &&
+						"props" in children
+					? String(
+							(children as { props?: { children?: string } }).props?.children ||
+								"",
+						)
+					: String(children || "");
+
+		return <CodeBlock className={className}>{codeString}</CodeBlock>;
+	}
+
+	// Inline code - simple styling without highlighting
+	return (
+		<code
+			className={`${className || ""} bg-muted px-1.5 py-0.5 rounded text-sm font-mono`}
+			{...props}
+		>
+			{children}
+		</code>
+	);
+}
+
+type PreProps = React.HTMLAttributes<HTMLPreElement> & {
+	children?: React.ReactNode;
+};
+
+function Pre({ children, ...props }: PreProps) {
+	// Check if children is a code element with language class
+	// If so, Code component will handle rendering, so we don't need the pre wrapper
+	if (
+		React.isValidElement(children) &&
+		children.type === "code" &&
+		typeof children.props.className === "string" &&
+		children.props.className.startsWith("language-")
+	) {
+		// Return children directly - Code component will handle the block rendering
+		return <>{children}</>;
+	}
+
+	// For other pre content, render normally
+	return <pre {...props}>{children}</pre>;
 }
 
 function Blockquote(props: React.BlockquoteHTMLAttributes<HTMLQuoteElement>) {
@@ -123,6 +171,7 @@ const components = {
 	h6: createHeading(6),
 	Image: RoundedImage,
 	a: CustomLink,
+	pre: Pre,
 	code: Code,
 	Table,
 	blockquote: Blockquote,

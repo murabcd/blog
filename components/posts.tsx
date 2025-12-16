@@ -1,12 +1,23 @@
 import Link from "next/link";
 import { formatDate } from "@/lib/utils";
-import { getBlogPosts } from "@/lib/server-utils";
 
-export function BlogPosts({ limit }: { limit?: number }) {
-	let allBlogs = getBlogPosts();
+type BlogPost = {
+	slug: string;
+	title: string;
+	publishedAt: string;
+};
+
+export function BlogPosts({
+	posts,
+	limit,
+}: {
+	posts: BlogPost[];
+	limit?: number;
+}) {
+	let allBlogs = [...posts];
 
 	allBlogs = allBlogs.sort((a, b) => {
-		if (new Date(a.metadata.publishedAt) > new Date(b.metadata.publishedAt)) {
+		if (new Date(a.publishedAt) > new Date(b.publishedAt)) {
 			return -1;
 		}
 		return 1;
@@ -27,10 +38,10 @@ export function BlogPosts({ limit }: { limit?: number }) {
 					>
 						<div className="flex flex-col md:flex-row gap-2">
 							<p className="text-muted-foreground w-[110px] tabular-nums">
-								{formatDate(post.metadata.publishedAt, false)}
+								{formatDate(post.publishedAt, false)}
 							</p>
 							<p className="text-foreground tracking-tight group-hover:underline">
-								{post.metadata.title}
+								{post.title}
 							</p>
 						</div>
 					</Link>

@@ -1,19 +1,19 @@
 import Link from "next/link";
 import { formatDate } from "@/lib/utils";
-import { getTalksEvents } from "@/lib/server-utils";
 
-export function TalksEvents() {
-	const allEvents = getTalksEvents();
+type TalkEvent = {
+	slug: string;
+	title: string;
+	publishedAt: string;
+};
 
+export function TalksEvents({ events }: { events: TalkEvent[] }) {
 	return (
 		<div className="relative">
 			<div className="space-y-4">
-				{allEvents
+				{events
 					.sort((a, b) => {
-						if (
-							new Date(a.metadata.publishedAt) >
-							new Date(b.metadata.publishedAt)
-						) {
+						if (new Date(a.publishedAt) > new Date(b.publishedAt)) {
 							return -1;
 						}
 						return 1;
@@ -26,10 +26,10 @@ export function TalksEvents() {
 						>
 							<div className="flex flex-col md:flex-row gap-2">
 								<p className="text-muted-foreground w-[110px] tabular-nums">
-									{formatDate(event.metadata.publishedAt, false)}
+									{formatDate(event.publishedAt, false)}
 								</p>
 								<p className="text-foreground tracking-tight group-hover:underline">
-									{event.metadata.title}
+									{event.title}
 								</p>
 							</div>
 						</Link>
