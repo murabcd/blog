@@ -101,11 +101,9 @@ function RoundedImage(props: ImageProps) {
 }
 
 function Code({ children, className, ...props }: CodeProps) {
-	// Check if this is a code block (has language class) or inline code
 	const isCodeBlock = className?.startsWith("language-");
 
 	if (isCodeBlock) {
-		// Code block - extract text content
 		const codeString =
 			typeof children === "string"
 				? children
@@ -137,19 +135,15 @@ type PreProps = React.HTMLAttributes<HTMLPreElement> & {
 };
 
 function Pre({ children, ...props }: PreProps) {
-	// Check if children is a code element with language class
-	// If so, Code component will handle rendering, so we don't need the pre wrapper
 	if (
-		React.isValidElement(children) &&
+		React.isValidElement<{ className?: string }>(children) &&
 		children.type === "code" &&
 		typeof children.props.className === "string" &&
 		children.props.className.startsWith("language-")
 	) {
-		// Return children directly - Code component will handle the block rendering
 		return <>{children}</>;
 	}
 
-	// For other pre content, render normally
 	return <pre {...props}>{children}</pre>;
 }
 
