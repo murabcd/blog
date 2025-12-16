@@ -120,13 +120,13 @@ export function Toc({ mdxContent }: TocProps) {
 				</div>
 			</div>
 			{showBackToTop && (
-				<div className="mt-4 pl-[calc(1rem+1px)]">
+				<div className="mt-4">
 					<button
 						type="button"
 						onClick={scrollToTop}
-						className="flex items-center text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer bg-transparent border-none p-0 w-auto"
+						className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer bg-transparent border-none p-0 w-auto"
 					>
-						<CircleArrowUp className="h-3 w-3 mr-1" />
+						<CircleArrowUp className="h-3 w-3" />
 						Back to top
 					</button>
 				</div>
