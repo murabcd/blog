@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { fetchQuery } from "convex/nextjs";
-import { api } from "@/convex/_generated/api";
 import { baseUrl } from "@/app/sitemap";
 import { CustomMDX } from "@/components/mdx";
+import { fetchQuery } from "convex/nextjs";
+import { unstable_cache } from "next/cache";
+import { api } from "@/convex/_generated/api";
 
 const ogImage = new URL("/api/og", baseUrl).toString();
 
@@ -34,8 +35,19 @@ export const metadata: Metadata = {
 	},
 };
 
+const getChatPageCached = unstable_cache(
+	async () => {
+		return fetchQuery(api.pages.getPageBySlug, { slug: "chat" });
+	},
+	["convex", "pages", "getPageBySlug", "chat"],
+	{
+		tags: ["pages"],
+		revalidate: 300,
+	},
+);
+
 export default async function Page() {
-	const page = await fetchQuery(api.pages.getPageBySlug, { slug: "chat" });
+	const page = await getChatPageCached();
 
 	if (!page) {
 		return (

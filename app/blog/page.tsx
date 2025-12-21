@@ -1,7 +1,8 @@
-import { fetchQuery } from "convex/nextjs";
-import { api } from "@/convex/_generated/api";
 import { BlogPosts } from "@/components/posts";
 import { baseUrl } from "@/app/sitemap";
+import { fetchQuery } from "convex/nextjs";
+import { unstable_cache } from "next/cache";
+import { api } from "@/convex/_generated/api";
 
 const ogImage = new URL("/api/og", baseUrl).toString();
 
@@ -33,8 +34,19 @@ export const metadata = {
 	},
 };
 
+const getAllBlogPostsCached = unstable_cache(
+	async () => {
+		return fetchQuery(api.blog.getAllPosts);
+	},
+	["convex", "blog", "getAllPosts"],
+	{
+		tags: ["blogPosts"],
+		revalidate: 60,
+	},
+);
+
 export default async function Page() {
-	const posts = await fetchQuery(api.blog.getAllPosts);
+	const posts = await getAllBlogPostsCached();
 
 	return (
 		<section>

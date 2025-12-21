@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { fetchQuery } from "convex/nextjs";
-import { api } from "@/convex/_generated/api";
 import { formatDate } from "@/lib/utils";
 import { baseUrl } from "@/app/sitemap";
+import { fetchQuery } from "convex/nextjs";
+import { unstable_cache } from "next/cache";
+import { api } from "@/convex/_generated/api";
 
 const ogImage = new URL("/api/og", baseUrl).toString();
 
@@ -35,8 +36,19 @@ export const metadata: Metadata = {
 	},
 };
 
+const getAllCodeProjectsCached = unstable_cache(
+	async () => {
+		return fetchQuery(api.code.getAllProjects);
+	},
+	["convex", "code", "getAllProjects"],
+	{
+		tags: ["codeProjects"],
+		revalidate: 300,
+	},
+);
+
 export default async function Page() {
-	const projects = await fetchQuery(api.code.getAllProjects);
+	const projects = await getAllCodeProjectsCached();
 
 	return (
 		<section>

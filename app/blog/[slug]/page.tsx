@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { fetchQuery } from "convex/nextjs";
+import { unstable_cache } from "next/cache";
 import { api } from "@/convex/_generated/api";
 
 import { baseUrl } from "@/app/sitemap";
@@ -11,8 +12,30 @@ import { CopyPageButton } from "@/components/copy-page-button";
 import { Toc } from "@/components/toc";
 import { calculateReadingTime, formatDate } from "@/lib/utils";
 
+const getAllBlogPostsCached = unstable_cache(
+	async () => {
+		return fetchQuery(api.blog.getAllPosts);
+	},
+	["convex", "blog", "getAllPosts"],
+	{
+		tags: ["blogPosts"],
+		revalidate: 60,
+	},
+);
+
+const getBlogPostBySlugCached = unstable_cache(
+	async (slug: string) => {
+		return fetchQuery(api.blog.getPostBySlug, { slug });
+	},
+	["convex", "blog", "getPostBySlug"],
+	{
+		tags: ["blogPosts"],
+		revalidate: 300,
+	},
+);
+
 export async function generateStaticParams() {
-	const posts = await fetchQuery(api.blog.getAllPosts);
+	const posts = await getAllBlogPostsCached();
 
 	return posts.map((post) => ({
 		slug: post.slug,
@@ -25,7 +48,7 @@ export async function generateMetadata({
 	params: Promise<{ slug: string }>;
 }): Promise<Metadata | undefined> {
 	const { slug } = await params;
-	const post = await fetchQuery(api.blog.getPostBySlug, { slug });
+	const post = await getBlogPostBySlugCached(slug);
 	if (!post) {
 		return;
 	}
@@ -80,7 +103,7 @@ export default async function Blog({
 	params: Promise<{ slug: string }>;
 }) {
 	const { slug } = await params;
-	const post = await fetchQuery(api.blog.getPostBySlug, { slug });
+	const post = await getBlogPostBySlugCached(slug);
 
 	if (!post) {
 		notFound();

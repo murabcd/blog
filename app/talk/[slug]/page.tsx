@@ -1,14 +1,37 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { fetchQuery } from "convex/nextjs";
+import { unstable_cache } from "next/cache";
 import { api } from "@/convex/_generated/api";
 
 import { formatDate } from "@/lib/utils";
 import { baseUrl } from "@/app/sitemap";
 import { CustomMDX } from "@/components/mdx";
 
+const getAllTalkEventsCached = unstable_cache(
+	async () => {
+		return fetchQuery(api.talk.getAllEvents);
+	},
+	["convex", "talk", "getAllEvents"],
+	{
+		tags: ["talkEvents"],
+		revalidate: 60,
+	},
+);
+
+const getTalkEventBySlugCached = unstable_cache(
+	async (slug: string) => {
+		return fetchQuery(api.talk.getEventBySlug, { slug });
+	},
+	["convex", "talk", "getEventBySlug"],
+	{
+		tags: ["talkEvents"],
+		revalidate: 300,
+	},
+);
+
 export async function generateStaticParams() {
-	const events = await fetchQuery(api.talk.getAllEvents);
+	const events = await getAllTalkEventsCached();
 
 	return events.map((event) => ({
 		slug: event.slug,
@@ -21,7 +44,7 @@ export async function generateMetadata({
 	params: Promise<{ slug: string }>;
 }): Promise<Metadata | undefined> {
 	const { slug } = await params;
-	const event = await fetchQuery(api.talk.getEventBySlug, { slug });
+	const event = await getTalkEventBySlugCached(slug);
 	if (!event) {
 		return;
 	}
@@ -76,7 +99,7 @@ export default async function EventPage({
 	params: Promise<{ slug: string }>;
 }) {
 	const { slug } = await params;
-	const event = await fetchQuery(api.talk.getEventBySlug, { slug });
+	const event = await getTalkEventBySlugCached(slug);
 
 	if (!event) {
 		notFound();

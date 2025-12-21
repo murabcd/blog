@@ -36,6 +36,7 @@ export function Navbar() {
 								<Link
 									key={path}
 									href={path}
+									prefetch
 									className="transition-all hover:text-primary"
 								>
 									{name}
