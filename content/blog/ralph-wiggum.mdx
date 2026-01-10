@@ -1,0 +1,119 @@
+---
+title: "Ralph: The Loop That Codes While You Sleep"
+publishedAt: "2026-01-02"
+summary: "We are moving from agents that chat to agents that loop. 'Ralph' is a new pattern for autonomous coding where an AI repeatedly picks tasks from a list, writes code, tests it, and commits it—all while you are away."
+---
+
+## The Problem with Chatting
+
+Most developers use AI agents like a chat buddy. You open a window, paste in a request ("Make the button blue"), wait for the code, paste it into your editor, fix the inevitable bugs, and repeat.
+
+It is faster than coding by hand, but you are still the bottleneck. You have to be there. You are the human router passing data back and forth.
+
+A new pattern called "Ralph" flips this model. Instead of a conversation, it’s a **loop**. You give the AI a plan, a set of tools, and a simple script. The AI wakes up, grabs the first task, finishes it, commits the code, and then *restarts itself* to do the next one. You go to sleep, and you wake up to a stack of completed features.
+
+## How Ralph Works
+
+Ralph isn't a product you buy; it's a technique you use. It relies on a few simple text files and a bash script working together.
+
+The core philosophy is **Fresh Context**. Long conversations make AI stupid. They get confused by their own history. Ralph solves this by wiping the agent's memory after every single task. It starts fresh every time, looking at the code as it exists right now, not remembering the mistakes it made ten minutes ago.
+
+To make this work, you need three things:
+1.  **The Brain:** A CLI agent (like Anthropic's `claude`).
+2.  **The Plan:** A file (like `PRD.md`) that lists what needs to be done.
+3.  **The Memory:** A file (like `progress.txt`) where the agent writes notes to its future self.
+
+## The Blueprint: How to Build It
+
+Here is the exact setup you can use to run a Ralph loop on your own machine.
+
+### 1. The File Structure
+Create a folder in your project (e.g., `ralph/`) and add these files:
+
+```
+/ralph
+  ├── PRD.md          # The list of tasks (Product Requirements Document)
+  ├── progress.txt    # The shared memory log
+  └── loop.sh         # The script that runs everything
+```
+
+### 2. The Plan (PRD.md)
+This is your backlog. The trick is to be extremely granular. Don't write "Build Login." Break it down so each step fits in one context window.
+
+```
+# Product Requirements
+
+- [ ] Create the database schema for the User table
+- [ ] Create the server action for user registration
+- [ ] Build the registration UI form component
+- [ ] Add Zod validation to the form
+- [ ] Write a test for the registration flow
+```
+
+### 3. The Loop Script (loop.sh)
+This is the engine. It runs the agent, captures the output, and checks if the job is done.
+
+```
+#!/bin/bash
+set -e # Stop if any command fails
+
+# Run for 10 iterations (or however many you need)
+for ((i=1; i<=10; i++)); do
+  echo "🚀 Starting Iteration $i..."
+
+  # Run the agent (using Claude Code)
+  # We pipe the prompt directly into the agent
+  result=$(claude -p "
+    You are an autonomous developer.
+    1. Read 'ralph/PRD.md' to see what needs to be done.
+    2. Read 'ralph/progress.txt' to learn from past mistakes.
+    3. Pick the first unchecked task.
+    4. Implement it. Run tests to verify.
+    5. Commit your changes: 'feat: [task name]'
+    6. Check the box in PRD.md.
+    7. Append lessons learned to progress.txt.
+    
+    If all tasks are checked, output: <STOP_SIGNAL>
+  ")
+
+  # Print the result to the console so you can see it
+  echo "$result"
+
+  # Check if the agent is finished
+  if [[ "$result" == *"<STOP_SIGNAL>"* ]]; then
+    echo "✅ All tasks complete!"
+    exit 0
+  fi
+
+  echo "Sleeping for 5 seconds..."
+  sleep 5
+done
+```
+
+## The Secret Sauce: Compound Learning
+
+The most brilliant part of this architecture is the `progress.txt` file.
+
+Since the agent's memory is wiped every time the loop restarts, how does it avoid making the same mistake twice? It writes it down.
+
+If the agent tries to run a database migration in Iteration 1 and fails because of a missing library, it fixes it and writes in `progress.txt`: *"Note: The migration command requires the 'ts-node' flag."*
+
+In Iteration 2, the *new* agent starts up. It has no memory of Iteration 1, but it reads `progress.txt`. It sees the warning. It avoids the error.
+
+By the tenth iteration, your agent has built up a customized handbook for your specific codebase. It knows your quirky naming conventions, your testing commands, and your architecture better than a human contractor would.
+
+## Success Factors
+
+Running Ralph isn't magic; it requires a new kind of engineering discipline.
+
+*   **Granularity is King:** If a task is too big ("Refactor the entire backend"), the agent will timeout or get confused. You must break tasks down into 10-minute chunks.
+*   **Fast Feedback:** The agent needs to know if it succeeded. Your project needs a reliable command (like `npm test` or `npm run typecheck`) that the agent can run to verify its own work before committing.
+*   **Sandboxing:** Because the agent is running `rm` and `git commit` commands while you sleep, you should run this inside a Docker container. This prevents the agent from accidentally deleting your home directory.
+
+## Conclusion
+
+We are moving from **Copilots** to **Coworkers**.
+
+A Copilot helps you type faster. A Coworker takes a ticket, disappears for four hours, and comes back with a finished feature. Ralph is the first primitive version of that AI Coworker.
+
+Your job changes from "writing code" to "managing the loop." You become the architect who writes the PRD and the reviewer who merges the PRs. The actual implementation becomes a background process, an infinite loop running quietly on a server, building your software one commit at a time.

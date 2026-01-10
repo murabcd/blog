@@ -1,0 +1,51 @@
+---
+title: "Just-in-Time Agent Skills"
+publishedAt: "2025-12-09"
+summary: "We are accidentally building slow, expensive agents by forcing them to memorize every tool we possess. The fix is borrowing a classic engineering concept: lazy loading. Don't load the code until you actually need to run it."
+---
+
+## The Weight of Possibility
+
+In traditional software, we learned a long time ago that you shouldn't load every single library into memory the moment an application starts. It kills performance. We use "lazy loading" to fetch resources only when they are actually needed.
+
+Strangely, we forgot this lesson when we started building AI agents.
+
+With the rise of the Model Context Protocol (MCP), it became easy to give an agent access to powerful external systems like web browsers, database connectors, and developer tools. But the standard way to do this is to dump every single tool definition into the agent's "context window" (its active memory) right at the start of the conversation.
+
+This is the equivalent of a plumber walking into a house carrying every single tool they own—wrenches, pipes, saws, welding gear—just to check a leaky faucet. It’s exhausting, expensive, and unnecessary.
+
+## The Cost of Being Prepared
+
+The numbers behind this "eager loading" strategy are shocking.
+
+Take a standard browser integration. To give an agent the ability to interact with a website, you might connect a standard Chrome toolkit. This toolkit defines about 26 different actions (tools). Just describing these 26 tools to the AI consumes around 17,000 tokens.
+
+That is roughly 10% of a massive model's capacity, and nearly **$0.10 per message** on top-tier models, wasted on definitions the agent might never use. Worse, all this noise degrades the agent's reasoning. When the context is crowded with irrelevant tools, the model is more likely to hallucinate or get confused.
+
+## The "Skill" Pattern
+
+The solution is to stop treating tools as a global list and start treating them as **Skills**.
+
+A Skill is a smart wrapper around a set of tools. Instead of forcing the agent to memorize the technical definition of every function in the API, you simply give it a menu.
+
+1.  **The Menu Phase:** At the start, the agent is given a short, human-readable description: *"Web Browser: Use this to view pages and take screenshots."* This costs almost nothing—maybe 30 tokens.
+2.  **The Order Phase:** The agent converses normally. Only when it decides "I need to see what is on this website" does it "activate" the Skill.
+3.  **The Loading Phase:** At that precise moment, the system injects the heavy technical definitions of the tools into the context.
+
+This "Just-in-Time" delivery keeps the agent light and fast for 99% of the conversation, only adding weight when it is strictly necessary.
+
+## Curating the Toolkit
+
+We can take this efficiency a step further. Even when an agent asks for a Skill, it rarely needs the *entire* toolkit.
+
+A developer might need an agent to browse a documentation site. For this, the agent needs to `navigate_page` and maybe `take_screenshot`. It definitely does not need `start_performance_trace` or `emulate_mobile_device` or `inspect_network_packets`.
+
+The Skill pattern allows for **whitelisting**. You can define a "Documentation Reader" skill that connects to the heavy Chrome server but filters the output to show only the 4 relevant tools instead of the full 26.
+
+By combining Lazy Loading (time) with Whitelisting (scope), we can reduce the token overhead by over 90%.
+
+## Conclusion
+
+We are moving away from the era of "Generalist" agents that carry every tool at once. We are entering the era of **Modular** agents.
+
+These agents start with a lightweight backpack containing only a map of what is possible. When they encounter a problem, they reach out and grab the specific kit they need. This makes them cheaper to run, faster to respond, and far less likely to get confused by their own capabilities.
