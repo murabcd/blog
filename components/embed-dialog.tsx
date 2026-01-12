@@ -52,7 +52,7 @@ export function EmbedDialog({
     <h3 style="font-weight: 600; color: hsl(var(--foreground)); font-size: 14px; margin: 0 0 4px 0; line-height: 1.3;">${title}</h3>
     <p style="font-size: 14px; color: hsl(var(--muted-foreground)); margin: 0 0 4px 0;">From ${author}</p>
     ${description ? `<p style="font-size: 14px; color: hsl(var(--muted-foreground)); margin: 0 0 8px 0; line-height: 1.4;">${description}</p>` : ""}
-    <a href="${fullUrl}" style="font-size: 14px; color: hsl(var(--primary)); text-decoration: none; font-weight: 500;" target="_blank">Read full post</a>
+    <a href="${fullUrl}" style="font-size: 14px; color: hsl(var(--primary)); text-decoration: none; font-weight: 500;" target="_blank" rel="noopener noreferrer">Read full post</a>
   </div>
 </div>`;
 
@@ -121,6 +121,7 @@ export function EmbedDialog({
 								onClick={handleCopy}
 								size="sm"
 								className="w-full sm:w-auto"
+								aria-label="Copy embed code"
 							>
 								<Copy className="w-4 h-4 sm:block hidden" />
 								<span className="sm:hidden">Copy</span>

@@ -84,10 +84,16 @@ export default function RootLayout({
 						enableSystem
 						disableTransitionOnChange
 					>
+						<a
+							href="#main-content"
+							className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] bg-background text-foreground border border-border rounded-md px-3 py-2 shadow-sm outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
+						>
+							Skip to content
+						</a>
 						<div className="mx-4 lg:mx-auto max-w-xl min-h-screen flex flex-col">
 							<Navbar />
 							<div className="grow">
-								<main className="mt-6 px-2 md:px-0">
+								<main id="main-content" className="mt-6 px-2 md:px-0">
 									{children}
 									<Analytics />
 								</main>

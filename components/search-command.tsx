@@ -16,6 +16,7 @@ import {
 	CommandList,
 	CommandSeparator,
 } from "@/components/ui/command";
+import { Kbd } from "@/components/ui/kbd";
 
 export function SearchCommand() {
 	const router = useRouter();
@@ -39,20 +40,19 @@ export function SearchCommand() {
 			<button
 				type="button"
 				onClick={() => setOpen(true)}
+				aria-label="Search content"
 				className="inline-flex items-center gap-2 rounded-md border border-input bg-transparent px-1.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
 			>
 				<Search className="h-4 w-4" />
-				<span className="hidden sm:inline-flex">Search content...</span>
-				<kbd className="pointer-events-none hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100 sm:inline-flex">
-					<span className="text-xs">⌘</span>K
-				</kbd>
+				<span className="hidden sm:inline-flex">Search content…</span>
+				<Kbd className="hidden sm:inline-flex">⌘ K</Kbd>
 			</button>
 			<CommandDialog
 				open={open}
 				onOpenChange={setOpen}
 				className="sm:max-w-[450px]"
 			>
-				<CommandInput placeholder="Search content..." />
+				<CommandInput placeholder="Search content…" />
 				<CommandList>
 					<CommandEmpty>No results found.</CommandEmpty>
 					<CommandGroup heading="Posts">
