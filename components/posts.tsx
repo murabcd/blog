@@ -14,23 +14,15 @@ export function BlogPosts({
 	posts: BlogPost[];
 	limit?: number;
 }) {
-	let allBlogs = [...posts];
-
-	allBlogs = allBlogs.sort((a, b) => {
-		if (new Date(a.publishedAt) > new Date(b.publishedAt)) {
-			return -1;
-		}
-		return 1;
-	});
-
-	if (limit) {
-		allBlogs = allBlogs.slice(0, limit);
-	}
+	const sortedBlogs = [...posts].sort(
+		(a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt),
+	);
+	const visibleBlogs = limit ? sortedBlogs.slice(0, limit) : sortedBlogs;
 
 	return (
 		<div className="relative">
 			<div className="space-y-4">
-				{allBlogs.map((post) => (
+				{visibleBlogs.map((post) => (
 					<Link
 						key={post.slug}
 						className="block group cursor-pointer"

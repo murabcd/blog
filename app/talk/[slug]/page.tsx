@@ -8,16 +8,7 @@ import { formatDate } from "@/lib/utils";
 import { baseUrl } from "@/app/sitemap";
 import { CustomMDX } from "@/components/mdx";
 
-const getAllTalkEventsCached = unstable_cache(
-	async () => {
-		return fetchQuery(api.talk.getAllEvents);
-	},
-	["convex", "talk", "getAllEvents"],
-	{
-		tags: ["talkEvents"],
-		revalidate: 60,
-	},
-);
+export const dynamic = "force-dynamic";
 
 const getTalkEventBySlugCached = unstable_cache(
 	async (slug: string) => {
@@ -29,14 +20,6 @@ const getTalkEventBySlugCached = unstable_cache(
 		revalidate: 300,
 	},
 );
-
-export async function generateStaticParams() {
-	const events = await getAllTalkEventsCached();
-
-	return events.map((event) => ({
-		slug: event.slug,
-	}));
-}
 
 export async function generateMetadata({
 	params,

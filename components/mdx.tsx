@@ -100,25 +100,28 @@ function RoundedImage(props: ImageProps) {
 	return <Image alt={alt} className="rounded-lg" {...rest} />;
 }
 
-function Code({ children, className, ...props }: CodeProps) {
-	const isCodeBlock = className?.startsWith("language-");
+function extractCodeString(children: React.ReactNode): string {
+	if (typeof children === "string") return children;
 
-	if (isCodeBlock) {
-		const codeString =
-			typeof children === "string"
-				? children
-				: typeof children === "object" &&
-						children !== null &&
-						"props" in children
-					? String(
-							(children as { props?: { children?: string } }).props?.children ||
-								"",
-						)
-					: String(children || "");
-
-		return <CodeBlock className={className}>{codeString}</CodeBlock>;
+	if (
+		typeof children === "object" &&
+		children !== null &&
+		"props" in children
+	) {
+		return String(
+			(children as { props?: { children?: string | React.ReactNode } }).props
+				?.children || "",
+		);
 	}
 
+	if (Array.isArray(children)) {
+		return children.map((c) => extractCodeString(c)).join("");
+	}
+
+	return String(children || "");
+}
+
+function Code({ children, className, ...props }: CodeProps) {
 	// Inline code - simple styling without highlighting
 	return (
 		<code
@@ -135,13 +138,17 @@ type PreProps = React.HTMLAttributes<HTMLPreElement> & {
 };
 
 function Pre({ children, ...props }: PreProps) {
-	if (
-		React.isValidElement<{ className?: string }>(children) &&
-		children.type === "code" &&
-		typeof children.props.className === "string" &&
-		children.props.className.startsWith("language-")
-	) {
-		return <>{children}</>;
+	if (React.isValidElement(children)) {
+		const className =
+			typeof (children.props as { className?: unknown })?.className === "string"
+				? ((children.props as { className?: string }).className as string)
+				: undefined;
+		const codeString = extractCodeString(
+			(children.props as { children?: React.ReactNode })?.children,
+		).replace(/\n$/, "");
+
+		// Treat any <pre><code>...</code></pre> block as a code block, even if no language was specified.
+		return <CodeBlock className={className}>{codeString}</CodeBlock>;
 	}
 
 	return <pre {...props}>{children}</pre>;

@@ -30,7 +30,7 @@ Here is the exact setup you can use to run a Ralph loop on your own machine.
 ### 1. The File Structure
 Create a folder in your project (e.g., `ralph/`) and add these files:
 
-```
+```text
 /ralph
   ├── PRD.md          # The list of tasks (Product Requirements Document)
   ├── progress.txt    # The shared memory log
@@ -40,7 +40,7 @@ Create a folder in your project (e.g., `ralph/`) and add these files:
 ### 2. The Plan (PRD.md)
 This is your backlog. The trick is to be extremely granular. Don't write "Build Login." Break it down so each step fits in one context window.
 
-```
+```markdown
 # Product Requirements
 
 - [ ] Create the database schema for the User table
@@ -53,7 +53,7 @@ This is your backlog. The trick is to be extremely granular. Don't write "Build 
 ### 3. The Loop Script (loop.sh)
 This is the engine. It runs the agent, captures the output, and checks if the job is done.
 
-```
+```bash
 #!/bin/bash
 set -e # Stop if any command fails
 

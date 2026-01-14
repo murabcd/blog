@@ -12,16 +12,7 @@ import { CopyPageButton } from "@/components/copy-page-button";
 import { Toc } from "@/components/toc";
 import { calculateReadingTime, formatDate } from "@/lib/utils";
 
-const getAllBlogPostsCached = unstable_cache(
-	async () => {
-		return fetchQuery(api.blog.getAllPosts);
-	},
-	["convex", "blog", "getAllPosts"],
-	{
-		tags: ["blogPosts"],
-		revalidate: 60,
-	},
-);
+export const dynamic = "force-dynamic";
 
 const getBlogPostBySlugCached = unstable_cache(
 	async (slug: string) => {
@@ -33,14 +24,6 @@ const getBlogPostBySlugCached = unstable_cache(
 		revalidate: 300,
 	},
 );
-
-export async function generateStaticParams() {
-	const posts = await getAllBlogPostsCached();
-
-	return posts.map((post) => ({
-		slug: post.slug,
-	}));
-}
 
 export async function generateMetadata({
 	params,
