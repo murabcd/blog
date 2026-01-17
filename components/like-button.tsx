@@ -17,10 +17,17 @@ export function LikeButton({ postSlug }: LikeButtonProps) {
 	const [showFloatingHearts, setShowFloatingHearts] = useState(false);
 
 	useEffect(() => {
-		let id = localStorage.getItem("visitorId");
+		let id = sessionStorage.getItem("visitorId");
+		if (!id) {
+			id = localStorage.getItem("visitorId");
+		}
 		if (!id) {
 			id = crypto.randomUUID();
 			localStorage.setItem("visitorId", id);
+			sessionStorage.setItem("visitorId", id);
+		}
+		if (id) {
+			sessionStorage.setItem("visitorId", id);
 		}
 		setVisitorId(id);
 	}, []);

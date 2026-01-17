@@ -17,12 +17,14 @@ import {
 	CommandSeparator,
 } from "@/components/ui/command";
 import { Kbd } from "@/components/ui/kbd";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function SearchCommand() {
 	const router = useRouter();
 	const [open, setOpen] = React.useState(false);
-	const blogs = useQuery(api.blog.getAllPosts) ?? [];
-	const talks = useQuery(api.talk.getAllEvents) ?? [];
+	const blogs = useQuery(api.blog.getAllPosts, open ? {} : "skip");
+	const talks = useQuery(api.talk.getAllEvents, open ? {} : "skip");
+	const isLoading = open && (blogs === undefined || talks === undefined);
 
 	React.useEffect(() => {
 		const down = (e: KeyboardEvent) => {
@@ -54,36 +56,47 @@ export function SearchCommand() {
 			>
 				<CommandInput placeholder="Search content…" />
 				<CommandList>
-					<CommandEmpty>No results found.</CommandEmpty>
-					<CommandGroup heading="Posts">
-						{blogs.map((post) => (
-							<CommandItem
-								key={post.slug}
-								onSelect={() => {
-									router.push(`/blog/${post.slug}`);
-									setOpen(false);
-								}}
-							>
-								<NotebookText className="mr-2 h-4 w-4" />
-								<span>{post.title}</span>
-							</CommandItem>
-						))}
-					</CommandGroup>
-					<CommandSeparator />
-					<CommandGroup heading="Talks">
-						{talks.map((talk) => (
-							<CommandItem
-								key={talk.slug}
-								onSelect={() => {
-									router.push(`/talk/${talk.slug}`);
-									setOpen(false);
-								}}
-							>
-								<Presentation className="mr-2 h-4 w-4" />
-								<span>{talk.title}</span>
-							</CommandItem>
-						))}
-					</CommandGroup>
+					{isLoading ? (
+						<div className="space-y-2 px-2 py-2">
+							<Skeleton className="h-4 w-36" />
+							<Skeleton className="h-4 w-52" />
+							<Skeleton className="h-4 w-44" />
+							<Skeleton className="h-4 w-32" />
+						</div>
+					) : (
+						<>
+							<CommandEmpty>No results found.</CommandEmpty>
+							<CommandGroup heading="Posts">
+								{(blogs ?? []).map((post) => (
+									<CommandItem
+										key={post.slug}
+										onSelect={() => {
+											router.push(`/blog/${post.slug}`);
+											setOpen(false);
+										}}
+									>
+										<NotebookText className="mr-2 h-4 w-4" />
+										<span>{post.title}</span>
+									</CommandItem>
+								))}
+							</CommandGroup>
+							<CommandSeparator />
+							<CommandGroup heading="Talks">
+								{(talks ?? []).map((talk) => (
+									<CommandItem
+										key={talk.slug}
+										onSelect={() => {
+											router.push(`/talk/${talk.slug}`);
+											setOpen(false);
+										}}
+									>
+										<Presentation className="mr-2 h-4 w-4" />
+										<span>{talk.title}</span>
+									</CommandItem>
+								))}
+							</CommandGroup>
+						</>
+					)}
 				</CommandList>
 			</CommandDialog>
 		</>

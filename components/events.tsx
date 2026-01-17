@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useMemo } from "react";
 import { formatDate } from "@/lib/utils";
 
 type TalkEvent = {
@@ -8,8 +9,12 @@ type TalkEvent = {
 };
 
 export function TalksEvents({ events }: { events: TalkEvent[] }) {
-	const sortedEvents = [...events].sort(
-		(a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt),
+	const sortedEvents = useMemo(
+		() =>
+			[...events].sort(
+				(a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt),
+			),
+		[events],
 	);
 
 	return (

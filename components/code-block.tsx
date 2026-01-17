@@ -1,8 +1,13 @@
 "use client";
 
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import dynamic from "next/dynamic";
 import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
+
+const SyntaxHighlighter = dynamic(
+	() => import("react-syntax-highlighter").then((mod) => mod.Prism),
+	{ ssr: false },
+);
 import { Copy, Check } from "lucide-react";
 import { toast } from "sonner";
 

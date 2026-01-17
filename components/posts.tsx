@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useMemo } from "react";
 import { formatDate } from "@/lib/utils";
 
 type BlogPost = {
@@ -14,10 +15,17 @@ export function BlogPosts({
 	posts: BlogPost[];
 	limit?: number;
 }) {
-	const sortedBlogs = [...posts].sort(
-		(a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt),
+	const sortedBlogs = useMemo(
+		() =>
+			[...posts].sort(
+				(a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt),
+			),
+		[posts],
 	);
-	const visibleBlogs = limit ? sortedBlogs.slice(0, limit) : sortedBlogs;
+	const visibleBlogs = useMemo(
+		() => (limit ? sortedBlogs.slice(0, limit) : sortedBlogs),
+		[limit, sortedBlogs],
+	);
 
 	return (
 		<div className="relative">
