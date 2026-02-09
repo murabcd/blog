@@ -1,6 +1,6 @@
 "use client";
 
-import { redirect } from "next/navigation";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
 	Empty,
@@ -22,8 +22,8 @@ export default function NotFound() {
 					</EmptyDescription>
 				</EmptyHeader>
 				<EmptyContent>
-					<Button onClick={() => redirect("/")} size="sm">
-						Go back
+					<Button asChild size="sm">
+						<Link href="/">Go back</Link>
 					</Button>
 				</EmptyContent>
 			</Empty>

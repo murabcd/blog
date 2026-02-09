@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { BlogPosts } from "@/components/posts";
 import { baseUrl } from "./sitemap";
 import { fetchQuery } from "convex/nextjs";
-import { unstable_cache } from "next/cache";
+import { cacheLife, cacheTag } from "next/cache";
 import { api } from "@/convex/_generated/api";
 
 const ogImage = new URL("/api/og", baseUrl).toString();
@@ -35,16 +35,12 @@ export const metadata: Metadata = {
 	},
 };
 
-const getAllBlogPostsCached = unstable_cache(
-	async () => {
-		return fetchQuery(api.blog.getAllPosts);
-	},
-	["convex", "blog", "getAllPosts"],
-	{
-		tags: ["blogPosts"],
-		revalidate: 60,
-	},
-);
+async function getAllBlogPostsCached() {
+	"use cache";
+	cacheLife({ revalidate: 60 });
+	cacheTag("blogPosts");
+	return fetchQuery(api.blog.getAllPosts);
+}
 
 export default async function Page() {
 	const posts = await getAllBlogPostsCached();

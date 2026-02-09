@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from "react";
 
-export function CurrentYear({ initialYear }: { initialYear: number }) {
-	const [year, setYear] = useState(initialYear);
+export function CurrentYear() {
+	const [year, setYear] = useState<number | null>(null);
 
 	useEffect(() => {
 		setYear(new Date().getFullYear());
 	}, []);
 
-	return <span>{year}</span>;
+	return <span suppressHydrationWarning>{year ?? ""}</span>;
 }

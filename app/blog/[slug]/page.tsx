@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { fetchQuery } from "convex/nextjs";
-import { unstable_cache } from "next/cache";
+import { cacheLife, cacheTag } from "next/cache";
+import Script from "next/script";
 import { api } from "@/convex/_generated/api";
 
 import { baseUrl } from "@/app/sitemap";
@@ -12,18 +13,12 @@ import { CopyPageButton } from "@/components/copy-page-button";
 import { Toc } from "@/components/toc";
 import { calculateReadingTime, formatDate } from "@/lib/utils";
 
-export const dynamic = "force-dynamic";
-
-const getBlogPostBySlugCached = unstable_cache(
-	async (slug: string) => {
-		return fetchQuery(api.blog.getPostBySlug, { slug });
-	},
-	["convex", "blog", "getPostBySlug"],
-	{
-		tags: ["blogPosts"],
-		revalidate: 300,
-	},
-);
+async function getBlogPostBySlugCached(slug: string) {
+	"use cache";
+	cacheLife({ revalidate: 300 });
+	cacheTag("blogPosts", `blogPost:${slug}`);
+	return fetchQuery(api.blog.getPostBySlug, { slug });
+}
 
 export async function generateMetadata({
 	params,
@@ -118,7 +113,8 @@ export default async function Blog({
 
 	return (
 		<>
-			<script
+			<Script
+				id={`jsonld-blog-${post.slug}`}
 				type="application/ld+json"
 				// biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD structured data requires dangerouslySetInnerHTML
 				dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

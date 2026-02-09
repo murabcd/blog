@@ -1,25 +1,20 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { fetchQuery } from "convex/nextjs";
-import { unstable_cache } from "next/cache";
+import { cacheLife, cacheTag } from "next/cache";
+import Script from "next/script";
 import { api } from "@/convex/_generated/api";
 
 import { formatDate } from "@/lib/utils";
 import { baseUrl } from "@/app/sitemap";
 import { CustomMDX } from "@/components/mdx";
 
-export const dynamic = "force-dynamic";
-
-const getTalkEventBySlugCached = unstable_cache(
-	async (slug: string) => {
-		return fetchQuery(api.talk.getEventBySlug, { slug });
-	},
-	["convex", "talk", "getEventBySlug"],
-	{
-		tags: ["talkEvents"],
-		revalidate: 300,
-	},
-);
+async function getTalkEventBySlugCached(slug: string) {
+	"use cache";
+	cacheLife({ revalidate: 300 });
+	cacheTag("talkEvents", `talkEvent:${slug}`);
+	return fetchQuery(api.talk.getEventBySlug, { slug });
+}
 
 export async function generateMetadata({
 	params,
@@ -109,7 +104,8 @@ export default async function EventPage({
 
 	return (
 		<>
-			<script
+			<Script
+				id={`jsonld-talk-${event.slug}`}
 				type="application/ld+json"
 				// biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD structured data requires dangerouslySetInnerHTML
 				dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

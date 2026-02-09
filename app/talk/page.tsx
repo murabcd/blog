@@ -1,7 +1,7 @@
 import { TalksEvents } from "@/components/events";
 import { baseUrl } from "@/app/sitemap";
 import { fetchQuery } from "convex/nextjs";
-import { unstable_cache } from "next/cache";
+import { cacheLife, cacheTag } from "next/cache";
 import { api } from "@/convex/_generated/api";
 
 const ogImage = new URL("/api/og", baseUrl).toString();
@@ -34,16 +34,12 @@ export const metadata = {
 	},
 };
 
-const getAllTalkEventsCached = unstable_cache(
-	async () => {
-		return fetchQuery(api.talk.getAllEvents);
-	},
-	["convex", "talk", "getAllEvents"],
-	{
-		tags: ["talkEvents"],
-		revalidate: 60,
-	},
-);
+async function getAllTalkEventsCached() {
+	"use cache";
+	cacheLife({ revalidate: 60 });
+	cacheTag("talkEvents");
+	return fetchQuery(api.talk.getAllEvents);
+}
 
 export default async function Page() {
 	const events = await getAllTalkEventsCached();
