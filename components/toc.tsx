@@ -27,6 +27,7 @@ export function Toc({ mdxContent, variant = "desktop" }: TocProps) {
 	const [showMobileToc, setShowMobileToc] = useState(false);
 	const [mobileOpen, setMobileOpen] = useState(false);
 	const rootRef = useRef<HTMLDivElement | null>(null);
+	const mobilePanelRef = useRef<HTMLDivElement | null>(null);
 
 	useEffect(() => {
 		const headings = mdxContent.match(/^(##|###)\s(.+)/gm);
@@ -64,10 +65,7 @@ export function Toc({ mdxContent, variant = "desktop" }: TocProps) {
 
 		const handleScroll = () => {
 			// A small buffer helps.
-			if (
-				win.innerHeight + win.scrollY >=
-				doc.body.offsetHeight - 2
-			) {
+			if (win.innerHeight + win.scrollY >= doc.body.offsetHeight - 2) {
 				if (toc.length > 0) {
 					setActiveId(toc[toc.length - 1].slug);
 				}
@@ -106,6 +104,31 @@ export function Toc({ mdxContent, variant = "desktop" }: TocProps) {
 		};
 	}, [toc]);
 
+	useEffect(() => {
+		if (!mobileOpen) {
+			return;
+		}
+
+		const doc = rootRef.current?.ownerDocument ?? document;
+		const handlePointerDown = (event: PointerEvent) => {
+			const target = event.target as Node | null;
+			if (!target) {
+				return;
+			}
+
+			if (mobilePanelRef.current?.contains(target)) {
+				return;
+			}
+
+			setMobileOpen(false);
+		};
+
+		doc.addEventListener("pointerdown", handlePointerDown);
+		return () => {
+			doc.removeEventListener("pointerdown", handlePointerDown);
+		};
+	}, [mobileOpen]);
+
 	if (toc.length === 0) {
 		return null;
 	}
@@ -124,12 +147,15 @@ export function Toc({ mdxContent, variant = "desktop" }: TocProps) {
 		}
 
 		return (
-			<div ref={rootRef} className="lg:hidden fixed top-17 left-0 right-0 z-40">
-				<div className="mx-4 max-w-xl md:mx-auto rounded-2xl bg-background/85 shadow-lg backdrop-blur-md">
+			<div ref={rootRef} className="lg:hidden fixed top-18 left-0 right-0 z-40">
+				<div
+					ref={mobilePanelRef}
+					className="mx-4 max-w-xl md:mx-auto rounded-lg bg-background/70 dark:bg-background/60 shadow-sm backdrop-blur-sm"
+				>
 					<button
 						type="button"
 						onClick={() => setMobileOpen((prev) => !prev)}
-						className="w-full flex items-center justify-between gap-3 px-4 py-3 text-sm font-medium tracking-tight"
+						className="w-full flex items-center justify-between gap-3 px-4 py-3 text-base font-normal"
 					>
 						<span className="flex items-center gap-2">
 							<List className="h-4 w-4" />
@@ -147,7 +173,7 @@ export function Toc({ mdxContent, variant = "desktop" }: TocProps) {
 						}`}
 					>
 						<div className="px-4 pb-4">
-							<ul className="space-y-2 text-sm">
+							<ul className="space-y-2 text-base font-normal">
 								{toc.map(({ level, text, slug }) => (
 									<li
 										key={slug}
