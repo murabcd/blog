@@ -40,7 +40,7 @@ export function BlogPosts({
 				))}
 			</div>
 			{limit && (
-				<Link href="/blog" className="mt-8 block hover:text-primary">
+				<Link href="/blog" className="mt-8 block text-sm hover:text-primary">
 					view all posts →
 				</Link>
 			)}
