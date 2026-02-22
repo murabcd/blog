@@ -93,7 +93,7 @@ export default function RootLayout({
 						<div className="mx-4 lg:mx-auto max-w-xl min-h-screen flex flex-col">
 							<Navbar />
 							<div className="grow">
-								<main id="main-content" className="mt-6 px-2 md:px-0">
+								<main id="main-content" className="mt-6 px-0">
 									{children}
 									<Analytics />
 								</main>
