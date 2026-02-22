@@ -144,13 +144,15 @@ export default async function Blog({
 					</div>
 				</div>
 
+				<Toc mdxContent={post.content} variant="mobile" />
+
 				<div className="relative">
 					<article className="prose max-w-xl mx-auto">
 						<CustomMDX source={post.content} />
 					</article>
 					<aside className="hidden lg:block absolute top-0 left-full h-full pl-8">
 						<div className="sticky top-24 w-64">
-							<Toc mdxContent={post.content} />
+							<Toc mdxContent={post.content} variant="desktop" />
 						</div>
 					</aside>
 				</div>

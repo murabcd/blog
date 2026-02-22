@@ -2,8 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { slugify } from "@/lib/utils";
-import { CircleArrowUp, ChartNoAxesGantt } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
+import {
+	ChevronDown,
+	CircleArrowUp,
+	ChartNoAxesGantt,
+	List,
+} from "lucide-react";
 
 interface TocEntry {
 	level: number;
@@ -13,12 +17,15 @@ interface TocEntry {
 
 interface TocProps {
 	mdxContent: string;
+	variant?: "desktop" | "mobile";
 }
 
-export function Toc({ mdxContent }: TocProps) {
+export function Toc({ mdxContent, variant = "desktop" }: TocProps) {
 	const [toc, setToc] = useState<TocEntry[]>([]);
 	const [activeId, setActiveId] = useState<string>("");
 	const [showBackToTop, setShowBackToTop] = useState(false);
+	const [showMobileToc, setShowMobileToc] = useState(false);
+	const [mobileOpen, setMobileOpen] = useState(false);
 
 	useEffect(() => {
 		const headings = mdxContent.match(/^(##|###)\s(.+)/gm);
@@ -65,9 +72,25 @@ export function Toc({ mdxContent }: TocProps) {
 			} else {
 				setShowBackToTop(false);
 			}
+
+			const firstHeadingId = toc[0]?.slug;
+			const firstHeading = firstHeadingId
+				? document.getElementById(firstHeadingId)
+				: null;
+
+			if (firstHeading) {
+				const shouldShow = firstHeading.getBoundingClientRect().top <= 72;
+				setShowMobileToc(shouldShow);
+				if (!shouldShow) {
+					setMobileOpen(false);
+				}
+			} else {
+				setShowMobileToc(false);
+			}
 		};
 
 		window.addEventListener("scroll", handleScroll, { passive: true });
+		handleScroll();
 
 		return () => {
 			toc.forEach(({ slug }) => {
@@ -91,33 +114,85 @@ export function Toc({ mdxContent }: TocProps) {
 		});
 	};
 
+	if (variant === "mobile") {
+		if (!showMobileToc) {
+			return null;
+		}
+
+		return (
+			<div className="lg:hidden fixed top-17 left-0 right-0 z-40">
+				<div className="mx-4 max-w-xl md:mx-auto rounded-2xl bg-background/85 shadow-lg backdrop-blur-md">
+					<button
+						type="button"
+						onClick={() => setMobileOpen((prev) => !prev)}
+						className="w-full flex items-center justify-between gap-3 px-4 py-3 text-sm font-medium tracking-tight"
+					>
+						<span className="flex items-center gap-2">
+							<List className="h-4 w-4" />
+							On this page
+						</span>
+						<ChevronDown
+							className={`h-4 w-4 transition-transform ${
+								mobileOpen ? "rotate-180" : ""
+							}`}
+						/>
+					</button>
+					<div
+						className={`overflow-hidden transition-[max-height,opacity] duration-300 ${
+							mobileOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+						}`}
+					>
+						<div className="px-4 pb-4">
+							<ul className="space-y-2 text-sm">
+								{toc.map(({ level, text, slug }) => (
+									<li
+										key={slug}
+										style={{ marginLeft: `${(level - 2) * 0.75}rem` }}
+										className={`border-l pl-3 transition-colors ${
+											activeId === slug
+												? "border-foreground text-foreground"
+												: "border-border/60 text-muted-foreground"
+										}`}
+									>
+										<a
+											href={`#${slug}`}
+											onClick={() => setMobileOpen(false)}
+											className="block"
+										>
+											{text}
+										</a>
+									</li>
+								))}
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		);
+	}
+
 	return (
 		<div className="sticky top-24 hidden lg:block">
 			<div className="mb-2 flex items-center gap-2">
 				<ChartNoAxesGantt className="h-4 w-4" />
 				<p className="tracking-tight text-sm font-medium">On this page</p>
 			</div>
-			<div className="flex items-stretch gap-4">
-				<div className="flex items-center">
-					<Separator orientation="vertical" className="h-full" />
-				</div>
-				<div>
-					<ul className="space-y-1">
-						{toc.map(({ level, text, slug }) => (
-							<li
-								key={slug}
-								style={{ marginLeft: `${(level - 2) * 1}rem` }}
-								className={`text-xs hover:text-foreground transition-colors ${
-									activeId === slug
-										? "text-foreground"
-										: "text-muted-foreground"
-								}`}
-							>
-								<a href={`#${slug}`}>{text}</a>
-							</li>
-						))}
-					</ul>
-				</div>
+			<div>
+				<ul className="space-y-1">
+					{toc.map(({ level, text, slug }) => (
+						<li
+							key={slug}
+							style={{ marginLeft: `${(level - 2) * 1}rem` }}
+							className={`border-l pl-3 text-xs hover:text-foreground transition-colors ${
+								activeId === slug
+									? "border-foreground text-foreground"
+									: "border-border/60 text-muted-foreground"
+							}`}
+						>
+							<a href={`#${slug}`}>{text}</a>
+						</li>
+					))}
+				</ul>
 			</div>
 			{showBackToTop && (
 				<div className="mt-4">
