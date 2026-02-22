@@ -94,7 +94,7 @@ export function CopyPageButton({ page, url }: { page: string; url: string }) {
 					) : (
 						<Copy className="w-4 h-4 mr-1 text-muted-foreground" />
 					)}
-					<span className="text-xs">Copy page</span>
+					<span className="text-xs">Copy</span>
 				</Button>
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild className="hidden sm:flex">

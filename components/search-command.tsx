@@ -22,23 +22,25 @@ import { Skeleton } from "@/components/ui/skeleton";
 export function SearchCommand() {
 	const router = useRouter();
 	const [open, setOpen] = React.useState(false);
+	const rootRef = React.useRef<HTMLDivElement | null>(null);
 	const blogs = useQuery(api.blog.getAllPosts, open ? {} : "skip");
 	const talks = useQuery(api.talk.getAllEvents, open ? {} : "skip");
 	const isLoading = open && (blogs === undefined || talks === undefined);
 
 	React.useEffect(() => {
+		const doc = rootRef.current?.ownerDocument ?? document;
 		const down = (e: KeyboardEvent) => {
 			if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
 				e.preventDefault();
 				setOpen((open) => !open);
 			}
 		};
-		document.addEventListener("keydown", down);
-		return () => document.removeEventListener("keydown", down);
+		doc.addEventListener("keydown", down);
+		return () => doc.removeEventListener("keydown", down);
 	}, []);
 
 	return (
-		<>
+		<div ref={rootRef} className="contents">
 			<button
 				type="button"
 				onClick={() => setOpen(true)}
@@ -99,6 +101,6 @@ export function SearchCommand() {
 					)}
 				</CommandList>
 			</CommandDialog>
-		</>
+		</div>
 	);
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useId } from "react";
+import { useState, useId, useEffect } from "react";
 
 import { Copy } from "lucide-react";
 import { useQuery } from "convex/react";
@@ -41,11 +41,13 @@ export function EmbedDialog({
 }: EmbedDialogProps) {
 	const embedCodeId = useId();
 	const likeCount = useQuery(api.posts.getLikeCount, { postSlug });
+	const [origin, setOrigin] = useState("");
 
-	const fullUrl =
-		typeof window !== "undefined"
-			? `${window.location.origin}/blog/${postSlug}`
-			: `/blog/${postSlug}`;
+	useEffect(() => {
+		setOrigin(window.location.origin);
+	}, []);
+
+	const fullUrl = origin ? `${origin}/blog/${postSlug}` : `/blog/${postSlug}`;
 
 	const embedCode = `<div class="blog-post-embed" style="border: 1px solid hsl(var(--border)); border-radius: 8px; padding: 16px; max-width: 500px; font-family: system-ui, -apple-system, sans-serif; background: hsl(var(--background));">
   <div style="flex: 1; min-width: 0;">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { slugify } from "@/lib/utils";
 import {
 	ChevronDown,
@@ -26,6 +26,7 @@ export function Toc({ mdxContent, variant = "desktop" }: TocProps) {
 	const [showBackToTop, setShowBackToTop] = useState(false);
 	const [showMobileToc, setShowMobileToc] = useState(false);
 	const [mobileOpen, setMobileOpen] = useState(false);
+	const rootRef = useRef<HTMLDivElement | null>(null);
 
 	useEffect(() => {
 		const headings = mdxContent.match(/^(##|###)\s(.+)/gm);
@@ -41,6 +42,8 @@ export function Toc({ mdxContent, variant = "desktop" }: TocProps) {
 	}, [mdxContent]);
 
 	useEffect(() => {
+		const doc = rootRef.current?.ownerDocument ?? document;
+		const win = doc.defaultView ?? window;
 		const observer = new IntersectionObserver(
 			(entries) => {
 				entries.forEach((entry) => {
@@ -53,7 +56,7 @@ export function Toc({ mdxContent, variant = "desktop" }: TocProps) {
 		);
 
 		toc.forEach(({ slug }) => {
-			const el = document.getElementById(slug);
+			const el = doc.getElementById(slug);
 			if (el) {
 				observer.observe(el);
 			}
@@ -62,8 +65,8 @@ export function Toc({ mdxContent, variant = "desktop" }: TocProps) {
 		const handleScroll = () => {
 			// A small buffer helps.
 			if (
-				window.innerHeight + window.scrollY >=
-				document.body.offsetHeight - 2
+				win.innerHeight + win.scrollY >=
+				doc.body.offsetHeight - 2
 			) {
 				if (toc.length > 0) {
 					setActiveId(toc[toc.length - 1].slug);
@@ -75,7 +78,7 @@ export function Toc({ mdxContent, variant = "desktop" }: TocProps) {
 
 			const firstHeadingId = toc[0]?.slug;
 			const firstHeading = firstHeadingId
-				? document.getElementById(firstHeadingId)
+				? doc.getElementById(firstHeadingId)
 				: null;
 
 			if (firstHeading) {
@@ -89,17 +92,17 @@ export function Toc({ mdxContent, variant = "desktop" }: TocProps) {
 			}
 		};
 
-		window.addEventListener("scroll", handleScroll, { passive: true });
+		win.addEventListener("scroll", handleScroll, { passive: true });
 		handleScroll();
 
 		return () => {
 			toc.forEach(({ slug }) => {
-				const el = document.getElementById(slug);
+				const el = doc.getElementById(slug);
 				if (el) {
 					observer.unobserve(el);
 				}
 			});
-			window.removeEventListener("scroll", handleScroll);
+			win.removeEventListener("scroll", handleScroll);
 		};
 	}, [toc]);
 
@@ -108,7 +111,8 @@ export function Toc({ mdxContent, variant = "desktop" }: TocProps) {
 	}
 
 	const scrollToTop = () => {
-		window.scrollTo({
+		const win = rootRef.current?.ownerDocument?.defaultView ?? window;
+		win.scrollTo({
 			top: 0,
 			behavior: "smooth",
 		});
@@ -120,7 +124,7 @@ export function Toc({ mdxContent, variant = "desktop" }: TocProps) {
 		}
 
 		return (
-			<div className="lg:hidden fixed top-17 left-0 right-0 z-40">
+			<div ref={rootRef} className="lg:hidden fixed top-17 left-0 right-0 z-40">
 				<div className="mx-4 max-w-xl md:mx-auto rounded-2xl bg-background/85 shadow-lg backdrop-blur-md">
 					<button
 						type="button"
@@ -172,7 +176,7 @@ export function Toc({ mdxContent, variant = "desktop" }: TocProps) {
 	}
 
 	return (
-		<div className="sticky top-24 hidden lg:block">
+		<div ref={rootRef} className="sticky top-24 hidden lg:block">
 			<div className="mb-2 flex items-center gap-2">
 				<ChartNoAxesGantt className="h-4 w-4" />
 				<p className="tracking-tight text-sm font-medium">On this page</p>
