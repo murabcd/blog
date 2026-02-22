@@ -13,6 +13,12 @@ const isVerbose =
 const envFile = isProduction ? ".env.production.local" : ".env.local";
 dotenv.config({ path: envFile, override: true });
 
+const revalidateSecret = process.env.REVALIDATE_SECRET;
+const siteUrl =
+	process.env.SITE_URL ||
+	process.env.NEXT_PUBLIC_SITE_URL ||
+	(process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined);
+
 if (isProduction) {
 	console.log("Syncing to PRODUCTION deployment...\n");
 }
@@ -26,6 +32,9 @@ if (isVerbose) {
 	}
 	if (process.env.CONVEX_URL) {
 		console.log(`CONVEX_URL=${process.env.CONVEX_URL}`);
+	}
+	if (siteUrl) {
+		console.log(`SITE_URL=${siteUrl}`);
 	}
 	console.log("");
 }
@@ -243,6 +252,29 @@ function getMDXFiles(dir: string): string[] {
 		.map((file) => path.join(dir, file));
 }
 
+async function revalidateTags(tags: string[]) {
+	if (!siteUrl || !revalidateSecret || tags.length === 0) return;
+
+	try {
+		const response = await fetch(`${siteUrl}/api/revalidate`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"x-revalidate-secret": revalidateSecret,
+			},
+			body: JSON.stringify({ tags }),
+		});
+
+		if (!response.ok) {
+			console.warn(
+				`Revalidate failed (${response.status}): ${await response.text()}`,
+			);
+		}
+	} catch (error) {
+		console.warn("Revalidate request failed:", error);
+	}
+}
+
 // Main sync function
 async function syncContent() {
 	if (isVerbose) {
@@ -288,6 +320,7 @@ async function syncContent() {
 			console.log(
 				`✓ Blog posts: ${result.created} created, ${result.updated} updated, ${result.deleted} deleted`,
 			);
+			await revalidateTags(["blogPosts"]);
 		} catch (error) {
 			console.error("Error syncing blog posts:", error);
 			process.exit(1);
@@ -320,6 +353,7 @@ async function syncContent() {
 			console.log(
 				`✓ Talk events: ${result.created} created, ${result.updated} updated, ${result.deleted} deleted`,
 			);
+			await revalidateTags(["talkEvents"]);
 		} catch (error) {
 			console.error("Error syncing talk events:", error);
 			process.exit(1);
@@ -354,6 +388,7 @@ async function syncContent() {
 			console.log(
 				`✓ Code projects: ${result.created} created, ${result.updated} updated, ${result.deleted} deleted`,
 			);
+			await revalidateTags(["codeProjects"]);
 		} catch (error) {
 			console.error("Error syncing code projects:", error);
 			process.exit(1);
@@ -375,6 +410,7 @@ async function syncContent() {
 				console.log(
 					`✓ Chat page: ${result.created} created, ${result.updated} updated, ${result.deleted} deleted`,
 				);
+				await revalidateTags(["pages", "pages:chat"]);
 			} catch (error) {
 				console.error("Error syncing chat page:", error);
 				process.exit(1);
