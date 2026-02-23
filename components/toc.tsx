@@ -2,12 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { slugify } from "@/lib/utils";
-import {
-	ChevronDown,
-	CircleArrowUp,
-	ChartNoAxesGantt,
-	List,
-} from "lucide-react";
+import { ChevronDown, CircleArrowUp, ChartNoAxesGantt } from "lucide-react";
 
 interface TocEntry {
 	level: number;
@@ -21,11 +16,7 @@ interface TocProps {
 	variant?: "desktop" | "mobile";
 }
 
-export function Toc({
-	mdxContent,
-	tocEntries,
-	variant = "desktop",
-}: TocProps) {
+export function Toc({ mdxContent, tocEntries, variant = "desktop" }: TocProps) {
 	const [toc, setToc] = useState<TocEntry[]>([]);
 	const [activeId, setActiveId] = useState<string>("");
 	const [showBackToTop, setShowBackToTop] = useState(false);
@@ -173,7 +164,7 @@ export function Toc({
 						className="w-full flex items-center justify-between gap-3 pl-4 pr-5.5 py-3 text-base font-normal"
 					>
 						<span className="flex items-center gap-2">
-							<List className="h-4 w-4" />
+							<ChartNoAxesGantt className="h-4 w-4" />
 							On this page
 						</span>
 						<ChevronDown
