@@ -147,15 +147,15 @@ export function Toc({ mdxContent, variant = "desktop" }: TocProps) {
 		}
 
 		return (
-			<div ref={rootRef} className="lg:hidden fixed top-18 left-0 right-0 z-40">
+			<div ref={rootRef} className="lg:hidden fixed top-16 left-0 right-0 z-40">
 				<div
 					ref={mobilePanelRef}
-					className="mx-4 max-w-xl md:mx-auto rounded-lg bg-background/70 dark:bg-background/60 shadow-sm backdrop-blur-sm"
+					className="w-full rounded-none shadow-sm border-b border-border/50 bg-background dark:bg-background"
 				>
 					<button
 						type="button"
 						onClick={() => setMobileOpen((prev) => !prev)}
-						className="w-full flex items-center justify-between gap-3 px-4 py-3 text-base font-normal"
+						className="w-full flex items-center justify-between gap-3 pl-4 pr-5.5 py-3 text-base font-normal"
 					>
 						<span className="flex items-center gap-2">
 							<List className="h-4 w-4" />
