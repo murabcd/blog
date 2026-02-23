@@ -16,11 +16,16 @@ interface TocEntry {
 }
 
 interface TocProps {
-	mdxContent: string;
+	mdxContent?: string;
+	tocEntries?: TocEntry[];
 	variant?: "desktop" | "mobile";
 }
 
-export function Toc({ mdxContent, variant = "desktop" }: TocProps) {
+export function Toc({
+	mdxContent,
+	tocEntries,
+	variant = "desktop",
+}: TocProps) {
 	const [toc, setToc] = useState<TocEntry[]>([]);
 	const [activeId, setActiveId] = useState<string>("");
 	const [showBackToTop, setShowBackToTop] = useState(false);
@@ -30,17 +35,27 @@ export function Toc({ mdxContent, variant = "desktop" }: TocProps) {
 	const mobilePanelRef = useRef<HTMLDivElement | null>(null);
 
 	useEffect(() => {
+		if (tocEntries && tocEntries.length > 0) {
+			setToc(tocEntries);
+			return;
+		}
+		if (!mdxContent) {
+			setToc([]);
+			return;
+		}
 		const headings = mdxContent.match(/^(##|###)\s(.+)/gm);
 		if (headings) {
-			const tocEntries = headings.map((heading) => {
+			const parsedEntries = headings.map((heading) => {
 				const level = (heading.match(/#/g) || []).length;
 				const text = heading.replace(/^(##|###)\s/, "").trim();
 				const slug = slugify(text);
 				return { level, text, slug };
 			});
-			setToc(tocEntries);
+			setToc(parsedEntries);
+		} else {
+			setToc([]);
 		}
-	}, [mdxContent]);
+	}, [mdxContent, tocEntries]);
 
 	useEffect(() => {
 		const doc = rootRef.current?.ownerDocument ?? document;

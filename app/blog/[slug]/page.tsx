@@ -11,13 +11,24 @@ import { LikeButton } from "@/components/like-button";
 import { ShareButton } from "@/components/share-button";
 import { CopyPageButton } from "@/components/copy-page-button";
 import { Toc } from "@/components/toc";
-import { calculateReadingTime, formatDate } from "@/lib/utils";
+import { calculateReadingTime, formatDate, slugify } from "@/lib/utils";
 
 async function getBlogPostBySlugCached(slug: string) {
 	"use cache";
 	cacheLife({ revalidate: 300 });
 	cacheTag("blogPosts", `blogPost:${slug}`);
 	return fetchQuery(api.blog.getPostBySlug, { slug });
+}
+
+function buildTocEntries(content: string) {
+	const headings = content.match(/^(##|###)\s(.+)/gm);
+	if (!headings) return [];
+	return headings.map((heading) => {
+		const level = (heading.match(/#/g) || []).length;
+		const text = heading.replace(/^(##|###)\s/, "").trim();
+		const slug = slugify(text);
+		return { level, text, slug };
+	});
 }
 
 export async function generateMetadata({
@@ -37,9 +48,7 @@ export async function generateMetadata({
 		summary: description,
 		image,
 	} = post;
-	const ogImage = image
-		? image
-		: `${baseUrl}/api/og?title=${encodeURIComponent(title)}`;
+	const ogImage = image ? image : `${baseUrl}/blog/${slug}/opengraph-image`;
 	const url = `${baseUrl}/blog/${post.slug}`;
 
 	return {
@@ -66,7 +75,6 @@ export async function generateMetadata({
 			card: "summary_large_image",
 			title,
 			description,
-			images: [ogImage],
 			creator: "@murabcd",
 		},
 		alternates: {
@@ -89,8 +97,9 @@ export default async function Blog({
 
 	const ogImage = post.image
 		? post.image
-		: `${baseUrl}/api/og?title=${encodeURIComponent(post.title)}`;
+		: `${baseUrl}/blog/${post.slug}/opengraph-image`;
 	const url = `${baseUrl}/blog/${post.slug}`;
+	const tocEntries = buildTocEntries(post.content);
 
 	const jsonLd = {
 		"@context": "https://schema.org",
@@ -140,11 +149,11 @@ export default async function Blog({
 						author="Murad Abdulkadyrov"
 					/>
 					<div className="ml-auto">
-						<CopyPageButton page={post.content} url={url} />
+						<CopyPageButton slug={post.slug} url={url} />
 					</div>
 				</div>
 
-				<Toc mdxContent={post.content} variant="mobile" />
+				<Toc tocEntries={tocEntries} variant="mobile" />
 
 				<div className="relative">
 					<article className="prose max-w-xl mx-auto">
@@ -152,7 +161,7 @@ export default async function Blog({
 					</article>
 					<aside className="hidden lg:block absolute top-0 left-full h-full pl-8">
 						<div className="sticky top-24 w-64">
-							<Toc mdxContent={post.content} variant="desktop" />
+							<Toc tocEntries={tocEntries} variant="desktop" />
 						</div>
 					</aside>
 				</div>

@@ -2,6 +2,7 @@
 
 import { Check, ChevronDown, Copy } from "lucide-react";
 import { toast } from "sonner";
+import { useState } from "react";
 
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import { Button } from "@/components/ui/button";
@@ -60,7 +61,7 @@ const menuItems = {
 	),
 };
 
-export function CopyPageButton({ page, url }: { page: string; url: string }) {
+export function CopyPageButton({ slug, url }: { slug: string; url: string }) {
 	const { copyToClipboard, isCopied } = useCopyToClipboard({
 		onCopy: () => {
 			toast.success("Copied to clipboard");
@@ -69,6 +70,7 @@ export function CopyPageButton({ page, url }: { page: string; url: string }) {
 			toast.error("Failed to copy to clipboard");
 		},
 	});
+	const [isCopying, setIsCopying] = useState(false);
 
 	const trigger = (
 		<Button
@@ -87,7 +89,24 @@ export function CopyPageButton({ page, url }: { page: string; url: string }) {
 					variant="ghost"
 					size="sm"
 					className="cursor-pointer h-8 shadow-none md:h-7 md:text-[0.8rem]"
-					onClick={() => copyToClipboard(page)}
+					disabled={isCopying}
+					onClick={async () => {
+						if (isCopying) return;
+						setIsCopying(true);
+						try {
+							const response = await fetch(`/api/blog/${slug}/md`);
+							if (!response.ok) {
+								throw new Error("Failed to fetch markdown");
+							}
+							const markdown = await response.text();
+							copyToClipboard(markdown);
+						} catch (error) {
+							console.error("Failed to copy markdown:", error);
+							toast.error("Failed to copy markdown");
+						} finally {
+							setIsCopying(false);
+						}
+					}}
 				>
 					{isCopied ? (
 						<Check className="w-4 h-4 mr-1 text-muted-foreground" />
