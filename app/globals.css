@@ -143,6 +143,17 @@ html {
 	@apply m-0 rounded-lg;
 }
 
+.prose iframe {
+	display: block;
+	width: 100%;
+	max-width: 100%;
+	aspect-ratio: 16 / 9;
+	height: auto;
+	margin: 1.25rem 0;
+	border: 0;
+	border-radius: 0.5rem;
+}
+
 .prose p {
 	@apply my-4;
 	color: var(--foreground);
