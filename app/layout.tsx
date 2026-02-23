@@ -10,6 +10,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { baseUrl } from "./sitemap";
 
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ConvexClientProvider } from "./convex-client-provider";
 
 const geistSans = Geist({
@@ -101,6 +102,7 @@ export default function RootLayout({
 								<main id="main-content" className="mt-6 px-0">
 									{children}
 									<Analytics />
+									<SpeedInsights />
 								</main>
 							</div>
 							<Toaster />
