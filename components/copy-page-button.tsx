@@ -2,7 +2,7 @@
 
 import { Check, ChevronDown, Copy } from "lucide-react";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import { Button } from "@/components/ui/button";
@@ -71,6 +71,20 @@ export function CopyPageButton({ slug, url }: { slug: string; url: string }) {
 		},
 	});
 	const [isCopying, setIsCopying] = useState(false);
+	const cachedMarkdownRef = useRef<string | null>(null);
+
+	const fetchMarkdown = async () => {
+		if (cachedMarkdownRef.current) {
+			return cachedMarkdownRef.current;
+		}
+		const response = await fetch(`/api/blog/${slug}/md`);
+		if (!response.ok) {
+			throw new Error("Failed to fetch markdown");
+		}
+		const markdown = await response.text();
+		cachedMarkdownRef.current = markdown;
+		return markdown;
+	};
 
 	const trigger = (
 		<Button
@@ -90,15 +104,17 @@ export function CopyPageButton({ slug, url }: { slug: string; url: string }) {
 					size="sm"
 					className="cursor-pointer h-8 shadow-none md:h-7 md:text-[0.8rem]"
 					disabled={isCopying}
+					onMouseEnter={() => {
+						void fetchMarkdown().catch(() => undefined);
+					}}
+					onFocus={() => {
+						void fetchMarkdown().catch(() => undefined);
+					}}
 					onClick={async () => {
 						if (isCopying) return;
 						setIsCopying(true);
 						try {
-							const response = await fetch(`/api/blog/${slug}/md`);
-							if (!response.ok) {
-								throw new Error("Failed to fetch markdown");
-							}
-							const markdown = await response.text();
+							const markdown = await fetchMarkdown();
 							copyToClipboard(markdown);
 						} catch (error) {
 							console.error("Failed to copy markdown:", error);
