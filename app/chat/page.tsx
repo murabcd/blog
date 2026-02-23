@@ -5,12 +5,15 @@ import { fetchQuery } from "convex/nextjs";
 import { cacheLife, cacheTag } from "next/cache";
 import { api } from "@/convex/_generated/api";
 
-const ogImage = new URL("/api/og", baseUrl).toString();
+const ogImage = new URL("/opengraph-image", baseUrl).toString();
 
 export const metadata: Metadata = {
 	title: "Chat",
 	description:
 		"Get in touch with me. I help startups with product advising and enjoy collaborating on interesting technical challenges.",
+	alternates: {
+		canonical: `${baseUrl}/chat`,
+	},
 	openGraph: {
 		title: "Chat | Murad Abdulkadyrov",
 		description:
@@ -30,7 +33,6 @@ export const metadata: Metadata = {
 		title: "Chat | Murad Abdulkadyrov",
 		description:
 			"Get in touch with me. I help startups with product advising and enjoy collaborating on interesting technical challenges.",
-		images: [ogImage],
 		creator: "@murabcd",
 	},
 };

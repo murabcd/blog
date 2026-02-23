@@ -5,12 +5,15 @@ import { fetchQuery } from "convex/nextjs";
 import { cacheLife, cacheTag } from "next/cache";
 import { api } from "@/convex/_generated/api";
 
-const ogImage = new URL("/api/og", baseUrl).toString();
+const ogImage = new URL("/opengraph-image", baseUrl).toString();
 
 export const metadata: Metadata = {
 	title: "Home",
 	description:
 		"Chief Product Officer at Flomni. Exploring AI, tech, and product building. Sharing real experiences, ideas, and lessons from building products and leading teams.",
+	alternates: {
+		canonical: baseUrl,
+	},
 	openGraph: {
 		title: "Murad Abdulkadyrov",
 		description:
@@ -30,7 +33,6 @@ export const metadata: Metadata = {
 		title: "Murad Abdulkadyrov",
 		description:
 			"Chief Product Officer at Flomni. Exploring AI, tech, and product building. Sharing real experiences, ideas, and lessons from building products and leading teams.",
-		images: [ogImage],
 		creator: "@murabcd",
 	},
 };

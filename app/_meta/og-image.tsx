@@ -1,10 +1,10 @@
 import { ImageResponse } from "next/og";
-import type { NextRequest } from "next/server";
 
-export async function GET(request: NextRequest): Promise<Response> {
-	const url = request.nextUrl;
-	const title = url.searchParams.get("title") || "Build. Ship. Iterate.";
+export const defaultAlt = "Murad Abdulkadyrov";
+export const defaultSize = { width: 1200, height: 630 };
+export const defaultContentType = "image/png";
 
+export function buildOgImage(title: string) {
 	return new ImageResponse(
 		<div
 			style={{
@@ -13,7 +13,7 @@ export async function GET(request: NextRequest): Promise<Response> {
 				width: "100%",
 				alignItems: "center",
 				justifyContent: "center",
-				letterSpacing: "-.02em",
+				letterSpacing: "-0.02em",
 				fontWeight: 700,
 				background: "white",
 			}}
@@ -63,8 +63,8 @@ export async function GET(request: NextRequest): Promise<Response> {
 			</div>
 		</div>,
 		{
-			width: 1200,
-			height: 630,
+			width: defaultSize.width,
+			height: defaultSize.height,
 		},
 	);
 }

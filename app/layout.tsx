@@ -22,7 +22,7 @@ const geistMono = Geist_Mono({
 	subsets: ["latin"],
 });
 
-const ogImage = new URL("/api/og", baseUrl).toString();
+const ogImage = new URL("/opengraph-image", baseUrl).toString();
 
 export const metadata: Metadata = {
 	metadataBase: new URL(baseUrl),
@@ -51,7 +51,6 @@ export const metadata: Metadata = {
 		card: "summary_large_image",
 		title: "Murad Abdulkadyrov",
 		description: "Exploring AI, tech, and product building.",
-		images: [ogImage],
 		creator: "@murabcd",
 	},
 	robots: {
@@ -65,6 +64,12 @@ export const metadata: Metadata = {
 			"max-snippet": -1,
 		},
 	},
+};
+
+export const viewport = {
+	width: "device-width",
+	initialScale: 1,
+	themeColor: "#ffffff",
 };
 
 export default function RootLayout({

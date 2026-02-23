@@ -33,9 +33,7 @@ export async function generateMetadata({
 		summary: description,
 		image,
 	} = event;
-	const ogImage = image
-		? image
-		: `${baseUrl}/api/og?title=${encodeURIComponent(title)}`;
+	const ogImage = image ? image : `${baseUrl}/talk/${slug}/opengraph-image`;
 	const url = `${baseUrl}/talk/${event.slug}`;
 
 	return {
@@ -62,7 +60,6 @@ export async function generateMetadata({
 			card: "summary_large_image",
 			title,
 			description,
-			images: [ogImage],
 			creator: "@murabcd",
 		},
 		alternates: {
@@ -85,7 +82,7 @@ export default async function EventPage({
 
 	const ogImage = event.image
 		? event.image
-		: `${baseUrl}/api/og?title=${encodeURIComponent(event.title)}`;
+		: `${baseUrl}/talk/${event.slug}/opengraph-image`;
 	const url = `${baseUrl}/talk/${event.slug}`;
 
 	const jsonLd = {
