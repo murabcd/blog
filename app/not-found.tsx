@@ -23,7 +23,7 @@ export default function NotFound() {
 				</EmptyHeader>
 				<EmptyContent>
 					<Button asChild size="sm">
-						<Link href="/">Go back</Link>
+						<Link href="/">Go Back</Link>
 					</Button>
 				</EmptyContent>
 			</Empty>

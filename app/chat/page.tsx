@@ -48,14 +48,16 @@ export default async function Page() {
 	if (!page) {
 		return (
 			<section>
-				<h1 className="mb-8 text-2xl font-semibold tracking-tighter">Chat</h1>
+				<h1 className="title mb-8 text-2xl font-semibold tracking-tighter">
+					Chat
+				</h1>
 			</section>
 		);
 	}
 
 	return (
 		<section>
-			<h1 className="mb-8 text-2xl font-semibold tracking-tighter">
+			<h1 className="title mb-8 text-2xl font-semibold tracking-tighter">
 				{page.title}
 			</h1>
 			<article className="prose">

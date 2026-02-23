@@ -47,7 +47,7 @@ export default async function Page() {
 
 	return (
 		<section>
-			<h1 className="mb-8 text-2xl font-semibold tracking-tighter">
+			<h1 className="title mb-8 text-2xl font-semibold tracking-tighter">
 				Murad Abdulkadyrov
 			</h1>
 			<p className="mb-4">

@@ -46,7 +46,9 @@ export default async function Page() {
 
 	return (
 		<section>
-			<h1 className="font-semibold text-2xl mb-8 tracking-tighter">Talk</h1>
+			<h1 className="title font-semibold text-2xl mb-8 tracking-tighter">
+				Talk
+			</h1>
 			<TalksEvents events={events} />
 		</section>
 	);

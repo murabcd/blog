@@ -65,7 +65,7 @@ export async function createRealtimeConnection(
   const offer = await pc.createOffer();
   await pc.setLocalDescription(offer);
 
-  const sdpResponse = await fetch(/* ... OpenAI endpoint ... */, {
+  const sdpResponse = await fetch(/* … OpenAI endpoint … */, {
     method: "POST",
     body: offer.sdp,
     headers: { Authorization: `Bearer ${EPHEMERAL_KEY}` },
@@ -109,7 +109,7 @@ const search: AgentConfig = {
   toolLogic: {
     webSearch: async ({ query }: { query: string }) => {
       const response = await fetch("/api/search", {
-        /* ... */
+        /* … */
       });
       const result = await response.json();
       return result;

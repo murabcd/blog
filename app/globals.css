@@ -5,6 +5,7 @@
 
 html {
 	scroll-behavior: smooth;
+	color-scheme: light dark;
 }
 
 ::selection {
@@ -69,7 +70,7 @@ html {
 }
 
 .prose a {
-	@apply transition-all underline-offset-2 decoration-[0.1em];
+	@apply transition-colors underline-offset-2 decoration-[0.1em];
 	text-decoration-color: var(--muted-foreground);
 }
 
@@ -162,21 +163,25 @@ html {
 .prose h1 {
 	@apply text-4xl font-medium tracking-tight mt-6 mb-2;
 	color: var(--foreground);
+	scroll-margin-top: 6rem;
 }
 
 .prose h2 {
 	@apply text-xl font-medium tracking-tight mt-6 mb-2;
 	color: var(--foreground);
+	scroll-margin-top: 6rem;
 }
 
 .prose h3 {
 	@apply text-xl font-medium tracking-tight mt-6 mb-2;
 	color: var(--foreground);
+	scroll-margin-top: 6rem;
 }
 
 .prose h4 {
 	@apply text-lg font-medium tracking-tight mt-6 mb-2;
 	color: var(--foreground);
+	scroll-margin-top: 6rem;
 }
 
 .prose strong {
