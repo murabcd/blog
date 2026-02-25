@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ArrowUp } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -19,13 +19,34 @@ export function FloatingChatInput({
 	url: string;
 }) {
 	const [value, setValue] = useState("");
+	const [isVisible, setIsVisible] = useState(true);
 	const promptUrl = useMemo(() => {
 		const prompt = buildPrompt({ url, question: value });
 		return `${BASE_URL}?q=${encodeURIComponent(prompt)}`;
 	}, [url, value]);
 
+	useEffect(() => {
+		const footer = document.querySelector<HTMLElement>("footer");
+		if (!footer) return;
+		const updateVisibility = () => {
+			const footerTop = footer.getBoundingClientRect().top;
+			setIsVisible(footerTop > window.innerHeight);
+		};
+		updateVisibility();
+		window.addEventListener("scroll", updateVisibility, { passive: true });
+		window.addEventListener("resize", updateVisibility);
+		return () => {
+			window.removeEventListener("scroll", updateVisibility);
+			window.removeEventListener("resize", updateVisibility);
+		};
+	}, []);
+
 	return (
-		<div className="fixed inset-x-0 bottom-4 z-50 flex justify-center px-4 sm:bottom-6 pointer-events-none">
+		<div
+			className={`fixed inset-x-0 bottom-4 z-50 flex justify-center px-4 sm:bottom-6 pointer-events-none transition-all duration-300 ${
+				isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+			}`}
+		>
 			<div className="w-full max-w-2xl pointer-events-none">
 				<div className="mx-auto w-full max-w-[185px] transition-[max-width] duration-300 focus-within:max-w-[315px]">
 					<form
