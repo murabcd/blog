@@ -74,6 +74,7 @@ export function FloatingChatInput({
 						<Button
 							type="submit"
 							size="icon"
+							aria-label="Ask about this post"
 							className="shrink-0 size-8 rounded-full bg-foreground text-background transition-transform duration-200 hover:-translate-y-0.5"
 						>
 							<ArrowUp className="size-4" />

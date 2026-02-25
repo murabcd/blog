@@ -56,7 +56,10 @@ export function SearchCommand() {
 				onOpenChange={setOpen}
 				className="sm:max-w-[450px]"
 			>
-				<CommandInput placeholder="Search content…" />
+				<CommandInput
+					placeholder="Search content…"
+					aria-label="Search content"
+				/>
 				<CommandList>
 					{isLoading ? (
 						<div className="space-y-2 px-2 py-2">

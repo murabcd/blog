@@ -60,6 +60,7 @@ export function LikeButton({ postSlug }: LikeButtonProps) {
 				variant="ghost"
 				size="sm"
 				disabled
+				aria-label="Like post"
 				className="h-8 shadow-none md:h-7 md:text-[0.8rem]"
 			>
 				<Heart className="w-4 h-4 mr-1 text-muted-foreground" />
@@ -76,6 +77,7 @@ export function LikeButton({ postSlug }: LikeButtonProps) {
 					size="sm"
 					onClick={handleLike}
 					aria-pressed={!!isLiked}
+					aria-label={isLiked ? "Unlike post" : "Like post"}
 					className="cursor-pointer h-8 shadow-none md:h-7 md:text-[0.8rem]"
 				>
 					<Heart

@@ -26,6 +26,7 @@ export default function Footer() {
 				<li>
 					<a
 						className="flex items-center transition-all hover:text-primary"
+						aria-label="RSS feed"
 						rel="noopener noreferrer"
 						target="_blank"
 						href="/api/rss"
@@ -37,6 +38,7 @@ export default function Footer() {
 				<li>
 					<a
 						className="flex items-center transition-all hover:text-primary"
+						aria-label="X (Twitter)"
 						rel="noopener noreferrer"
 						target="_blank"
 						href="https://x.com/murabcd"
@@ -48,6 +50,7 @@ export default function Footer() {
 				<li>
 					<a
 						className="flex items-center transition-all hover:text-primary"
+						aria-label="LinkedIn"
 						rel="noopener noreferrer"
 						target="_blank"
 						href="https://www.linkedin.com/in/murabcd/"
@@ -59,6 +62,7 @@ export default function Footer() {
 				<li>
 					<a
 						className="flex items-center transition-all hover:text-primary"
+						aria-label="GitHub"
 						rel="noopener noreferrer"
 						target="_blank"
 						href="https://github.com/murabcd"
