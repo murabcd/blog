@@ -11,6 +11,7 @@ import { LikeButton } from "@/components/like-button";
 import { ShareButton } from "@/components/share-button";
 import { CopyPageButton } from "@/components/copy-page-button";
 import { Toc } from "@/components/toc";
+import { FloatingChatInput } from "@/components/floating-chat-input";
 import { calculateReadingTime, formatDate, slugify } from "@/lib/utils";
 
 async function getBlogPostBySlugCached(slug: string) {
@@ -166,6 +167,7 @@ export default async function Blog({
 					</aside>
 				</div>
 			</section>
+			<FloatingChatInput url={url} />
 		</>
 	);
 }

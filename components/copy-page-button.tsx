@@ -22,7 +22,7 @@ import { Icons } from "@/components/icons";
 
 function getPromptUrl(baseURL: string, url: string) {
 	return `${baseURL}?q=${encodeURIComponent(
-		`I’m reading this blog article: ${url}.
+		`I’m reading this blog article: ${url}
 Please help me understand the content, answer questions about it, provide examples, or discuss the topics covered in this article.
   `,
 	)}`;
