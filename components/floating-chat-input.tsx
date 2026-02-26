@@ -13,11 +13,7 @@ function buildPrompt({ url, question }: { url: string; question: string }) {
 	return `${url} ${trimmed}`;
 }
 
-export function FloatingChatInput({
-	url,
-}: {
-	url: string;
-}) {
+export function FloatingChatInput({ url }: { url: string }) {
 	const [value, setValue] = useState("");
 	const [isVisible, setIsVisible] = useState(true);
 	const promptUrl = useMemo(() => {
@@ -28,16 +24,15 @@ export function FloatingChatInput({
 	useEffect(() => {
 		const footer = document.querySelector<HTMLElement>("footer");
 		if (!footer) return;
-		const updateVisibility = () => {
-			const footerTop = footer.getBoundingClientRect().top;
-			setIsVisible(footerTop > window.innerHeight);
-		};
-		updateVisibility();
-		window.addEventListener("scroll", updateVisibility, { passive: true });
-		window.addEventListener("resize", updateVisibility);
+
+		const observer = new IntersectionObserver(([entry]) => {
+			setIsVisible(!entry.isIntersecting);
+		});
+
+		observer.observe(footer);
+
 		return () => {
-			window.removeEventListener("scroll", updateVisibility);
-			window.removeEventListener("resize", updateVisibility);
+			observer.disconnect();
 		};
 	}, []);
 
