@@ -119,39 +119,6 @@ export function Toc({ mdxContent, tocEntries, variant = "desktop" }: TocProps) {
 			}
 		});
 
-		const handleScroll = () => {
-			// A small buffer helps.
-			if (
-				window.innerHeight + window.scrollY >=
-				document.body.offsetHeight - 2
-			) {
-				if (toc.length > 0) {
-					setActiveId(toc[toc.length - 1].slug);
-				}
-				setShowBackToTop(true);
-			} else {
-				setShowBackToTop(false);
-			}
-
-			const firstHeadingId = toc[0]?.slug;
-			const firstHeading = firstHeadingId
-				? document.getElementById(firstHeadingId)
-				: null;
-
-			if (firstHeading) {
-				const shouldShow = firstHeading.getBoundingClientRect().top <= 72;
-				setShowMobileToc(shouldShow);
-				if (!shouldShow) {
-					setMobileOpen(false);
-				}
-			} else {
-				setShowMobileToc(false);
-			}
-		};
-
-		window.addEventListener("scroll", handleScroll, { passive: true });
-		handleScroll();
-
 		return () => {
 			toc.forEach(({ slug }) => {
 				const el = document.getElementById(slug);
@@ -159,7 +126,53 @@ export function Toc({ mdxContent, tocEntries, variant = "desktop" }: TocProps) {
 					observer.unobserve(el);
 				}
 			});
-			window.removeEventListener("scroll", handleScroll);
+		};
+	}, [toc]);
+
+	useEffect(() => {
+		const firstHeadingId = toc[0]?.slug;
+		const firstHeading = firstHeadingId
+			? document.getElementById(firstHeadingId)
+			: null;
+		const footer = document.querySelector("footer");
+
+		if (!firstHeading) {
+			setShowMobileToc(false);
+			return;
+		}
+
+		const updateMobileToc = () => {
+			const shouldShow = firstHeading.getBoundingClientRect().top <= 72;
+			setShowMobileToc(shouldShow);
+			if (!shouldShow) {
+				setMobileOpen(false);
+			}
+		};
+
+		const firstHeadingObserver = new IntersectionObserver(() => {
+			updateMobileToc();
+		});
+		firstHeadingObserver.observe(firstHeading);
+		updateMobileToc();
+
+		let footerObserver: IntersectionObserver | null = null;
+		if (footer) {
+			footerObserver = new IntersectionObserver(([entry]) => {
+				setShowBackToTop(entry.isIntersecting);
+			});
+			footerObserver.observe(footer);
+			setShowBackToTop(
+				footer.getBoundingClientRect().top <= window.innerHeight,
+			);
+		} else {
+			setShowBackToTop(false);
+		}
+
+		return () => {
+			firstHeadingObserver.disconnect();
+			if (footerObserver) {
+				footerObserver.disconnect();
+			}
 		};
 	}, [toc]);
 
