@@ -154,17 +154,11 @@ export default async function Blog({
 					</div>
 				</div>
 
-				<Toc tocEntries={tocEntries} variant="mobile" />
-
 				<div className="relative">
 					<article className="prose max-w-xl mx-auto">
 						<CustomMDX source={post.content} />
 					</article>
-					<aside className="hidden lg:block absolute top-0 left-full h-full pl-8">
-						<div className="sticky top-24 w-64">
-							<Toc tocEntries={tocEntries} variant="desktop" />
-						</div>
-					</aside>
+					<Toc tocEntries={tocEntries} variant="combined" />
 				</div>
 			</section>
 			<FloatingChatInput url={url} />
