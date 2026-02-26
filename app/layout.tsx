@@ -78,6 +78,8 @@ export default function RootLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const isProduction = process.env.NODE_ENV === "production";
+
 	return (
 		<html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
 			<body
@@ -101,8 +103,8 @@ export default function RootLayout({
 							<div className="grow">
 								<main id="main-content" className="mt-6 px-0">
 									{children}
-									<Analytics />
-									<SpeedInsights />
+									{isProduction ? <Analytics /> : null}
+									{isProduction ? <SpeedInsights /> : null}
 								</main>
 							</div>
 							<Toaster />
