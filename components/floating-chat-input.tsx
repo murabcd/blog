@@ -16,6 +16,7 @@ function buildPrompt({ url, question }: { url: string; question: string }) {
 export function FloatingChatInput({ url }: { url: string }) {
 	const [value, setValue] = useState("");
 	const [isVisible, setIsVisible] = useState(true);
+	const canSubmit = value.trim().length > 0;
 	const promptUrl = useMemo(() => {
 		const prompt = buildPrompt({ url, question: value });
 		return `${BASE_URL}?q=${encodeURIComponent(prompt)}`;
@@ -48,6 +49,7 @@ export function FloatingChatInput({ url }: { url: string }) {
 						className="pointer-events-auto relative flex items-center gap-2 rounded-full border border-foreground/10 bg-background/70 dark:bg-background/60 pl-4 pr-1 py-1.5 shadow-[0_12px_30px_rgba(0,0,0,0.22)] backdrop-blur-sm transition-shadow duration-300 focus-within:shadow-[0_18px_40px_rgba(0,0,0,0.3)]"
 						onSubmit={(event) => {
 							event.preventDefault();
+							if (!canSubmit) return;
 							window.open(promptUrl, "_blank", "noopener,noreferrer");
 						}}
 					>
@@ -60,7 +62,7 @@ export function FloatingChatInput({ url }: { url: string }) {
 								value={value}
 								onChange={(event) => setValue(event.target.value)}
 								placeholder="Ask AI…"
-								className="h-auto w-full min-w-0 border-0 bg-transparent px-0 py-0 text-sm text-foreground/90 shadow-none outline-none placeholder:text-foreground/50 focus-visible:ring-0 rounded-none dark:bg-transparent"
+								className="h-auto w-full min-w-0 border-0 bg-transparent px-0 py-0 text-base sm:text-sm text-foreground/90 shadow-none outline-none placeholder:text-foreground/50 focus-visible:ring-0 rounded-none dark:bg-transparent"
 								autoComplete="off"
 								autoCorrect="off"
 								spellCheck={false}
@@ -69,6 +71,7 @@ export function FloatingChatInput({ url }: { url: string }) {
 						<Button
 							type="submit"
 							size="icon"
+							disabled={!canSubmit}
 							aria-label="Ask about this post"
 							className="shrink-0 size-8 rounded-full bg-foreground text-background transition-transform duration-200 hover:-translate-y-0.5"
 						>
