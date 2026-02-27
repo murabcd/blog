@@ -3,7 +3,9 @@
   <h1 align="center">Blog</h1>
 </a>
 
+<p align="center">
 CMS-style workflow where content is stored in Convex and synced from markdown/MDX files.
+</p>
 
 <p align="center">
   Blog Built with Next.js and Convex.
