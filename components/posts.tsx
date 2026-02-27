@@ -39,11 +39,11 @@ export function BlogPosts({
 					</Link>
 				))}
 			</div>
-			{limit && (
+			{limit !== undefined ? (
 				<Link href="/blog" className="mt-8 block text-sm hover:text-primary">
 					view all posts →
 				</Link>
-			)}
+			) : null}
 		</div>
 	);
 }
