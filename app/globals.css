@@ -6,6 +6,11 @@
 html {
 	scroll-behavior: smooth;
 	color-scheme: light dark;
+	overscroll-behavior-y: none;
+}
+
+body {
+	overscroll-behavior-y: none;
 }
 
 ::selection {
