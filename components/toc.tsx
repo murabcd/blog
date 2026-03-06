@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+import { createPortal } from "react-dom";
 import { slugify } from "@/lib/utils";
 import { ChevronDown, CircleArrowUp, ChartNoAxesGantt } from "lucide-react";
 
@@ -72,6 +73,8 @@ export function Toc({ mdxContent, tocEntries, variant = "desktop" }: TocProps) {
 	const [showBackToTop, setShowBackToTop] = useState(false);
 	const [showMobileToc, setShowMobileToc] = useState(false);
 	const [mobileOpen, setMobileOpen] = useState(false);
+	const [mobileRevealOffset, setMobileRevealOffset] = useState(64);
+	const [mobileTocSlot, setMobileTocSlot] = useState<HTMLElement | null>(null);
 	const mobilePanelRef = useRef<HTMLDivElement | null>(null);
 	const isMobile = variant === "mobile";
 	const isDesktop = variant === "desktop";
@@ -130,6 +133,35 @@ export function Toc({ mdxContent, tocEntries, variant = "desktop" }: TocProps) {
 	}, [toc]);
 
 	useEffect(() => {
+		const navbar = document.querySelector<HTMLElement>("[data-site-navbar]");
+		const tocSlot = document.querySelector<HTMLElement>("[data-mobile-toc-slot]");
+
+		setMobileTocSlot(tocSlot);
+
+		if (!navbar) {
+			setMobileRevealOffset(64);
+			return;
+		}
+
+		const updateNavbarHeight = () => {
+			setMobileRevealOffset(Math.round(navbar.getBoundingClientRect().height));
+		};
+
+		const resizeObserver = new ResizeObserver(() => {
+			updateNavbarHeight();
+		});
+
+		resizeObserver.observe(navbar);
+		window.addEventListener("resize", updateNavbarHeight);
+		updateNavbarHeight();
+
+		return () => {
+			resizeObserver.disconnect();
+			window.removeEventListener("resize", updateNavbarHeight);
+		};
+	}, []);
+
+	useEffect(() => {
 		const firstHeadingId = toc[0]?.slug;
 		const firstHeading = firstHeadingId
 			? document.getElementById(firstHeadingId)
@@ -142,17 +174,20 @@ export function Toc({ mdxContent, tocEntries, variant = "desktop" }: TocProps) {
 		}
 
 		const updateMobileToc = () => {
-			const shouldShow = firstHeading.getBoundingClientRect().top <= 72;
+			const shouldShow =
+				firstHeading.getBoundingClientRect().top <= mobileRevealOffset;
 			setShowMobileToc(shouldShow);
 			if (!shouldShow) {
 				setMobileOpen(false);
 			}
 		};
 
-		const firstHeadingObserver = new IntersectionObserver(() => {
+		const handleViewportChange = () => {
 			updateMobileToc();
-		});
-		firstHeadingObserver.observe(firstHeading);
+		};
+
+		window.addEventListener("scroll", handleViewportChange, { passive: true });
+		window.addEventListener("resize", handleViewportChange);
 		updateMobileToc();
 
 		let footerObserver: IntersectionObserver | null = null;
@@ -169,12 +204,13 @@ export function Toc({ mdxContent, tocEntries, variant = "desktop" }: TocProps) {
 		}
 
 		return () => {
-			firstHeadingObserver.disconnect();
+			window.removeEventListener("scroll", handleViewportChange);
+			window.removeEventListener("resize", handleViewportChange);
 			if (footerObserver) {
 				footerObserver.disconnect();
 			}
 		};
-	}, [toc]);
+	}, [mobileRevealOffset, toc]);
 
 	useEffect(() => {
 		if (!mobileOpen) {
@@ -211,61 +247,67 @@ export function Toc({ mdxContent, tocEntries, variant = "desktop" }: TocProps) {
 		});
 	};
 
+		const mobileTocContent = (
+			<div
+				ref={mobilePanelRef}
+				className="w-full rounded-none bg-background dark:bg-background"
+			>
+			<button
+				type="button"
+				onClick={() => setMobileOpen((prev) => !prev)}
+				className="w-full flex items-center justify-between gap-3 pl-4 pr-5.5 py-3 text-base font-normal"
+			>
+				<span className="flex items-center gap-2">
+					<ChartNoAxesGantt className="h-4 w-4" />
+					On this page
+				</span>
+				<ChevronDown
+					className={`h-4 w-4 transition-transform ${
+						mobileOpen ? "rotate-180" : ""
+					}`}
+				/>
+			</button>
+			<div
+				className={`overflow-hidden transition-[max-height,opacity] duration-300 ${
+					mobileOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+				}`}
+			>
+				<div className="px-4 pb-4">
+					<ul className="space-y-2 text-base font-normal">
+						{toc.map(({ level, text, slug }) => (
+							<li
+								key={slug}
+								style={{ marginLeft: `${(level - 2) * 0.75}rem` }}
+								className={`border-l pl-3 transition-colors ${
+									activeId === slug
+										? "border-foreground text-foreground"
+										: "border-border/60 text-muted-foreground"
+								}`}
+							>
+								<a
+									href={`#${slug}`}
+									onClick={() => setMobileOpen(false)}
+									className="block"
+								>
+									{text}
+								</a>
+							</li>
+						))}
+					</ul>
+				</div>
+			</div>
+		</div>
+	);
+
 	return (
 		<>
-			{(isMobile || isCombined) && showMobileToc ? (
-				<div className="lg:hidden fixed top-16 left-0 right-0 z-40">
-					<div
-						ref={mobilePanelRef}
-						className="w-full rounded-none shadow-sm border-b border-border/50 bg-background dark:bg-background"
-					>
-						<button
-							type="button"
-							onClick={() => setMobileOpen((prev) => !prev)}
-							className="w-full flex items-center justify-between gap-3 pl-4 pr-5.5 py-3 text-base font-normal"
-						>
-							<span className="flex items-center gap-2">
-								<ChartNoAxesGantt className="h-4 w-4" />
-								On this page
-							</span>
-							<ChevronDown
-								className={`h-4 w-4 transition-transform ${
-									mobileOpen ? "rotate-180" : ""
-								}`}
-							/>
-						</button>
-						<div
-							className={`overflow-hidden transition-[max-height,opacity] duration-300 ${
-								mobileOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-							}`}
-						>
-							<div className="px-4 pb-4">
-								<ul className="space-y-2 text-base font-normal">
-									{toc.map(({ level, text, slug }) => (
-										<li
-											key={slug}
-											style={{ marginLeft: `${(level - 2) * 0.75}rem` }}
-											className={`border-l pl-3 transition-colors ${
-												activeId === slug
-													? "border-foreground text-foreground"
-													: "border-border/60 text-muted-foreground"
-											}`}
-										>
-											<a
-												href={`#${slug}`}
-												onClick={() => setMobileOpen(false)}
-												className="block"
-											>
-												{text}
-											</a>
-										</li>
-									))}
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
-			) : null}
+			{(isMobile || isCombined) && showMobileToc
+				? mobileTocSlot
+					? createPortal(mobileTocContent, mobileTocSlot)
+					: (
+						<div className="lg:hidden">{mobileTocContent}</div>
+					)
+				: null}
 			{isDesktop ? (
 				<div className="sticky top-24 hidden lg:block">
 					<DesktopToc
