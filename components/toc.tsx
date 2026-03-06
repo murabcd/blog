@@ -34,18 +34,20 @@ function DesktopToc({
 				<ChartNoAxesGantt className="h-4 w-4" />
 				<p className="tracking-tight text-sm font-medium">On this page</p>
 			</div>
-			<div>
+			<div className="relative pl-3">
+				<div className="absolute left-0 top-0 bottom-0 w-px bg-border/60" />
 				<ul className="space-y-1">
 					{toc.map(({ level, text, slug }) => (
 						<li
 							key={slug}
 							style={{ marginLeft: `${(level - 2) * 1}rem` }}
-							className={`border-l pl-3 text-xs hover:text-foreground transition-colors ${
-								activeId === slug
-									? "border-foreground text-foreground"
-									: "border-border/60 text-muted-foreground"
+							className={`relative pl-3 text-xs hover:text-foreground transition-colors ${
+								activeId === slug ? "text-foreground" : "text-muted-foreground"
 							}`}
 						>
+							{activeId === slug ? (
+								<span className="absolute left-[-0.75rem] top-0 bottom-0 w-px bg-foreground" />
+							) : null}
 							<a href={`#${slug}`}>{text}</a>
 						</li>
 					))}
