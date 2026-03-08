@@ -1,0 +1,65 @@
+---
+title: "The Autonomous Data Stack"
+publishedAt: "2026-03-01"
+summary: "For years data teams have been trapped maintaining rigid semantic layers to explain data to machines. A new architecture uses AI agents to read raw code and learn on the fly, finally making true self-serve data a reality."
+---
+
+## The End of the Dashboard Queue
+
+The "Modern Data Stack" was a massive step forward for the technology industry. It centralized information and made databases incredibly fast. But it had one fatal flaw. It only made data accessible to data analysts. 
+
+If someone in marketing or sales needed an answer, they still had to write a ticket. They had to wait for a human to translate their business question into a SQL query, build a dashboard, and explain the results. The human translation layer was a permanent bottleneck. 
+
+The AI Data Stack removes this bottleneck. It replaces the human translator with autonomous agents. But to make these agents reliable, we have to abandon one of the most painful practices in data engineering: the semantic layer.
+
+## Killing the Semantic Layer
+
+For years, the gold standard for data automation was building a semantic layer. This is a massive, hand-written dictionary. It maps abstract business concepts directly to specific database columns. 
+
+Semantic layers are a nightmare to maintain. They are brittle. They require constant human updates. They create a new bottleneck because the data team has to anticipate every possible question a user might ask and pre-define the logic for it.
+
+We can now replace this static dictionary with **Context Management**. 
+
+Instead of pre-defining everything, you give an AI agent direct access to your raw source of truth. You connect it to your data transformation code and your application logic. When a user asks a question, the agent investigates the code on demand to figure out how the data fits together.
+
+## The Scout and the Builder
+
+If you ask an AI to write a SQL query immediately, it will fail. It will guess the table structures and invent columns that do not exist. 
+
+To fix this, you must split the work. Before writing any code, you dispatch a cheap, specialized sub-agent. Think of it as a scout. 
+
+The scout's only job is to investigate the landscape. It reads the raw code files, traces how data flows from one table to another, and checks for specific business rules. It then returns a structured brief containing the exact tables, column definitions, and filter rules needed for the job. 
+
+This brief is handed to the main agent. Because the main agent now has a perfect, verified map of the data, it can write flawless SQL without hallucinating.
+
+## Capturing Tribal Knowledge
+
+Every company has hidden rules about its data. An analyst might know that the "orders" table duplicates rows when an item ships twice, so you always have to filter by a specific ID. Historically, this "tribal knowledge" lived exclusively in the heads of a few senior employees.
+
+Agents can now learn and store this knowledge automatically. 
+
+When an agent makes a mistake and a user corrects it, you extract that correction. You save it as a "quirk" in a searchable database. 
+
+The next time someone asks a related question, the system searches the database, finds the quirk, and injects that rule into the agent's instructions. The system builds its own institutional memory based on actual usage. It gets smarter every single day without requiring an engineer to update a central repository.
+
+## The Self-Correction Loop
+
+Even with a scout and a memory bank, an agent will occasionally write a query that executes perfectly but answers the wrong question. It might miss a subtle time window or use the wrong join logic. It will confidently deliver a bad answer.
+
+The solution is forcing the agent to grade its own homework. 
+
+Before showing the result to the user, a background process scores the generated SQL. It checks if the query structurally matches the intent of the user. It breaks the original question into smaller parts and verifies that the code addresses every single part. 
+
+If the scoring system finds a gap, it triggers a recovery loop. It tells the agent exactly what it missed and forces it to try again. The agent fixes its own logic silently. The user only ever sees the final, verified result.
+
+## Bringing It to the Team
+
+To see what this actually looks like in practice, I recently built an open-source project for my own team called [Omni](https://github.com/murabcd/omni) to bridge the gap between our data and our daily workflows. 
+
+Omni can run analytics queries in PostHog, pull and analyze issues from Jira and Yandex Tracker, extract data from Figma or Google Docs and so on.
+
+If a someone is out of the office and needs to know a specific user trend, they don't need to write a ticket. They just ask the Omni, and the agent orchestrates the tools, searches its memory, and delivers the data right in the chat. 
+
+## Conclusion
+
+By replacing brittle, manually updated dictionaries with dynamic agents that read code and learn from their mistakes, companies are unlocking massive leverage. A setup that previously required a team of five analysts can now be managed by one person. Anyone in the company can ask a complex question in chat and get a verified answer in seconds. The future of data is finally self-serve.
