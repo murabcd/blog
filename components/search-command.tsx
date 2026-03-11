@@ -14,7 +14,6 @@ import {
 	CommandInput,
 	CommandItem,
 	CommandList,
-	CommandSeparator,
 } from "@/components/ui/command";
 import { Kbd } from "@/components/ui/kbd";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -85,7 +84,6 @@ export function SearchCommand() {
 									</CommandItem>
 								))}
 							</CommandGroup>
-							<CommandSeparator />
 							<CommandGroup heading="Talks">
 								{(talks ?? []).map((talk) => (
 									<CommandItem

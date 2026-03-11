@@ -73,7 +73,7 @@ export function FloatingChatInput({ url }: { url: string }) {
 							size="icon"
 							disabled={!canSubmit}
 							aria-label="Ask about this post"
-							className="shrink-0 size-8 rounded-full bg-foreground text-background transition-transform duration-200 hover:-translate-y-0.5"
+							className="shrink-0 size-8 cursor-pointer rounded-full bg-foreground text-background transition-transform duration-200 hover:-translate-y-0.5 disabled:cursor-not-allowed"
 						>
 							<ArrowUp className="size-4" />
 						</Button>
