@@ -1,0 +1,45 @@
+---
+title: "Standardizing AI Workflows Too Early"
+publishedAt: "2026-03-22"
+summary: "Companies are trying to lock in one official way of working with AI too early. The better approach is to give teams the environment to experiment, then let the useful patterns emerge."
+---
+
+## Standardization is the Wrong Reflex
+
+Every company is trying to answer the same question right now: how should people actually work with AI when building software? Most companies respond with the same reflex. They start searching for the official workflow. What is the approved tool? What is the right interface? What is the standard way for engineers to work with agents?
+
+This is understandable. Standardization feels like maturity. It feels like control. But I think it is the wrong move. We are still far too early. The workflows are changing every month. The interfaces are changing. The orchestration patterns are changing. Even the role of the human is changing. If your developer productivity team is locking everyone into one approved workflow right now, it is probably reducing learning, not improving it.
+
+I do not think there is one right answer yet, and pretending there is usually slows a team down.
+
+## The Good Ones All Look Different
+
+The more I look at serious teams using agents every day, the less I believe in the idea of a single best workflow. One person wants a terminal and nothing else. Another wants an inbox that tracks long-running tasks. Another wants background agents watching support tickets. Another wants something reading logs and opening issues. Another wants a multi-agent setup coordinating research, coding, and review. Another just wants a very good coding agent and a clean branch.
+
+This is not a problem to eliminate. It is a signal. It means people are still discovering what fits the shape of their work. The engineer fixing flakes should not work the same way as the PM building a prototype. The designer exploring flows should not need the same setup as the infra person debugging a production issue at midnight. Forcing one workflow across all of that is like deciding there should be one way to think.
+
+## The Important Layer is Compute
+
+Most people think the important primitive is the agent. I do not think it is. The important layer is compute. You need fast, disposable, isolated environments that are easy to create, easy to trust, easy to share, and available from anywhere.
+
+Once that exists, everything else starts showing up. Agents have somewhere to run. Automations have somewhere to live. Work can be resumed without reconstructing local state. Experiments stop being precious. Parallelism becomes normal.
+
+Without that layer, most agent workflows are still fragile. They depend on one laptop, one terminal, one person staying online, one environment that only half works, one setup nobody else wants to touch. That is not a real system. That is a demo.
+
+## Real Systems Emerge as Small Loops
+
+When people talk about the future of AI-powered development, they often imagine one big command center. That is not what I see. What I see is lots of small loops: a workflow that summarizes support signals, one that scans logs, one that fights flaky tests in the background, one that keeps agent conversations organized in one place, and one that opens branches, writes code, and waits for a human to review.
+
+None of these is the whole picture. Together, they start to become a real operating model. The winning organizations will not design this top-down in one shot. They will let these loops emerge, compete, combine, and harden over time.
+
+## Give People Infrastructure, Not Doctrine
+
+The job of leadership right now is not to declare the final workflow. The job is to provide the conditions for useful workflows to emerge: fast provisioning, secure isolation, easy sharing, good integrations, visibility, and trust.
+
+If you give teams those primitives, they will discover their own durable way of working. And no, it will not look the same across the company. That is not dysfunction. That is discovery.
+
+## Conclusion
+
+Teams do not need a final answer yet. They need room to explore, compare, and refine how AI fits into their actual work. The mistake is trying to freeze this too early into one tool, one interface, or one mandated process.
+
+The companies that move fastest will be the ones that make experimentation cheap, safe, and normal. Over time, the strong patterns will become process. The weak ones will disappear. The strange ones will sometimes become the most valuable ones. That is how durable ways of working get built: not by decree, but by evolution.
