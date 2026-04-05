@@ -10,6 +10,7 @@
 
 import type * as blog from "../blog.js";
 import type * as code from "../code.js";
+import type * as lib_syncAuth from "../lib/syncAuth.js";
 import type * as pages from "../pages.js";
 import type * as posts from "../posts.js";
 import type * as talk from "../talk.js";
@@ -23,6 +24,7 @@ import type {
 declare const fullApi: ApiFromModules<{
   blog: typeof blog;
   code: typeof code;
+  "lib/syncAuth": typeof lib_syncAuth;
   pages: typeof pages;
   posts: typeof posts;
   talk: typeof talk;

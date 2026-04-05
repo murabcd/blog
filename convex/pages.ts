@@ -1,5 +1,6 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
+import { assertValidSyncSecret } from "./lib/syncAuth";
 
 // Get all published static pages
 export const getAllPages = query({
@@ -65,6 +66,7 @@ export const getPageBySlug = query({
 // Public mutation for syncing static pages from markdown files
 export const syncPagesPublic = mutation({
 	args: {
+		syncSecret: v.string(),
 		pages: v.array(
 			v.object({
 				slug: v.string(),
@@ -80,6 +82,8 @@ export const syncPagesPublic = mutation({
 		deleted: v.number(),
 	}),
 	handler: async (ctx, args) => {
+		assertValidSyncSecret(args.syncSecret);
+
 		let created = 0;
 		let updated = 0;
 		let deleted = 0;
@@ -125,4 +129,3 @@ export const syncPagesPublic = mutation({
 		return { created, updated, deleted };
 	},
 });
-

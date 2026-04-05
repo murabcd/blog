@@ -14,6 +14,8 @@ const envFile = isProduction ? ".env.production.local" : ".env.local";
 dotenv.config({ path: envFile, override: true });
 
 const revalidateSecret = process.env.REVALIDATE_SECRET;
+const contentSyncSecret =
+	process.env.CONTENT_SYNC_SECRET ?? process.env.REVALIDATE_SECRET;
 const siteUrl =
 	process.env.SITE_URL ||
 	process.env.NEXT_PUBLIC_SITE_URL ||
@@ -290,6 +292,12 @@ async function syncContent() {
 		);
 		process.exit(1);
 	}
+	if (!contentSyncSecret) {
+		console.error(
+			"Error: CONTENT_SYNC_SECRET or REVALIDATE_SECRET environment variable is not set",
+		);
+		process.exit(1);
+	}
 
 	// Initialize Convex client
 	const client = new ConvexHttpClient(convexUrl);
@@ -315,6 +323,7 @@ async function syncContent() {
 		}
 		try {
 			const result = await client.mutation(api.blog.syncPostsPublic, {
+				syncSecret: contentSyncSecret,
 				posts: blogPosts,
 			});
 			console.log(
@@ -348,6 +357,7 @@ async function syncContent() {
 		}
 		try {
 			const result = await client.mutation(api.talk.syncEventsPublic, {
+				syncSecret: contentSyncSecret,
 				events: talkEvents,
 			});
 			console.log(
@@ -383,6 +393,7 @@ async function syncContent() {
 		}
 		try {
 			const result = await client.mutation(api.code.syncProjectsPublic, {
+				syncSecret: contentSyncSecret,
 				projects: codeProjects,
 			});
 			console.log(
@@ -405,6 +416,7 @@ async function syncContent() {
 			}
 			try {
 				const result = await client.mutation(api.pages.syncPagesPublic, {
+					syncSecret: contentSyncSecret,
 					pages: [chatPage],
 				});
 				console.log(

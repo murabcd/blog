@@ -1,5 +1,6 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
+import { assertValidSyncSecret } from "./lib/syncAuth";
 
 // Get all published code projects, sorted by date descending
 export const getAllProjects = query({
@@ -86,6 +87,7 @@ export const getProjectBySlug = query({
 // Public mutation for syncing code projects from markdown files
 export const syncProjectsPublic = mutation({
 	args: {
+		syncSecret: v.string(),
 		projects: v.array(
 			v.object({
 				slug: v.string(),
@@ -103,6 +105,8 @@ export const syncProjectsPublic = mutation({
 		deleted: v.number(),
 	}),
 	handler: async (ctx, args) => {
+		assertValidSyncSecret(args.syncSecret);
+
 		let created = 0;
 		let updated = 0;
 		let deleted = 0;

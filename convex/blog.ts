@@ -1,5 +1,6 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
+import { assertValidSyncSecret } from "./lib/syncAuth";
 
 // Get all published blog posts, sorted by publishedAt descending
 export const getAllPosts = query({
@@ -84,6 +85,7 @@ export const getPostBySlug = query({
 // Public mutation for syncing blog posts from markdown files
 export const syncPostsPublic = mutation({
 	args: {
+		syncSecret: v.string(),
 		posts: v.array(
 			v.object({
 				slug: v.string(),
@@ -101,6 +103,8 @@ export const syncPostsPublic = mutation({
 		deleted: v.number(),
 	}),
 	handler: async (ctx, args) => {
+		assertValidSyncSecret(args.syncSecret);
+
 		let created = 0;
 		let updated = 0;
 		let deleted = 0;
@@ -148,4 +152,3 @@ export const syncPostsPublic = mutation({
 		return { created, updated, deleted };
 	},
 });
-

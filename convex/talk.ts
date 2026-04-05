@@ -1,5 +1,6 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
+import { assertValidSyncSecret } from "./lib/syncAuth";
 
 // Get all published talk events, sorted by publishedAt descending
 export const getAllEvents = query({
@@ -84,6 +85,7 @@ export const getEventBySlug = query({
 // Public mutation for syncing talk events from markdown files
 export const syncEventsPublic = mutation({
 	args: {
+		syncSecret: v.string(),
 		events: v.array(
 			v.object({
 				slug: v.string(),
@@ -101,6 +103,8 @@ export const syncEventsPublic = mutation({
 		deleted: v.number(),
 	}),
 	handler: async (ctx, args) => {
+		assertValidSyncSecret(args.syncSecret);
+
 		let created = 0;
 		let updated = 0;
 		let deleted = 0;
@@ -148,4 +152,3 @@ export const syncEventsPublic = mutation({
 		return { created, updated, deleted };
 	},
 });
-
