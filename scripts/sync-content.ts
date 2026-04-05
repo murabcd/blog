@@ -14,8 +14,7 @@ const envFile = isProduction ? ".env.production.local" : ".env.local";
 dotenv.config({ path: envFile, override: true });
 
 const revalidateSecret = process.env.REVALIDATE_SECRET;
-const contentSyncSecret =
-	process.env.CONTENT_SYNC_SECRET ?? process.env.REVALIDATE_SECRET;
+const contentSyncSecret = process.env.CONTENT_SYNC_SECRET;
 const siteUrl =
 	process.env.SITE_URL ||
 	process.env.NEXT_PUBLIC_SITE_URL ||
@@ -294,7 +293,7 @@ async function syncContent() {
 	}
 	if (!contentSyncSecret) {
 		console.error(
-			"Error: CONTENT_SYNC_SECRET or REVALIDATE_SECRET environment variable is not set",
+			"Error: CONTENT_SYNC_SECRET environment variable is not set",
 		);
 		process.exit(1);
 	}
