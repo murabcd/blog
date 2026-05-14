@@ -10,7 +10,7 @@ import { CustomMDX } from "@/components/mdx";
 import { LikeButton } from "@/components/like-button";
 import { ShareButton } from "@/components/share-button";
 import { CopyPageButton } from "@/components/copy-page-button";
-import { Toc } from "@/components/toc";
+import { Toc, type TocSection } from "@/components/toc";
 import { FloatingChatInput } from "@/components/floating-chat-input";
 import { calculateReadingTime, formatDate, slugify } from "@/lib/utils";
 
@@ -21,15 +21,25 @@ async function getBlogPostBySlugCached(slug: string) {
 	return fetchQuery(api.blog.getPostBySlug, { slug });
 }
 
-function buildTocEntries(content: string) {
+function buildTocSections(content: string): TocSection[] {
 	const headings = content.match(/^(##|###)\s(.+)/gm);
 	if (!headings) return [];
-	return headings.map((heading) => {
+
+	return headings.reduce<TocSection[]>((sections, heading) => {
 		const level = (heading.match(/#/g) || []).length;
 		const text = heading.replace(/^(##|###)\s/, "").trim();
-		const slug = slugify(text);
-		return { level, text, slug };
-	});
+		const id = slugify(text);
+
+		if (level === 2 || sections.length === 0) {
+			sections.push({ id, label: text });
+			return sections;
+		}
+
+		const parent = sections[sections.length - 1];
+		parent.children = [...(parent.children ?? []), { id, label: text }];
+
+		return sections;
+	}, []);
 }
 
 export async function generateMetadata({
@@ -100,7 +110,7 @@ export default async function Blog({
 		? post.image
 		: `${baseUrl}/blog/${post.slug}/opengraph-image`;
 	const url = `${baseUrl}/blog/${post.slug}`;
-	const tocEntries = buildTocEntries(post.content);
+	const tocSections = buildTocSections(post.content);
 
 	const jsonLd = {
 		"@context": "https://schema.org",
@@ -158,7 +168,7 @@ export default async function Blog({
 					<article className="prose max-w-xl mx-auto">
 						<CustomMDX source={post.content} />
 					</article>
-					<Toc tocEntries={tocEntries} variant="combined" />
+					<Toc sections={tocSections} variant="combined" />
 				</div>
 			</section>
 			<FloatingChatInput url={url} />
