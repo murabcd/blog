@@ -90,7 +90,7 @@ export function ShareButton({
 					<Button
 						variant="ghost"
 						size="sm"
-						className="cursor-pointer h-8 shadow-none md:h-7 md:text-[0.8rem]"
+						className="h-8 shadow-none md:h-7 md:text-[0.8rem]"
 					>
 						<Share2 className="w-4 h-4 mr-1 text-muted-foreground" />
 						<span className="text-xs">Share</span>
@@ -135,7 +135,7 @@ export function ShareButton({
 					<Button
 						variant="ghost"
 						size="sm"
-						className="cursor-pointer h-8 shadow-none md:h-7 md:text-[0.8rem]"
+						className="h-8 shadow-none md:h-7 md:text-[0.8rem]"
 					>
 						<Share2 className="w-4 h-4 mr-1 text-muted-foreground" />
 						<span className="text-xs">Share</span>

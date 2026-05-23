@@ -1,6 +1,9 @@
 import { query, mutation } from "./_generated/server";
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { assertValidSyncSecret } from "./lib/syncAuth";
+import { assertCompleteSync } from "./lib/syncPayload";
+
+const MAX_POSTS = 100;
 
 // Get all published blog posts, sorted by publishedAt descending
 export const getAllPosts = query({
@@ -20,16 +23,11 @@ export const getAllPosts = query({
 		const posts = await ctx.db
 			.query("blogPosts")
 			.withIndex("by_publishedAt")
-			.collect();
-
-		// Sort by publishedAt descending
-		const sortedPosts = posts.sort(
-			(a, b) =>
-				new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
-		);
+			.order("desc")
+			.take(MAX_POSTS);
 
 		// Return without content for list view
-		return sortedPosts.map((post) => ({
+		return posts.map((post) => ({
 			_id: post._id,
 			_creationTime: post._creationTime,
 			slug: post.slug,
@@ -68,6 +66,14 @@ export const getPostBySlug = query({
 		if (!post) {
 			return null;
 		}
+		const content = await ctx.db
+			.query("blogPostContents")
+			.withIndex("by_slug", (q) => q.eq("slug", args.slug))
+			.first();
+
+		if (!content) {
+			throw new ConvexError("Blog post content is missing");
+		}
 
 		return {
 			_id: post._id,
@@ -75,7 +81,7 @@ export const getPostBySlug = query({
 			slug: post.slug,
 			title: post.title,
 			summary: post.summary,
-			content: post.content,
+			content: content.content,
 			publishedAt: post.publishedAt,
 			image: post.image,
 		};
@@ -86,6 +92,7 @@ export const getPostBySlug = query({
 export const syncPostsPublic = mutation({
 	args: {
 		syncSecret: v.string(),
+		slugs: v.array(v.string()),
 		posts: v.array(
 			v.object({
 				slug: v.string(),
@@ -104,6 +111,7 @@ export const syncPostsPublic = mutation({
 	}),
 	handler: async (ctx, args) => {
 		assertValidSyncSecret(args.syncSecret);
+		assertCompleteSync(args.slugs, args.posts);
 
 		let created = 0;
 		let updated = 0;
@@ -114,18 +122,23 @@ export const syncPostsPublic = mutation({
 
 		// Get all existing posts
 		const existingPosts = await ctx.db.query("blogPosts").collect();
+		const existingContents = await ctx.db.query("blogPostContents").collect();
 		const existingBySlug = new Map(existingPosts.map((p) => [p.slug, p]));
+		const existingContentBySlug = new Map(
+			existingContents.map((content) => [content.slug, content]),
+		);
 
 		// Upsert incoming posts
 		for (const post of args.posts) {
 			const existing = existingBySlug.get(post.slug);
+			const existingContent = existingContentBySlug.get(post.slug);
 
 			if (existing) {
 				// Update existing post
-				await ctx.db.patch(existing._id, {
+				await ctx.db.replace(existing._id, {
+					slug: post.slug,
 					title: post.title,
 					summary: post.summary,
-					content: post.content,
 					publishedAt: post.publishedAt,
 					image: post.image,
 					lastSyncedAt: now,
@@ -134,10 +147,27 @@ export const syncPostsPublic = mutation({
 			} else {
 				// Create new post
 				await ctx.db.insert("blogPosts", {
-					...post,
+					slug: post.slug,
+					title: post.title,
+					summary: post.summary,
+					publishedAt: post.publishedAt,
+					image: post.image,
 					lastSyncedAt: now,
 				});
 				created++;
+			}
+			if (existingContent) {
+				await ctx.db.replace(existingContent._id, {
+					slug: post.slug,
+					content: post.content,
+					lastSyncedAt: now,
+				});
+			} else {
+				await ctx.db.insert("blogPostContents", {
+					slug: post.slug,
+					content: post.content,
+					lastSyncedAt: now,
+				});
 			}
 		}
 
@@ -146,6 +176,11 @@ export const syncPostsPublic = mutation({
 			if (!incomingSlugs.has(existing.slug)) {
 				await ctx.db.delete(existing._id);
 				deleted++;
+			}
+		}
+		for (const existingContent of existingContents) {
+			if (!incomingSlugs.has(existingContent.slug)) {
+				await ctx.db.delete(existingContent._id);
 			}
 		}
 

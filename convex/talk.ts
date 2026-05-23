@@ -1,6 +1,9 @@
 import { query, mutation } from "./_generated/server";
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { assertValidSyncSecret } from "./lib/syncAuth";
+import { assertCompleteSync } from "./lib/syncPayload";
+
+const MAX_EVENTS = 100;
 
 // Get all published talk events, sorted by publishedAt descending
 export const getAllEvents = query({
@@ -20,16 +23,11 @@ export const getAllEvents = query({
 		const events = await ctx.db
 			.query("talkEvents")
 			.withIndex("by_publishedAt")
-			.collect();
-
-		// Sort by publishedAt descending
-		const sortedEvents = events.sort(
-			(a, b) =>
-				new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
-		);
+			.order("desc")
+			.take(MAX_EVENTS);
 
 		// Return without content for list view
-		return sortedEvents.map((event) => ({
+		return events.map((event) => ({
 			_id: event._id,
 			_creationTime: event._creationTime,
 			slug: event.slug,
@@ -68,6 +66,14 @@ export const getEventBySlug = query({
 		if (!event) {
 			return null;
 		}
+		const content = await ctx.db
+			.query("talkEventContents")
+			.withIndex("by_slug", (q) => q.eq("slug", args.slug))
+			.first();
+
+		if (!content) {
+			throw new ConvexError("Talk event content is missing");
+		}
 
 		return {
 			_id: event._id,
@@ -75,7 +81,7 @@ export const getEventBySlug = query({
 			slug: event.slug,
 			title: event.title,
 			summary: event.summary,
-			content: event.content,
+			content: content.content,
 			publishedAt: event.publishedAt,
 			image: event.image,
 		};
@@ -86,6 +92,7 @@ export const getEventBySlug = query({
 export const syncEventsPublic = mutation({
 	args: {
 		syncSecret: v.string(),
+		slugs: v.array(v.string()),
 		events: v.array(
 			v.object({
 				slug: v.string(),
@@ -104,6 +111,7 @@ export const syncEventsPublic = mutation({
 	}),
 	handler: async (ctx, args) => {
 		assertValidSyncSecret(args.syncSecret);
+		assertCompleteSync(args.slugs, args.events);
 
 		let created = 0;
 		let updated = 0;
@@ -114,18 +122,23 @@ export const syncEventsPublic = mutation({
 
 		// Get all existing events
 		const existingEvents = await ctx.db.query("talkEvents").collect();
+		const existingContents = await ctx.db.query("talkEventContents").collect();
 		const existingBySlug = new Map(existingEvents.map((e) => [e.slug, e]));
+		const existingContentBySlug = new Map(
+			existingContents.map((content) => [content.slug, content]),
+		);
 
 		// Upsert incoming events
 		for (const event of args.events) {
 			const existing = existingBySlug.get(event.slug);
+			const existingContent = existingContentBySlug.get(event.slug);
 
 			if (existing) {
 				// Update existing event
-				await ctx.db.patch(existing._id, {
+				await ctx.db.replace(existing._id, {
+					slug: event.slug,
 					title: event.title,
 					summary: event.summary,
-					content: event.content,
 					publishedAt: event.publishedAt,
 					image: event.image,
 					lastSyncedAt: now,
@@ -134,10 +147,27 @@ export const syncEventsPublic = mutation({
 			} else {
 				// Create new event
 				await ctx.db.insert("talkEvents", {
-					...event,
+					slug: event.slug,
+					title: event.title,
+					summary: event.summary,
+					publishedAt: event.publishedAt,
+					image: event.image,
 					lastSyncedAt: now,
 				});
 				created++;
+			}
+			if (existingContent) {
+				await ctx.db.replace(existingContent._id, {
+					slug: event.slug,
+					content: event.content,
+					lastSyncedAt: now,
+				});
+			} else {
+				await ctx.db.insert("talkEventContents", {
+					slug: event.slug,
+					content: event.content,
+					lastSyncedAt: now,
+				});
 			}
 		}
 
@@ -146,6 +176,11 @@ export const syncEventsPublic = mutation({
 			if (!incomingSlugs.has(existing.slug)) {
 				await ctx.db.delete(existing._id);
 				deleted++;
+			}
+		}
+		for (const existingContent of existingContents) {
+			if (!incomingSlugs.has(existingContent.slug)) {
+				await ctx.db.delete(existingContent._id);
 			}
 		}
 

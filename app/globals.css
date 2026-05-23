@@ -13,6 +13,36 @@ body {
 	overscroll-behavior-y: none;
 }
 
+@layer base {
+	a,
+	button,
+	summary,
+	[role="button"],
+	[role="link"],
+	[role="menuitem"],
+	[role="option"],
+	[role="tab"],
+	[role="switch"],
+	[role="checkbox"],
+	[role="radio"],
+	label:has(input:not(:disabled)),
+	input[type="button"],
+	input[type="submit"],
+	input[type="reset"],
+	input[type="checkbox"],
+	input[type="radio"],
+	select {
+		cursor: pointer;
+	}
+
+	:disabled,
+	[aria-disabled="true"],
+	[data-disabled],
+	[data-disabled="true"] {
+		cursor: not-allowed;
+	}
+}
+
 ::selection {
 	background-color: var(--primary);
 	color: var(--primary-foreground);
@@ -67,7 +97,6 @@ body {
 	padding-right: 0.5em;
 	width: 80%;
 	max-width: 700px;
-	cursor: pointer;
 }
 
 .anchor:hover {

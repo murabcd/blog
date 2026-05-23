@@ -61,7 +61,7 @@ export default async function Page() {
 							href={project.href}
 							target="_blank"
 							rel="noopener noreferrer"
-							className="block group cursor-pointer"
+							className="block group"
 						>
 							<div className="flex flex-col md:flex-row gap-2">
 								<p className="text-muted-foreground w-[110px] tabular-nums">

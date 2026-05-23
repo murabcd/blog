@@ -174,7 +174,7 @@ function CodeCopyButton({ code }: { code: string }) {
 		<button
 			type="button"
 			onClick={handleCopy}
-			className="absolute top-2 right-2 z-10 flex items-center justify-center w-7 h-7 p-0 bg-background/80 border border-border rounded-md text-muted-foreground opacity-0 group-hover:opacity-100 transition-all hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 shadow-xs active:scale-95 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] cursor-pointer"
+			className="absolute top-2 right-2 z-10 flex items-center justify-center w-7 h-7 p-0 bg-background/80 border border-border rounded-md text-muted-foreground opacity-0 group-hover:opacity-100 transition-all hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 shadow-xs active:scale-95 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
 			aria-label={copied ? "Copied!" : "Copy code"}
 			title={copied ? "Copied!" : "Copy code"}
 		>

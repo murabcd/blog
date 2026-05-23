@@ -1,6 +1,9 @@
 import { query, mutation } from "./_generated/server";
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { assertValidSyncSecret } from "./lib/syncAuth";
+import { assertCompleteSync } from "./lib/syncPayload";
+
+const MAX_PROJECTS = 100;
 
 // Get all published code projects, sorted by date descending
 export const getAllProjects = query({
@@ -13,30 +16,23 @@ export const getAllProjects = query({
 			title: v.string(),
 			href: v.string(),
 			date: v.string(),
-			content: v.string(),
 			published: v.boolean(),
 		}),
 	),
 	handler: async (ctx) => {
 		const projects = await ctx.db
 			.query("codeProjects")
-			.withIndex("by_published", (q) => q.eq("published", true))
-			.collect();
+			.withIndex("by_published_date", (q) => q.eq("published", true))
+			.order("desc")
+			.take(MAX_PROJECTS);
 
-		// Sort by date descending
-		const sortedProjects = projects.sort(
-			(a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-		);
-
-		// Return without lastSyncedAt
-		return sortedProjects.map((project) => ({
+		return projects.map((project) => ({
 			_id: project._id,
 			_creationTime: project._creationTime,
 			slug: project.slug,
 			title: project.title,
 			href: project.href,
 			date: project.date,
-			content: project.content,
 			published: project.published,
 		}));
 	},
@@ -70,7 +66,15 @@ export const getProjectBySlug = query({
 			return null;
 		}
 
-		// Return without lastSyncedAt
+		const content = await ctx.db
+			.query("codeProjectContents")
+			.withIndex("by_slug", (q) => q.eq("slug", args.slug))
+			.first();
+
+		if (!content) {
+			throw new ConvexError("Code project content is missing");
+		}
+
 		return {
 			_id: project._id,
 			_creationTime: project._creationTime,
@@ -78,7 +82,7 @@ export const getProjectBySlug = query({
 			title: project.title,
 			href: project.href,
 			date: project.date,
-			content: project.content,
+			content: content.content,
 			published: project.published,
 		};
 	},
@@ -88,6 +92,7 @@ export const getProjectBySlug = query({
 export const syncProjectsPublic = mutation({
 	args: {
 		syncSecret: v.string(),
+		slugs: v.array(v.string()),
 		projects: v.array(
 			v.object({
 				slug: v.string(),
@@ -106,6 +111,7 @@ export const syncProjectsPublic = mutation({
 	}),
 	handler: async (ctx, args) => {
 		assertValidSyncSecret(args.syncSecret);
+		assertCompleteSync(args.slugs, args.projects);
 
 		let created = 0;
 		let updated = 0;
@@ -114,40 +120,65 @@ export const syncProjectsPublic = mutation({
 		const now = Date.now();
 		const incomingSlugs = new Set(args.projects.map((p) => p.slug));
 
-		// Get all existing projects
 		const existingProjects = await ctx.db.query("codeProjects").collect();
+		const existingContents = await ctx.db
+			.query("codeProjectContents")
+			.collect();
 		const existingBySlug = new Map(existingProjects.map((p) => [p.slug, p]));
+		const existingContentBySlug = new Map(
+			existingContents.map((content) => [content.slug, content]),
+		);
 
-		// Upsert incoming projects
 		for (const project of args.projects) {
 			const existing = existingBySlug.get(project.slug);
+			const existingContent = existingContentBySlug.get(project.slug);
 
 			if (existing) {
-				// Update existing project
-				await ctx.db.patch(existing._id, {
+				await ctx.db.replace(existing._id, {
+					slug: project.slug,
 					title: project.title,
 					href: project.href,
 					date: project.date,
-					content: project.content,
 					published: project.published,
 					lastSyncedAt: now,
 				});
 				updated++;
 			} else {
-				// Create new project
 				await ctx.db.insert("codeProjects", {
-					...project,
+					slug: project.slug,
+					title: project.title,
+					href: project.href,
+					date: project.date,
+					published: project.published,
 					lastSyncedAt: now,
 				});
 				created++;
 			}
+
+			if (existingContent) {
+				await ctx.db.replace(existingContent._id, {
+					slug: project.slug,
+					content: project.content,
+					lastSyncedAt: now,
+				});
+			} else {
+				await ctx.db.insert("codeProjectContents", {
+					slug: project.slug,
+					content: project.content,
+					lastSyncedAt: now,
+				});
+			}
 		}
 
-		// Delete projects that no longer exist in the repo
 		for (const existing of existingProjects) {
 			if (!incomingSlugs.has(existing.slug)) {
 				await ctx.db.delete(existing._id);
 				deleted++;
+			}
+		}
+		for (const existingContent of existingContents) {
+			if (!incomingSlugs.has(existingContent.slug)) {
+				await ctx.db.delete(existingContent._id);
 			}
 		}
 

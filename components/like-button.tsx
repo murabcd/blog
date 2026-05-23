@@ -78,7 +78,7 @@ export function LikeButton({ postSlug }: LikeButtonProps) {
 					onClick={handleLike}
 					aria-pressed={!!isLiked}
 					aria-label={isLiked ? "Unlike post" : "Like post"}
-					className="cursor-pointer h-8 shadow-none md:h-7 md:text-[0.8rem]"
+					className="h-8 shadow-none md:h-7 md:text-[0.8rem]"
 				>
 					<Heart
 						className={`w-4 h-4 transition-all duration-300 ${

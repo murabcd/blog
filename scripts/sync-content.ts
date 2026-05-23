@@ -253,6 +253,40 @@ function getMDXFiles(dir: string): string[] {
 		.map((file) => path.join(dir, file));
 }
 
+function getSlugs(filePaths: string[]) {
+	return filePaths.map((filePath) =>
+		path.basename(filePath, path.extname(filePath)),
+	);
+}
+
+function assertParsedAll(
+	label: string,
+	expectedSlugs: string[],
+	parsedSlugs: string[],
+) {
+	if (expectedSlugs.length !== parsedSlugs.length) {
+		throw new Error(
+			`${label} sync aborted: parsed ${parsedSlugs.length} of ${expectedSlugs.length} files`,
+		);
+	}
+
+	const parsed = new Set(parsedSlugs);
+	for (const slug of expectedSlugs) {
+		if (!parsed.has(slug)) {
+			throw new Error(`${label} sync aborted: failed to parse ${slug}`);
+		}
+	}
+}
+
+function getSyncErrorMessage(error: unknown) {
+	const message = error instanceof Error ? error.message : String(error);
+	const redacted = contentSyncSecret
+		? message.replaceAll(contentSyncSecret, "[redacted]")
+		: message;
+
+	return redacted.split("\n").at(0) ?? "Unknown error";
+}
+
 async function revalidateTags(tags: string[]) {
 	if (!siteUrl || !revalidateSecret || tags.length === 0) return;
 
@@ -292,9 +326,7 @@ async function syncContent() {
 		process.exit(1);
 	}
 	if (!contentSyncSecret) {
-		console.error(
-			"Error: CONTENT_SYNC_SECRET environment variable is not set",
-		);
+		console.error("Error: CONTENT_SYNC_SECRET environment variable is not set");
 		process.exit(1);
 	}
 
@@ -304,6 +336,7 @@ async function syncContent() {
 	// Sync blog posts
 	console.log("Syncing blog posts...");
 	const blogFiles = getMDXFiles(BLOG_DIR);
+	const blogSlugs = getSlugs(blogFiles);
 
 	const blogPosts: ParsedBlogPost[] = [];
 	for (const filePath of blogFiles) {
@@ -315,6 +348,11 @@ async function syncContent() {
 			}
 		}
 	}
+	assertParsedAll(
+		"Blog posts",
+		blogSlugs,
+		blogPosts.map((post) => post.slug),
+	);
 
 	if (blogPosts.length > 0) {
 		if (isVerbose) {
@@ -323,6 +361,7 @@ async function syncContent() {
 		try {
 			const result = await client.mutation(api.blog.syncPostsPublic, {
 				syncSecret: contentSyncSecret,
+				slugs: blogSlugs,
 				posts: blogPosts,
 			});
 			console.log(
@@ -330,7 +369,7 @@ async function syncContent() {
 			);
 			await revalidateTags(["blogPosts"]);
 		} catch (error) {
-			console.error("Error syncing blog posts:", error);
+			console.error(`Error syncing blog posts: ${getSyncErrorMessage(error)}`);
 			process.exit(1);
 		}
 	}
@@ -338,6 +377,7 @@ async function syncContent() {
 	// Sync talk events
 	console.log("Syncing talk events...");
 	const talkFiles = getMDXFiles(TALK_DIR);
+	const talkSlugs = getSlugs(talkFiles);
 
 	const talkEvents: ParsedTalkEvent[] = [];
 	for (const filePath of talkFiles) {
@@ -349,6 +389,11 @@ async function syncContent() {
 			}
 		}
 	}
+	assertParsedAll(
+		"Talk events",
+		talkSlugs,
+		talkEvents.map((event) => event.slug),
+	);
 
 	if (talkEvents.length > 0) {
 		if (isVerbose) {
@@ -357,6 +402,7 @@ async function syncContent() {
 		try {
 			const result = await client.mutation(api.talk.syncEventsPublic, {
 				syncSecret: contentSyncSecret,
+				slugs: talkSlugs,
 				events: talkEvents,
 			});
 			console.log(
@@ -364,7 +410,7 @@ async function syncContent() {
 			);
 			await revalidateTags(["talkEvents"]);
 		} catch (error) {
-			console.error("Error syncing talk events:", error);
+			console.error(`Error syncing talk events: ${getSyncErrorMessage(error)}`);
 			process.exit(1);
 		}
 	}
@@ -372,6 +418,7 @@ async function syncContent() {
 	// Sync code projects
 	console.log("Syncing code projects...");
 	const codeFiles = getMDXFiles(CODE_DIR);
+	const codeSlugs = getSlugs(codeFiles);
 
 	const codeProjects: ParsedCodeProject[] = [];
 	for (const filePath of codeFiles) {
@@ -383,6 +430,11 @@ async function syncContent() {
 			}
 		}
 	}
+	assertParsedAll(
+		"Code projects",
+		codeSlugs,
+		codeProjects.map((project) => project.slug),
+	);
 
 	if (codeProjects.length > 0) {
 		if (isVerbose) {
@@ -393,6 +445,7 @@ async function syncContent() {
 		try {
 			const result = await client.mutation(api.code.syncProjectsPublic, {
 				syncSecret: contentSyncSecret,
+				slugs: codeSlugs,
 				projects: codeProjects,
 			});
 			console.log(
@@ -400,7 +453,9 @@ async function syncContent() {
 			);
 			await revalidateTags(["codeProjects"]);
 		} catch (error) {
-			console.error("Error syncing code projects:", error);
+			console.error(
+				`Error syncing code projects: ${getSyncErrorMessage(error)}`,
+			);
 			process.exit(1);
 		}
 	}
@@ -416,6 +471,7 @@ async function syncContent() {
 			try {
 				const result = await client.mutation(api.pages.syncPagesPublic, {
 					syncSecret: contentSyncSecret,
+					slugs: [chatPage.slug],
 					pages: [chatPage],
 				});
 				console.log(
@@ -423,7 +479,7 @@ async function syncContent() {
 				);
 				await revalidateTags(["pages", "pages:chat"]);
 			} catch (error) {
-				console.error("Error syncing chat page:", error);
+				console.error(`Error syncing chat page: ${getSyncErrorMessage(error)}`);
 				process.exit(1);
 			}
 		}
@@ -437,4 +493,7 @@ async function syncContent() {
 }
 
 // Run the sync
-syncContent().catch(console.error);
+syncContent().catch((error) => {
+	console.error(getSyncErrorMessage(error));
+	process.exit(1);
+});

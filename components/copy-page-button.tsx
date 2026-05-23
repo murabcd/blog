@@ -20,6 +20,10 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Icons } from "@/components/icons";
 
+const MarkdownIcon = Icons.markdown;
+const ChatGPTIcon = Icons.chatgpt;
+const ClaudeIcon = Icons.claude;
+
 function getPromptUrl(baseURL: string, url: string) {
 	return `${baseURL}?q=${encodeURIComponent(
 		`I’m reading this blog article: ${url}
@@ -35,7 +39,7 @@ const menuItems = {
 			target="_blank"
 			rel="noopener noreferrer"
 		>
-			<Icons.markdown />
+			<MarkdownIcon />
 			View as Markdown
 		</a>
 	),
@@ -45,7 +49,7 @@ const menuItems = {
 			target="_blank"
 			rel="noopener noreferrer"
 		>
-			<Icons.chatgpt />
+			<ChatGPTIcon />
 			Open in ChatGPT
 		</a>
 	),
@@ -55,11 +59,21 @@ const menuItems = {
 			target="_blank"
 			rel="noopener noreferrer"
 		>
-			<Icons.claude />
+			<ClaudeIcon />
 			Open in Claude
 		</a>
 	),
 };
+
+const copyMenuTrigger = (
+	<Button
+		variant="ghost"
+		size="sm"
+		className="peer -ml-0.5 size-8 shadow-none md:size-7 md:text-[0.8rem]"
+	>
+		<ChevronDown className="rotate-180 sm:rotate-0" />
+	</Button>
+);
 
 export function CopyPageButton({ slug, url }: { slug: string; url: string }) {
 	const { copyToClipboard, isCopied } = useCopyToClipboard({
@@ -86,23 +100,13 @@ export function CopyPageButton({ slug, url }: { slug: string; url: string }) {
 		return markdown;
 	};
 
-	const trigger = (
-		<Button
-			variant="ghost"
-			size="sm"
-			className="peer -ml-0.5 size-8 shadow-none md:size-7 md:text-[0.8rem]"
-		>
-			<ChevronDown className="rotate-180 sm:rotate-0" />
-		</Button>
-	);
-
 	return (
 		<Popover>
 			<div className="group/buttons relative flex rounded-lg *:data-[slot=button]:focus-visible:relative *:data-[slot=button]:focus-visible:z-10">
 				<Button
 					variant="ghost"
 					size="sm"
-					className="cursor-pointer h-8 shadow-none md:h-7 md:text-[0.8rem]"
+					className="h-8 shadow-none md:h-7 md:text-[0.8rem]"
 					disabled={isCopying}
 					onMouseEnter={() => {
 						void fetchMarkdown().catch(() => undefined);
@@ -125,15 +129,15 @@ export function CopyPageButton({ slug, url }: { slug: string; url: string }) {
 					}}
 				>
 					{isCopied ? (
-						<Check className="w-4 h-4 mr-1 text-muted-foreground" />
+						<Check className="mr-1 size-4 text-muted-foreground" />
 					) : (
-						<Copy className="w-4 h-4 mr-1 text-muted-foreground" />
+						<Copy className="mr-1 size-4 text-muted-foreground" />
 					)}
 					<span className="text-xs">Copy</span>
 				</Button>
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild className="hidden sm:flex">
-						{trigger}
+						{copyMenuTrigger}
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align="end" className="shadow-none">
 						{Object.entries(menuItems).map(([key, value]) => (
@@ -148,7 +152,7 @@ export function CopyPageButton({ slug, url }: { slug: string; url: string }) {
 					className="bg-foreground/10! absolute top-0 right-8 z-0 h-8! peer-focus-visible:opacity-0 sm:right-7 sm:h-7!"
 				/>
 				<PopoverTrigger asChild className="flex sm:hidden">
-					{trigger}
+					{copyMenuTrigger}
 				</PopoverTrigger>
 				<PopoverContent
 					className="bg-background/70 dark:bg-background/60 w-52 origin-center! rounded-lg p-1 shadow-sm backdrop-blur-sm"

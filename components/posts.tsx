@@ -25,7 +25,7 @@ export function BlogPosts({
 				{visibleBlogs.map((post) => (
 					<Link
 						key={post.slug}
-						className="block group cursor-pointer"
+						className="block group"
 						href={`/blog/${post.slug}`}
 					>
 						<div className="flex flex-col md:flex-row gap-2">
