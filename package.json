@@ -15,6 +15,8 @@
 		"type-check": "tsc --noEmit",
 		"sync": "bun run scripts/sync-content.ts",
 		"sync:prod": "SYNC_ENV=production VERBOSE=true bun run scripts/sync-content.ts",
+		"migrate:split-content": "bun run scripts/migrate-split-content.ts",
+		"migrate:split-content:prod": "SYNC_ENV=production bun run scripts/migrate-split-content.ts",
 		"deploy": "bun run sync && bun run build",
 		"deploy:prod": "bunx convex deploy && bun run sync:prod"
 	},
