@@ -1,0 +1,77 @@
+---
+title: "Your Repository Has Two Users"
+publishedAt: "2026-05-17"
+summary: "A modern codebase is no longer just the thing that runs in production. It is also the environment AI agents read to decide what to change. Most teams still optimize only for the first user."
+---
+
+## We Still Design Repositories for Humans
+
+Most teams think about a codebase in one dimension. It is the source code that powers the product, the place where humans read, write, review, and ship changes.
+
+That view is no longer complete.
+
+The repository now has a second user: the agent. An agent does not just execute tasks inside the codebase. It reads the codebase to decide what the system is, what the team expects, and what it should do next. That means the repo is no longer only implementation. It is also context.
+
+Once you see that clearly, a lot of old habits start looking broken.
+
+## Small Inconsistencies Become Expensive
+
+A human engineer can survive a messy repository. They can ask a teammate which document to trust. They can notice that a ticket is stale. They can infer that a comment is outdated, or that a strange pattern in one folder is just historical baggage.
+
+An agent is much worse at this. It treats your repository more literally. If truth, history, plans, exceptions, and half-abandoned ideas all sit next to each other without clear boundaries, the agent absorbs all of it as context and starts making worse decisions.
+
+This matters because agent onboarding is continuous. A human joins the company once. An agent effectively re-joins the codebase every session. If the repository contains contradictions, those contradictions are paid again and again.
+
+## The Real Problem Is Ambiguous Authority
+
+The biggest mistake teams make is not bad code. It is ambiguous authority.
+
+If a planning doc describes one thing, the code does another, and an old ticket says a third thing, what should the agent believe? Humans can usually resolve that tension with intuition. Agents need the answer to be explicit.
+
+This is why I think every repository needs a much sharper distinction between truth and memory. Some artifacts should describe the system as it is today. Others should exist as plans, rationale, or history. Both are useful. But they are not equally authoritative, and pretending they are creates confusion at exactly the layer where agents are trying to reason.
+
+Once you frame the problem this way, documentation stops being a vague good. It becomes part of the execution environment.
+
+## Good Context Is Local, Operational, and Earned
+
+There are a few principles that seem to matter much more in an agent-heavy codebase.
+
+First, instructions should live as close as possible to where they apply. A rule about one backend subsystem should not be buried in a giant root file if it only matters in one folder. Locality matters because agents need the relevant guidance to appear at the moment they are making a choice.
+
+Second, instructions should be operational, not descriptive. Telling an agent that `src/` contains source code is noise. Telling it to avoid inline imports, to prefer early returns, or to never treat a spec as current behavior is useful. The test is simple: does this sentence change how the agent behaves?
+
+Third, nothing should be loaded by default unless it consistently earns its place. Excess context is not harmless. It taxes every session, every engineer, and every agent. If you want strong behavior, the default should be skepticism, not inclusion.
+
+## Verification Becomes Part of the Design
+
+Once agents are writing a meaningful share of your code, verification stops being a downstream safety check and becomes part of the architecture.
+
+You cannot rely on "the engineer will catch it later" as the main control mechanism. The system needs narrower feedback loops: better linting, type checks, targeted tests, clear standards, and specialized validation steps that tell the agent whether it actually satisfied the local rules of the repo.
+
+This changes the role of standards as well. A style guide sitting quietly in Confluence is almost useless here. Standards only matter when they are present where the work happens and enforced where the work lands.
+
+## The Cleanup Comes Before the Gains
+
+A lot of teams want the productivity upside of coding agents without paying the cleanup cost first.
+
+That usually does not work.
+
+If bad patterns already dominate the visible parts of the repo, agents will learn and reproduce those patterns faster than humans ever did. The result is not just messy output. It is accelerated inconsistency. Before the codebase becomes a good environment for agents, it often has to become a stricter environment for everyone.
+
+That means rewriting instructions, separating current truth from old intent, moving context closer to usage, and fixing the parts of the codebase that agents are most likely to copy from. There is no glamorous shortcut here. The repository has to become more internally coherent because it is now being read at machine speed.
+
+## The Payoff Is Not Better Prompting
+
+When teams talk about getting more from coding agents, they usually focus on prompts, models, and tools.
+
+Those things matter. But they are not the full story. A strong repository gives agents better judgment before the prompt even begins. It reduces confusion, narrows the search space, and makes correctness easier to verify. In practice, that often matters more than another round of prompt tuning.
+
+The important shift is strategic. You are no longer just maintaining a codebase. You are maintaining an operating environment for machine reasoning.
+
+## Conclusion
+
+The repository now serves two users: the humans who change the system and the agents who interpret it. Most companies still organize their codebases as if only the first one matters.
+
+That will not hold.
+
+The teams that get the most from agents will not simply have better models. They will have codebases with clearer authority, more local context, tighter verification, and less accidental ambiguity. They will treat repository design as part of the intelligence stack.
