@@ -15,8 +15,6 @@ export default defineSchema({
 		slug: v.string(),
 		title: v.string(),
 		summary: v.string(),
-		// Deprecated: migrated to blogPostContents.content.
-		content: v.optional(v.string()),
 		publishedAt: v.string(),
 		image: v.optional(v.string()),
 		lastSyncedAt: v.number(),
@@ -41,8 +39,6 @@ export default defineSchema({
 		slug: v.string(),
 		title: v.string(),
 		summary: v.string(),
-		// Deprecated: migrated to talkEventContents.content.
-		content: v.optional(v.string()),
 		publishedAt: v.string(),
 		image: v.optional(v.string()),
 		lastSyncedAt: v.number(),
@@ -68,8 +64,6 @@ export default defineSchema({
 		title: v.string(),
 		href: v.string(),
 		date: v.string(),
-		// Deprecated: migrated to codeProjectContents.content.
-		content: v.optional(v.string()),
 		published: v.boolean(),
 		lastSyncedAt: v.number(),
 	})
@@ -87,8 +81,6 @@ export default defineSchema({
 	staticPages: defineTable({
 		slug: v.string(),
 		title: v.string(),
-		// Deprecated: migrated to staticPageContents.content.
-		content: v.optional(v.string()),
 		published: v.boolean(),
 		lastSyncedAt: v.number(),
 	})

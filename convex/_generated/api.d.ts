@@ -12,7 +12,6 @@ import type * as blog from "../blog.js";
 import type * as code from "../code.js";
 import type * as lib_syncAuth from "../lib/syncAuth.js";
 import type * as lib_syncPayload from "../lib/syncPayload.js";
-import type * as migrations from "../migrations.js";
 import type * as pages from "../pages.js";
 import type * as posts from "../posts.js";
 import type * as talk from "../talk.js";
@@ -28,7 +27,6 @@ declare const fullApi: ApiFromModules<{
   code: typeof code;
   "lib/syncAuth": typeof lib_syncAuth;
   "lib/syncPayload": typeof lib_syncPayload;
-  migrations: typeof migrations;
   pages: typeof pages;
   posts: typeof posts;
   talk: typeof talk;
