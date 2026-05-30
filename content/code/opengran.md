@@ -1,6 +1,6 @@
 ---
-title: "OpenGran"
-href: "https://github.com/murabcd/opengran"
+title: "Graneri"
+href: "https://github.com/murabcd/graneri"
 date: "2026-03-20"
 published: true
 ---
