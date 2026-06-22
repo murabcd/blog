@@ -17,7 +17,7 @@
     "sync:prod": "SYNC_ENV=production VERBOSE=true bun run scripts/sync-content.ts",
     "deploy": "bun run sync && bun run build",
     "deploy:prod": "bunx convex deploy && bun run sync:prod",
-    "doctor": "npx react-doctor@latest"
+    "doctor": "npx react-doctor@latest . --project app,components,lib,hooks"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",

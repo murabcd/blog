@@ -1,7 +1,0 @@
-{
-  "$schema": "https://react.doctor/schema/config.json",
-  "deadCode": false,
-  "rules": {
-    "react-doctor/async-await-in-loop": "off"
-  }
-}
