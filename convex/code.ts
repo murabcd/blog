@@ -120,10 +120,10 @@ export const syncProjectsPublic = mutation({
 		const now = Date.now();
 		const incomingSlugs = new Set(args.projects.map((p) => p.slug));
 
-		const existingProjects = await ctx.db.query("codeProjects").collect();
-		const existingContents = await ctx.db
-			.query("codeProjectContents")
-			.collect();
+		const [existingProjects, existingContents] = await Promise.all([
+			ctx.db.query("codeProjects").collect(),
+			ctx.db.query("codeProjectContents").collect(),
+		]);
 		const existingBySlug = new Map(existingProjects.map((p) => [p.slug, p]));
 		const existingContentBySlug = new Map(
 			existingContents.map((content) => [content.slug, content]),

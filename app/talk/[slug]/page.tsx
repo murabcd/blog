@@ -8,6 +8,7 @@ import { api } from "@/convex/_generated/api";
 import { formatDate } from "@/lib/utils";
 import { baseUrl } from "@/app/sitemap";
 import { CustomMDX } from "@/components/mdx";
+import { serializeJsonLd } from "@/lib/jsonld";
 
 async function getTalkEventBySlugCached(slug: string) {
 	"use cache";
@@ -105,7 +106,7 @@ export default async function EventPage({
 				id={`jsonld-talk-${event.slug}`}
 				type="application/ld+json"
 				// biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD structured data requires dangerouslySetInnerHTML
-				dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+				dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
 			/>
 			<section>
 				<h1 className="title font-semibold text-2xl tracking-tighter">

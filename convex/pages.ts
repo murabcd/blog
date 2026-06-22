@@ -105,8 +105,10 @@ export const syncPagesPublic = mutation({
 		const now = Date.now();
 		const incomingSlugs = new Set(args.pages.map((p) => p.slug));
 
-		const existingPages = await ctx.db.query("staticPages").collect();
-		const existingContents = await ctx.db.query("staticPageContents").collect();
+		const [existingPages, existingContents] = await Promise.all([
+			ctx.db.query("staticPages").collect(),
+			ctx.db.query("staticPageContents").collect(),
+		]);
 		const existingBySlug = new Map(existingPages.map((p) => [p.slug, p]));
 		const existingContentBySlug = new Map(
 			existingContents.map((content) => [content.slug, content]),

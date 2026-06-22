@@ -121,8 +121,10 @@ export const syncPostsPublic = mutation({
 		const incomingSlugs = new Set(args.posts.map((p) => p.slug));
 
 		// Get all existing posts
-		const existingPosts = await ctx.db.query("blogPosts").collect();
-		const existingContents = await ctx.db.query("blogPostContents").collect();
+		const [existingPosts, existingContents] = await Promise.all([
+			ctx.db.query("blogPosts").collect(),
+			ctx.db.query("blogPostContents").collect(),
+		]);
 		const existingBySlug = new Map(existingPosts.map((p) => [p.slug, p]));
 		const existingContentBySlug = new Map(
 			existingContents.map((content) => [content.slug, content]),

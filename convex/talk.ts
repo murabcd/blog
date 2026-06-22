@@ -121,8 +121,10 @@ export const syncEventsPublic = mutation({
 		const incomingSlugs = new Set(args.events.map((e) => e.slug));
 
 		// Get all existing events
-		const existingEvents = await ctx.db.query("talkEvents").collect();
-		const existingContents = await ctx.db.query("talkEventContents").collect();
+		const [existingEvents, existingContents] = await Promise.all([
+			ctx.db.query("talkEvents").collect(),
+			ctx.db.query("talkEventContents").collect(),
+		]);
 		const existingBySlug = new Map(existingEvents.map((e) => [e.slug, e]));
 		const existingContentBySlug = new Map(
 			existingContents.map((content) => [content.slug, content]),

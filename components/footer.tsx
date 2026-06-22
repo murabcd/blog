@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import { CurrentYear } from "@/components/current-year";
 
@@ -12,7 +13,7 @@ function ArrowIcon() {
 			aria-hidden="true"
 		>
 			<path
-				d="M2.07102 11.3494L0.963068 10.2415L9.2017 1.98864H2.83807L2.85227 0.454545H11.8438V9.46023H10.2955L10.3097 3.09659L2.07102 11.3494Z"
+				d="M2.07 11.35.96 10.24 9.2 1.99H2.84L2.85.45h8.99v9.01h-1.55l.02-6.36-8.24 8.25Z"
 				fill="currentColor"
 			/>
 		</svg>
@@ -24,16 +25,14 @@ export default function Footer() {
 		<footer className="mb-6 mt-16">
 			<ul className="font-sm mt-8 flex flex-row space-x-4 space-y-0 text-foreground">
 				<li>
-					<a
+					<Link
 						className="flex items-center transition-all hover:text-primary"
 						aria-label="RSS feed"
-						rel="noopener noreferrer"
-						target="_blank"
 						href="/api/rss"
 					>
 						<ArrowIcon />
 						<p className="ml-2 h-7">rss</p>
-					</a>
+					</Link>
 				</li>
 				<li>
 					<a

@@ -12,6 +12,7 @@ import { ShareButton } from "@/components/share-button";
 import { CopyPageButton } from "@/components/copy-page-button";
 import { Toc, type TocSection } from "@/components/toc";
 import { FloatingChatInput } from "@/components/floating-chat-input";
+import { serializeJsonLd } from "@/lib/jsonld";
 import { calculateReadingTime, formatDate, slugify } from "@/lib/utils";
 
 async function getBlogPostBySlugCached(slug: string) {
@@ -137,7 +138,7 @@ export default async function Blog({
 				id={`jsonld-blog-${post.slug}`}
 				type="application/ld+json"
 				// biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD structured data requires dangerouslySetInnerHTML
-				dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+				dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
 			/>
 			<section>
 				<h1 className="title font-semibold text-2xl tracking-tighter">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState, useSyncExternalStore } from "react";
 import { ArrowUp } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -13,29 +13,46 @@ function buildPrompt({ url, question }: { url: string; question: string }) {
 	return `${url} ${trimmed}`;
 }
 
+function getChatVisibilitySnapshot() {
+	const footer = document.querySelector<HTMLElement>("footer");
+	return !footer || footer.getBoundingClientRect().top > window.innerHeight;
+}
+
+function getServerChatVisibilitySnapshot() {
+	return true;
+}
+
+function subscribeToChatVisibility(onStoreChange: () => void) {
+	const footer = document.querySelector<HTMLElement>("footer");
+	if (!footer) return () => {};
+
+	const observer = new IntersectionObserver(() => {
+		onStoreChange();
+	});
+
+	observer.observe(footer);
+	window.addEventListener("resize", onStoreChange);
+	window.addEventListener("scroll", onStoreChange, { passive: true });
+
+	return () => {
+		observer.disconnect();
+		window.removeEventListener("resize", onStoreChange);
+		window.removeEventListener("scroll", onStoreChange);
+	};
+}
+
 export function FloatingChatInput({ url }: { url: string }) {
 	const [value, setValue] = useState("");
-	const [isVisible, setIsVisible] = useState(true);
+	const isVisible = useSyncExternalStore(
+		subscribeToChatVisibility,
+		getChatVisibilitySnapshot,
+		getServerChatVisibilitySnapshot,
+	);
 	const canSubmit = value.trim().length > 0;
 	const promptUrl = useMemo(() => {
 		const prompt = buildPrompt({ url, question: value });
 		return `${BASE_URL}?q=${encodeURIComponent(prompt)}`;
 	}, [url, value]);
-
-	useEffect(() => {
-		const footer = document.querySelector<HTMLElement>("footer");
-		if (!footer) return;
-
-		const observer = new IntersectionObserver(([entry]) => {
-			setIsVisible(!entry.isIntersecting);
-		});
-
-		observer.observe(footer);
-
-		return () => {
-			observer.disconnect();
-		};
-	}, []);
 
 	return (
 		<div
@@ -45,13 +62,8 @@ export function FloatingChatInput({ url }: { url: string }) {
 		>
 			<div className="w-full max-w-2xl pointer-events-none">
 				<div className="mx-auto w-full max-w-[185px] transition-[max-width] duration-300 focus-within:max-w-[315px]">
-					<form
+					<div
 						className="pointer-events-auto relative flex items-center gap-2 rounded-full border border-foreground/10 bg-background/70 dark:bg-background/60 pl-4 pr-1 py-1.5 shadow-[0_12px_30px_rgba(0,0,0,0.22)] backdrop-blur-sm transition-shadow duration-300 focus-within:shadow-[0_18px_40px_rgba(0,0,0,0.3)]"
-						onSubmit={(event) => {
-							event.preventDefault();
-							if (!canSubmit) return;
-							window.open(promptUrl, "_blank", "noopener,noreferrer");
-						}}
 					>
 						<label className="sr-only" htmlFor="floating-chat-input">
 							Ask about this post
@@ -66,18 +78,23 @@ export function FloatingChatInput({ url }: { url: string }) {
 								autoComplete="off"
 								autoCorrect="off"
 								spellCheck={false}
+								onKeyDown={(event) => {
+									if (event.key !== "Enter" || !canSubmit) return;
+									window.open(promptUrl, "_blank", "noopener,noreferrer");
+								}}
 							/>
 						</div>
 						<Button
-							type="submit"
+							type="button"
 							size="icon"
 							disabled={!canSubmit}
 							aria-label="Ask about this post"
 							className="shrink-0 size-8 rounded-full bg-foreground text-background transition-transform duration-200 hover:-translate-y-0.5 disabled:cursor-not-allowed"
+							onClick={() => window.open(promptUrl, "_blank", "noopener,noreferrer")}
 						>
 							<ArrowUp className="size-4" />
 						</Button>
-					</form>
+					</div>
 				</div>
 			</div>
 		</div>

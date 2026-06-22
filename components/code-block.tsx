@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import { useTheme } from "next-themes";
 import type { CSSProperties } from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 const SyntaxHighlighter = dynamic(
 	() => import("react-syntax-highlighter").then((mod) => mod.Prism),
@@ -168,24 +168,17 @@ type CodeBlockProps = {
 	className?: string;
 };
 
+function capitalizeLanguage(lang: string) {
+	return lang.toLowerCase();
+}
+
 export function CodeBlock({ children, className }: CodeBlockProps) {
 	const { theme, resolvedTheme } = useTheme();
-	const [mounted, setMounted] = useState(false);
-
-	useEffect(() => {
-		setMounted(true);
-	}, []);
-
 	const match = /language-(\w+)/.exec(className || "");
 	const language = match ? match[1] : "text";
 	const codeString = String(children).replace(/\n$/, "");
 
-	const capitalizeLanguage = (lang: string) => {
-		return lang.toLowerCase();
-	};
-
 	const getCodeTheme = () => {
-		if (!mounted) return cursorDarkTheme;
 		const currentTheme = resolvedTheme || theme || "dark";
 		return currentTheme === "dark" ? cursorDarkTheme : cursorLightTheme;
 	};

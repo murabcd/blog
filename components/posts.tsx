@@ -14,7 +14,7 @@ export function BlogPosts({
 	posts: BlogPost[];
 	limit?: number;
 }) {
-	const sortedBlogs = [...posts].sort(
+	const sortedBlogs = posts.toSorted(
 		(a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt),
 	);
 	const visibleBlogs = limit ? sortedBlogs.slice(0, limit) : sortedBlogs;

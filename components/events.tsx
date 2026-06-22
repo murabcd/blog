@@ -11,7 +11,7 @@ type TalkEvent = {
 export function TalksEvents({ events }: { events: TalkEvent[] }) {
 	const sortedEvents = useMemo(
 		() =>
-			[...events].sort(
+			events.toSorted(
 				(a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt),
 			),
 		[events],

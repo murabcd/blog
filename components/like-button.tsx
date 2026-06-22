@@ -3,7 +3,7 @@
 import { Heart } from "lucide-react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
@@ -12,23 +12,14 @@ interface LikeButtonProps {
 }
 
 export function LikeButton({ postSlug }: LikeButtonProps) {
-	const [visitorId, setVisitorId] = useState<string>("");
-
-	useEffect(() => {
-		let id = sessionStorage.getItem("visitorId");
-		if (!id) {
-			id = localStorage.getItem("visitorId");
-		}
+	const [visitorId] = useState<string>(() => {
+		let id = localStorage.getItem("visitorId");
 		if (!id) {
 			id = crypto.randomUUID();
 			localStorage.setItem("visitorId", id);
-			sessionStorage.setItem("visitorId", id);
 		}
-		if (id) {
-			sessionStorage.setItem("visitorId", id);
-		}
-		setVisitorId(id);
-	}, []);
+		return id;
+	});
 
 	const likeCount = useQuery(api.posts.getLikeCount, { postSlug });
 	const isLiked = useQuery(

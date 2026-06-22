@@ -1,0 +1,10 @@
+{
+  "$schema": "https://react.doctor/schema/config.json",
+  "deadCode": false,
+  "rules": {
+    "react-doctor/anchor-has-content": "off",
+    "react-doctor/async-await-in-loop": "off",
+    "react-doctor/no-multi-comp": "off",
+    "react-doctor/no-polymorphic-children": "off"
+  }
+}

@@ -36,7 +36,8 @@ function createHeading(level: number) {
 					href: `#${slug}`,
 					key: `link-${slug}`,
 					className: "anchor",
-				}),
+					"aria-label": `Link to ${typeof children === "string" ? children : "heading"}`,
+				}, "#"),
 			],
 			children,
 		);

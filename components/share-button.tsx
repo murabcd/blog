@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Code2, Link2, Linkedin, Share2, Twitter } from "lucide-react";
 import { toast } from "sonner";
 
@@ -35,8 +35,8 @@ export function ShareButton({
 }: ShareButtonProps) {
 	const [isEmbedDialogOpen, setIsEmbedDialogOpen] = useState(false);
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-	const [origin, setOrigin] = useState("");
-	const [canNativeShare, setCanNativeShare] = useState(false);
+	const [origin] = useState(() => window.location.origin);
+	const [canNativeShare] = useState(() => typeof navigator.share === "function");
 
 	const postUrl = origin ? `${origin}/blog/${postSlug}` : `/blog/${postSlug}`;
 	const twitterShareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
@@ -45,11 +45,6 @@ export function ShareButton({
 	const linkedInShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
 		postUrl,
 	)}`;
-
-	useEffect(() => {
-		setOrigin(window.location.origin);
-		setCanNativeShare(typeof navigator.share === "function");
-	}, []);
 
 	const handleCopyLink = async () => {
 		try {
