@@ -103,15 +103,8 @@ function RoundedImage(props: ImageProps) {
 function extractCodeString(children: React.ReactNode): string {
 	if (typeof children === "string") return children;
 
-	if (
-		typeof children === "object" &&
-		children !== null &&
-		"props" in children
-	) {
-		return String(
-			(children as { props?: { children?: string | React.ReactNode } }).props
-				?.children || "",
-		);
+	if (isCodeElement(children)) {
+		return extractCodeString(children.props.children);
 	}
 
 	if (Array.isArray(children)) {
@@ -137,18 +130,28 @@ type PreProps = React.HTMLAttributes<HTMLPreElement> & {
 	children?: React.ReactNode;
 };
 
+type CodeElementProps = {
+	children?: React.ReactNode;
+	className?: string;
+};
+
+function isCodeElement(
+	children: React.ReactNode,
+): children is React.ReactElement<CodeElementProps> {
+	return React.isValidElement<CodeElementProps>(children);
+}
+
 function Pre({ children, ...props }: PreProps) {
-	if (React.isValidElement(children)) {
-		const className =
-			typeof (children.props as { className?: unknown })?.className === "string"
-				? ((children.props as { className?: string }).className as string)
-				: undefined;
-		const codeString = extractCodeString(
-			(children.props as { children?: React.ReactNode })?.children,
-		).replace(/\n$/, "");
+	if (isCodeElement(children)) {
+		const codeString = extractCodeString(children.props.children).replace(
+			/\n$/,
+			"",
+		);
 
 		// Treat any <pre><code>...</code></pre> block as a code block, even if no language was specified.
-		return <CodeBlock className={className}>{codeString}</CodeBlock>;
+		return (
+			<CodeBlock className={children.props.className}>{codeString}</CodeBlock>
+		);
 	}
 
 	return <pre {...props}>{children}</pre>;

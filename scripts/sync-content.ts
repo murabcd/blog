@@ -3,6 +3,13 @@ import path from "node:path";
 import matter from "gray-matter";
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "../convex/_generated/api";
+import {
+	type Frontmatter,
+	getOptionalBoolean,
+	getOptionalString,
+	getRequiredString,
+	toFrontmatter,
+} from "../lib/frontmatter";
 import dotenv from "dotenv";
 
 // Load environment variables based on SYNC_ENV
@@ -108,14 +115,14 @@ interface ParsedStaticPage {
 
 // Parse a single MDX file (blog post or talk event)
 function parseMDXFile(filePath: string): {
-	metadata: BlogPostFrontmatter | TalkEventFrontmatter;
+	metadata: Frontmatter;
 	content: string;
 } | null {
 	try {
 		const fileContent = fs.readFileSync(filePath, "utf-8");
 		const { data, content } = matter(fileContent);
 		return {
-			metadata: data as BlogPostFrontmatter | TalkEventFrontmatter,
+			metadata: toFrontmatter(data),
 			content,
 		};
 	} catch (error) {
@@ -129,9 +136,13 @@ function parseBlogPost(filePath: string): ParsedBlogPost | null {
 	const parsed = parseMDXFile(filePath);
 	if (!parsed) return null;
 
-	const frontmatter = parsed.metadata as BlogPostFrontmatter;
+	const frontmatter: BlogPostFrontmatter = {
+		title: getRequiredString(parsed.metadata, "title") ?? "",
+		publishedAt: getRequiredString(parsed.metadata, "publishedAt") ?? "",
+		summary: getRequiredString(parsed.metadata, "summary") ?? "",
+		image: getOptionalString(parsed.metadata, "image"),
+	};
 
-	// Validate required fields
 	if (!frontmatter.title || !frontmatter.publishedAt || !frontmatter.summary) {
 		console.warn(
 			`Skipping ${filePath}: missing required frontmatter fields (title, publishedAt, summary)`,
@@ -156,9 +167,13 @@ function parseTalkEvent(filePath: string): ParsedTalkEvent | null {
 	const parsed = parseMDXFile(filePath);
 	if (!parsed) return null;
 
-	const frontmatter = parsed.metadata as TalkEventFrontmatter;
+	const frontmatter: TalkEventFrontmatter = {
+		title: getRequiredString(parsed.metadata, "title") ?? "",
+		publishedAt: getRequiredString(parsed.metadata, "publishedAt") ?? "",
+		summary: getRequiredString(parsed.metadata, "summary") ?? "",
+		image: getOptionalString(parsed.metadata, "image"),
+	};
 
-	// Validate required fields
 	if (!frontmatter.title || !frontmatter.publishedAt || !frontmatter.summary) {
 		console.warn(
 			`Skipping ${filePath}: missing required frontmatter fields (title, publishedAt, summary)`,
@@ -184,7 +199,13 @@ function parseCodeProject(filePath: string): ParsedCodeProject | null {
 		const fileContent = fs.readFileSync(filePath, "utf-8");
 		const { data, content } = matter(fileContent);
 
-		const frontmatter = data as Partial<CodeProjectFrontmatter>;
+		const metadata = toFrontmatter(data);
+		const frontmatter: Partial<CodeProjectFrontmatter> = {
+			title: getRequiredString(metadata, "title") ?? undefined,
+			href: getRequiredString(metadata, "href") ?? undefined,
+			date: getRequiredString(metadata, "date") ?? undefined,
+			published: getOptionalBoolean(metadata, "published"),
+		};
 
 		// Validate required fields
 		if (!frontmatter.title || !frontmatter.href || !frontmatter.date) {
@@ -219,7 +240,11 @@ function parseStaticPage(
 		const fileContent = fs.readFileSync(filePath, "utf-8");
 		const { data, content } = matter(fileContent);
 
-		const frontmatter = data as Partial<StaticPageFrontmatter>;
+		const metadata = toFrontmatter(data);
+		const frontmatter: Partial<StaticPageFrontmatter> = {
+			title: getRequiredString(metadata, "title") ?? undefined,
+			published: getOptionalBoolean(metadata, "published"),
+		};
 
 		// Validate required fields
 		if (!frontmatter.title) {

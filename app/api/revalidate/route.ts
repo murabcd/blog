@@ -3,7 +3,30 @@ import { revalidateTag } from "next/cache";
 import { logger } from "@/lib/logger";
 
 type RevalidateRequest = {
-	tags?: string[];
+	tags: string[];
+};
+
+type RevalidateOutcome =
+	| "rate_limited"
+	| "unauthorized"
+	| "bad_request"
+	| "success"
+	| "error";
+
+type RevalidateEvent = {
+	event: "revalidate.request";
+	method: "POST";
+	path: string;
+	requestId: string;
+	clientIp: string;
+	outcome?: RevalidateOutcome;
+	tagsRequestedCount?: number;
+	invalidTagsCount?: number;
+	tagsAcceptedCount?: number;
+	errorName?: string;
+	errorMessage?: string;
+	statusCode?: number;
+	durationMs?: number;
 };
 
 const ALLOWED_STATIC_TAGS = new Set([
@@ -98,6 +121,31 @@ function cleanupExpiredRateLimitEntries() {
 	}
 }
 
+function parseRevalidateRequest(payload: unknown): RevalidateRequest {
+	if (
+		typeof payload !== "object" ||
+		payload === null ||
+		!("tags" in payload) ||
+		!Array.isArray(payload.tags)
+	) {
+		return { tags: [] };
+	}
+
+	return {
+		tags: payload.tags.filter((tag): tag is string => typeof tag === "string"),
+	};
+}
+
+async function readRevalidateRequest(
+	request: Request,
+): Promise<RevalidateRequest> {
+	try {
+		return parseRevalidateRequest(await request.json());
+	} catch {
+		return { tags: [] };
+	}
+}
+
 export async function POST(request: Request) {
 	const startTime = Date.now();
 	const requestId =
@@ -106,13 +154,12 @@ export async function POST(request: Request) {
 		crypto.randomUUID();
 	const requestPath = new URL(request.url).pathname;
 	const clientIp = getClientIp(request);
-	const wideEvent: Record<string, unknown> = {
+	const wideEvent: RevalidateEvent = {
 		event: "revalidate.request",
 		method: "POST",
 		path: requestPath,
 		requestId,
 		clientIp,
-		outcome: "unknown",
 	};
 
 	let response: Response | null = null;
@@ -135,14 +182,7 @@ export async function POST(request: Request) {
 			return response;
 		}
 
-		let payload: RevalidateRequest | null = null;
-		try {
-			payload = (await request.json()) as RevalidateRequest;
-		} catch {
-			// Ignore invalid JSON
-		}
-
-		const tags = Array.isArray(payload?.tags) ? payload?.tags : [];
+		const { tags } = await readRevalidateRequest(request);
 		wideEvent.tagsRequestedCount = tags.length;
 
 		if (tags.length === 0) {

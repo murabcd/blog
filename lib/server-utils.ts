@@ -1,6 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
+import {
+	getOptionalString,
+	getRequiredString,
+	toFrontmatter,
+} from "@/lib/frontmatter";
 
 type Metadata = {
 	title: string;
@@ -11,7 +16,15 @@ type Metadata = {
 
 function parseMarkdown(fileContent: string) {
 	const { data, content } = matter(fileContent);
-	return { metadata: data as Metadata, content: content.trim() };
+	const frontmatter = toFrontmatter(data);
+	const metadata: Metadata = {
+		title: getRequiredString(frontmatter, "title") ?? "",
+		publishedAt: getRequiredString(frontmatter, "publishedAt") ?? "",
+		summary: getRequiredString(frontmatter, "summary") ?? "",
+		image: getOptionalString(frontmatter, "image"),
+	};
+
+	return { metadata, content: content.trim() };
 }
 
 function getMarkdownFiles(dir: string) {

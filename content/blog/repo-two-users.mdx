@@ -38,7 +38,7 @@ There are a few principles that seem to matter much more in an agent-heavy codeb
 
 First, instructions should live as close as possible to where they apply. A rule about one backend subsystem should not be buried in a giant root file if it only matters in one folder. Locality matters because agents need the relevant guidance to appear at the moment they are making a choice.
 
-Second, instructions should be operational, not descriptive. Telling an agent that `src/` contains source code is noise. Telling it to avoid inline imports, to prefer early returns, or to never treat a spec as current behavior is useful. The test is simple: does this sentence change how the agent behaves?
+Second, instructions should be operational, not descriptive. Telling an agent that `src/` contains source code is noise. Telling it to avoid inline imports, to prefer early returns, or to never treat a spec as current behavior is useful. The test is concrete: does this sentence change how the agent behaves?
 
 Third, nothing should be loaded by default unless it consistently earns its place. Excess context is not harmless. It taxes every session, every engineer, and every agent. If you want strong behavior, the default should be skepticism, not inclusion.
 
@@ -50,13 +50,13 @@ You cannot rely on "the engineer will catch it later" as the main control mechan
 
 This changes the role of standards as well. A style guide sitting quietly in Confluence is almost useless here. Standards only matter when they are present where the work happens and enforced where the work lands.
 
-## The Cleanup Comes Before the Gains
+## Cleanup Comes Before the Gains
 
 A lot of teams want the productivity upside of coding agents without paying the cleanup cost first.
 
 That usually does not work.
 
-If bad patterns already dominate the visible parts of the repo, agents will learn and reproduce those patterns faster than humans ever did. The result is not just messy output. It is accelerated inconsistency. Before the codebase becomes a good environment for agents, it often has to become a stricter environment for everyone.
+If bad patterns already dominate the visible parts of the repo, agents will learn and reproduce those patterns faster than humans ever did. The result is not only messy output. It is accelerated inconsistency. Before the codebase becomes a good environment for agents, it often has to become a stricter environment for everyone.
 
 That means rewriting instructions, separating current truth from old intent, moving context closer to usage, and fixing the parts of the codebase that agents are most likely to copy from. There is no glamorous shortcut here. The repository has to become more internally coherent because it is now being read at machine speed.
 
@@ -68,7 +68,7 @@ Those things matter. But they are not the full story. A strong repository gives 
 
 The important shift is strategic. You are no longer just maintaining a codebase. You are maintaining an operating environment for machine reasoning.
 
-## Conclusion
+## The Shift
 
 The repository now serves two users: the humans who change the system and the agents who interpret it. Most companies still organize their codebases as if only the first one matters.
 

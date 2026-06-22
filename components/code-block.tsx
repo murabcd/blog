@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useTheme } from "next-themes";
+import type { CSSProperties } from "react";
 import { useState, useEffect } from "react";
 
 const SyntaxHighlighter = dynamic(
@@ -11,40 +12,40 @@ const SyntaxHighlighter = dynamic(
 import { Copy, Check } from "lucide-react";
 import { toast } from "sonner";
 
-const cursorDarkTheme: { [key: string]: React.CSSProperties } = {
+type SyntaxTheme = Record<string, CSSProperties>;
+
+const baseCodeStyle = {
+	background: "transparent",
+	fontFamily:
+		"SF Mono, Monaco, Cascadia Code, Roboto Mono, Consolas, Courier New, monospace",
+	fontSize: "14px",
+	textAlign: "left",
+	whiteSpace: "pre",
+	wordSpacing: "normal",
+	wordBreak: "normal",
+	wordWrap: "normal",
+	lineHeight: "1.6",
+	tabSize: 4,
+	hyphens: "none",
+} satisfies CSSProperties;
+
+const basePreStyle = {
+	...baseCodeStyle,
+	padding: "1.5em",
+	margin: "1.5em 0",
+	overflow: "auto",
+	borderRadius: "8px",
+} satisfies CSSProperties;
+
+const cursorDarkTheme: SyntaxTheme = {
 	'code[class*="language-"]': {
+		...baseCodeStyle,
 		color: "#d4d4d4",
-		background: "transparent",
-		fontFamily:
-			"SF Mono, Monaco, Cascadia Code, Roboto Mono, Consolas, Courier New, monospace",
-		fontSize: "14px",
-		textAlign: "left" as const,
-		whiteSpace: "pre" as const,
-		wordSpacing: "normal",
-		wordBreak: "normal" as const,
-		wordWrap: "normal" as const,
-		lineHeight: "1.6",
-		tabSize: 4,
-		hyphens: "none" as const,
 	},
 	'pre[class*="language-"]': {
+		...basePreStyle,
 		color: "#d4d4d4",
 		background: "#1e1e1e",
-		fontFamily:
-			"SF Mono, Monaco, Cascadia Code, Roboto Mono, Consolas, Courier New, monospace",
-		fontSize: "14px",
-		textAlign: "left" as const,
-		whiteSpace: "pre" as const,
-		wordSpacing: "normal",
-		wordBreak: "normal" as const,
-		wordWrap: "normal" as const,
-		lineHeight: "1.6",
-		tabSize: 4,
-		hyphens: "none" as const,
-		padding: "1.5em",
-		margin: "1.5em 0",
-		overflow: "auto" as const,
-		borderRadius: "8px",
 	},
 	comment: { color: "#6a9955", fontStyle: "italic" },
 	prolog: { color: "#6a9955" },
@@ -83,40 +84,15 @@ const cursorDarkTheme: { [key: string]: React.CSSProperties } = {
 	decorator: { color: "#dcdcaa" },
 };
 
-const cursorLightTheme: { [key: string]: React.CSSProperties } = {
+const cursorLightTheme: SyntaxTheme = {
 	'code[class*="language-"]': {
+		...baseCodeStyle,
 		color: "#171717",
-		background: "transparent",
-		fontFamily:
-			"SF Mono, Monaco, Cascadia Code, Roboto Mono, Consolas, Courier New, monospace",
-		fontSize: "14px",
-		textAlign: "left" as const,
-		whiteSpace: "pre" as const,
-		wordSpacing: "normal",
-		wordBreak: "normal" as const,
-		wordWrap: "normal" as const,
-		lineHeight: "1.6",
-		tabSize: 4,
-		hyphens: "none" as const,
 	},
 	'pre[class*="language-"]': {
+		...basePreStyle,
 		color: "#171717",
 		background: "#f5f5f5",
-		fontFamily:
-			"SF Mono, Monaco, Cascadia Code, Roboto Mono, Consolas, Courier New, monospace",
-		fontSize: "14px",
-		textAlign: "left" as const,
-		whiteSpace: "pre" as const,
-		wordSpacing: "normal",
-		wordBreak: "normal" as const,
-		wordWrap: "normal" as const,
-		lineHeight: "1.6",
-		tabSize: 4,
-		hyphens: "none" as const,
-		padding: "1.5em",
-		margin: "1.5em 0",
-		overflow: "auto" as const,
-		borderRadius: "8px",
 	},
 	comment: { color: "#6a737d", fontStyle: "italic" },
 	prolog: { color: "#6a737d" },

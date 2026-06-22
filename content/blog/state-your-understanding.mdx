@@ -1,0 +1,45 @@
+---
+title: "State Your Understanding"
+publishedAt: "2026-06-15"
+summary: "AI makes it much easier to produce confident-looking work without revealing how much the author actually understood. Teams need a better norm: declare your level of understanding up front."
+---
+
+## Confidence Is Cheap Now
+
+One strange side effect of AI is that it is much harder to tell whether someone actually understands what they are talking about. Confident language used to be a weak signal that someone had at least reasoned through the thing. Not a perfect signal, but something.
+
+That signal is weaker now. Anyone can paste in a bug, a diff, or a half-formed plan and get back a polished explanation. The writing can sound calm and senior even when the author mostly followed the model to a plausible answer.
+
+Sometimes they do understand it. Sometimes they do not. The problem is that the surface now looks too similar.
+
+## Pull Requests Need a New Signal
+
+This shows up most clearly in code review. A PR arrives with a neat summary, a list of changes, and a confident explanation of why the approach works. Before AI, that usually told you something about the author's reasoning. Today it may only tell you that they asked the model to summarize the diff.
+
+The problem is not that people are using AI. Of course they are. The problem is that the PR description no longer tells the reviewer how much original understanding sits behind the change.
+
+That matters because code review is not only a review of code. It is also a review of judgment. A reviewer is trying to understand where to trust the author, where to inspect more deeply, and where the team might be carrying hidden risk. If every explanation arrives in the same polished tone, that judgment gets harder.
+
+## Say What You Actually Know
+
+I think teams need a new norm here: state your level of understanding up front.
+
+Not in a dramatic way. Practically. "I understand the bug but not this subsystem deeply." "I am confident in the fix, but want review on migration implications." "I followed the AI's suggested approach and verified it with tests, but I cannot explain yet why this pattern is preferred." "I think this is right, but I would not be comfortable owning this area alone."
+
+That kind of note is much more useful than a perfect AI-generated summary that quietly implies confidence the author does not have.
+
+It also makes review faster. If I know you understand the domain and used AI to move faster, I review one way. If I know you are new to the area and used AI to get to a plausible patch, I review another way. Both are fine. They are not the same.
+
+## This Is Not Humility Theater
+
+The point is not to make everyone sound uncertain. It is to make the source of confidence visible again.
+
+There is a big difference between "I know this area well and used AI to save time" and "I do not know this area well and used AI to get unstuck." Both can produce good work. But a team should not have to infer which one happened from tone, because tone has become cheap.
+
+This will matter more as the tools get better. The summaries will get smoother, the explanations cleaner, and the apparent confidence more convincing. Without a norm around declaring understanding, teams will make worse judgments about where expertise actually lives.
+
+## The Norm
+
+AI made good prose cheap, so teams need a different signal for real understanding.
+
+The fix is practical: say what you know, say what you do not know, and say how you got to the answer. That used to be optional. I do not think it is optional anymore.
