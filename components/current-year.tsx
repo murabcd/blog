@@ -1,5 +1,8 @@
-const currentYear = 2026;
+import { cacheLife } from "next/cache";
 
-export function CurrentYear() {
-	return <span>{currentYear}</span>;
+export async function CurrentYear() {
+	"use cache";
+	cacheLife("days");
+
+	return <span suppressHydrationWarning>{new Date().getFullYear()}</span>;
 }

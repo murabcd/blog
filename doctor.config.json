@@ -1,0 +1,3 @@
+{
+	"projects": ["app", "components", "lib", "hooks"]
+}

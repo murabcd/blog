@@ -73,7 +73,8 @@ export default function Footer() {
 			</ul>
 			<div className="flex items-end justify-between text-xs text-muted-foreground">
 				<p>
-					© <CurrentYear /> Murad&apos;s blog. All rights reserved.
+					© <CurrentYear />{" "}
+					Murad&apos;s blog. All rights reserved.
 				</p>
 				<ThemeSwitcher />
 			</div>
