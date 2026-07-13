@@ -1,11 +1,8 @@
 "use client";
 
-import { useState, useId } from "react";
+import { useId, useSyncExternalStore } from "react";
 
 import { Copy } from "lucide-react";
-import { useQuery } from "convex/react";
-
-import { api } from "@/convex/_generated/api";
 
 import { toast } from "sonner";
 
@@ -26,8 +23,19 @@ interface EmbedDialogProps {
 	postSlug: string;
 	title: string;
 	description?: string;
-	publishedAt: string;
 	author: string;
+}
+
+function subscribe() {
+	return () => {};
+}
+
+function getOriginSnapshot() {
+	return window.location.origin;
+}
+
+function getServerOriginSnapshot() {
+	return "";
 }
 
 export function EmbedDialog({
@@ -36,12 +44,14 @@ export function EmbedDialog({
 	postSlug,
 	title,
 	description,
-	publishedAt,
 	author,
 }: EmbedDialogProps) {
 	const embedCodeId = useId();
-	const likeCount = useQuery(api.posts.getLikeCount, { postSlug });
-	const [origin] = useState(() => window.location.origin);
+	const origin = useSyncExternalStore(
+		subscribe,
+		getOriginSnapshot,
+		getServerOriginSnapshot,
+	);
 
 	const fullUrl = origin ? `${origin}/blog/${postSlug}` : `/blog/${postSlug}`;
 

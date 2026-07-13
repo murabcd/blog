@@ -62,9 +62,7 @@ export function FloatingChatInput({ url }: { url: string }) {
 		>
 			<div className="w-full max-w-2xl pointer-events-none">
 				<div className="mx-auto w-full max-w-[185px] transition-[max-width] duration-300 focus-within:max-w-[315px]">
-					<div
-						className="pointer-events-auto relative flex items-center gap-2 rounded-full border border-foreground/10 bg-background/70 dark:bg-background/60 pl-4 pr-1 py-1.5 shadow-[0_12px_30px_rgba(0,0,0,0.22)] backdrop-blur-sm transition-shadow duration-300 focus-within:shadow-[0_18px_40px_rgba(0,0,0,0.3)]"
-					>
+					<div className="pointer-events-auto relative flex items-center gap-2 rounded-full border border-foreground/10 bg-background/70 dark:bg-background/60 pl-4 pr-1 py-1.5 shadow-[0_12px_30px_rgba(0,0,0,0.22)] backdrop-blur-sm transition-shadow duration-300 focus-within:shadow-[0_18px_40px_rgba(0,0,0,0.3)]">
 						<label className="sr-only" htmlFor="floating-chat-input">
 							Ask about this post
 						</label>
@@ -90,7 +88,9 @@ export function FloatingChatInput({ url }: { url: string }) {
 							disabled={!canSubmit}
 							aria-label="Ask about this post"
 							className="shrink-0 size-8 rounded-full bg-foreground text-background transition-transform duration-200 hover:-translate-y-0.5 disabled:cursor-not-allowed"
-							onClick={() => window.open(promptUrl, "_blank", "noopener,noreferrer")}
+							onClick={() =>
+								window.open(promptUrl, "_blank", "noopener,noreferrer")
+							}
 						>
 							<ArrowUp className="size-4" />
 						</Button>

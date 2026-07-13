@@ -32,7 +32,7 @@ export function Navbar() {
 				<nav
 					className="flex flex-row items-center justify-between relative px-0 pb-0 md:pb-4 fade md:overflow-auto scroll-pr-6 md:relative mt-6"
 					id={navId}
-					>
+				>
 					<div className="flex flex-row items-center space-x-4">
 						{Object.entries(navItems).map(([path, { name }]) => {
 							return (
@@ -48,12 +48,12 @@ export function Navbar() {
 						})}
 					</div>
 					<SearchCommand />
-					</nav>
-				</div>
-				<div
-					data-mobile-toc-slot
-					className="lg:hidden absolute top-full left-1/2 z-40 w-screen -translate-x-1/2"
-				/>
-			</aside>
+				</nav>
+			</div>
+			<div
+				data-mobile-toc-slot
+				className="lg:hidden absolute top-full left-1/2 z-40 w-screen -translate-x-1/2"
+			/>
+		</aside>
 	);
 }

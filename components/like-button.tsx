@@ -3,7 +3,7 @@
 import { Heart } from "lucide-react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { useState } from "react";
+import { useSyncExternalStore } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
@@ -11,15 +11,34 @@ interface LikeButtonProps {
 	postSlug: string;
 }
 
+function getVisitorIdSnapshot() {
+	return localStorage.getItem("visitorId");
+}
+
+function getServerVisitorIdSnapshot() {
+	return null;
+}
+
+function subscribeToVisitorId(onStoreChange: () => void) {
+	if (!localStorage.getItem("visitorId")) {
+		localStorage.setItem("visitorId", crypto.randomUUID());
+		onStoreChange();
+	}
+
+	function handleStorage(event: StorageEvent) {
+		if (event.key === "visitorId") onStoreChange();
+	}
+
+	window.addEventListener("storage", handleStorage);
+	return () => window.removeEventListener("storage", handleStorage);
+}
+
 export function LikeButton({ postSlug }: LikeButtonProps) {
-	const [visitorId] = useState<string>(() => {
-		let id = localStorage.getItem("visitorId");
-		if (!id) {
-			id = crypto.randomUUID();
-			localStorage.setItem("visitorId", id);
-		}
-		return id;
-	});
+	const visitorId = useSyncExternalStore(
+		subscribeToVisitorId,
+		getVisitorIdSnapshot,
+		getServerVisitorIdSnapshot,
+	);
 
 	const likeCount = useQuery(api.posts.getLikeCount, { postSlug });
 	const isLiked = useQuery(

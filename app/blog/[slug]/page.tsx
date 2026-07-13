@@ -157,7 +157,6 @@ export default async function Blog({
 						postSlug={post.slug}
 						title={post.title}
 						description={post.summary}
-						publishedAt={formatDate(post.publishedAt)}
 						author="Murad Abdulkadyrov"
 					/>
 					<div className="ml-auto">

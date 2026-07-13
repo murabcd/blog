@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { Code2, Link2, Linkedin, Share2, Twitter } from "lucide-react";
 import { toast } from "sonner";
 
@@ -22,21 +22,47 @@ interface ShareButtonProps {
 	postSlug: string;
 	title?: string;
 	description?: string;
-	publishedAt?: string;
 	author?: string;
+}
+
+function subscribe() {
+	return () => {};
+}
+
+function getOriginSnapshot() {
+	return window.location.origin;
+}
+
+function getServerOriginSnapshot() {
+	return "";
+}
+
+function getCanNativeShareSnapshot() {
+	return typeof navigator.share === "function";
+}
+
+function getServerCanNativeShareSnapshot() {
+	return false;
 }
 
 export function ShareButton({
 	postSlug,
 	title = "Untitled Post",
 	description,
-	publishedAt = "Recently",
 	author = "Murad Abdulkadyrov",
 }: ShareButtonProps) {
 	const [isEmbedDialogOpen, setIsEmbedDialogOpen] = useState(false);
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-	const [origin] = useState(() => window.location.origin);
-	const [canNativeShare] = useState(() => typeof navigator.share === "function");
+	const origin = useSyncExternalStore(
+		subscribe,
+		getOriginSnapshot,
+		getServerOriginSnapshot,
+	);
+	const canNativeShare = useSyncExternalStore(
+		subscribe,
+		getCanNativeShareSnapshot,
+		getServerCanNativeShareSnapshot,
+	);
 
 	const postUrl = origin ? `${origin}/blog/${postSlug}` : `/blog/${postSlug}`;
 	const twitterShareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
@@ -215,7 +241,6 @@ export function ShareButton({
 				postSlug={postSlug}
 				title={title}
 				description={description}
-				publishedAt={publishedAt}
 				author={author}
 			/>
 		</>
