@@ -28,18 +28,12 @@ export function createHeading(level: number) {
 		return React.createElement(
 			`h${level}`,
 			{ id: slug, style: { scrollMarginTop: "6rem" } },
-			[
-				React.createElement(
-					"a",
-					{
-						href: `#${slug}`,
-						key: `link-${slug}`,
-						className: "anchor",
-						"aria-label": `Link to ${text || "heading"}`,
-					},
-					"#",
-				),
-			],
+			React.createElement("a", {
+				href: `#${slug}`,
+				key: `link-${slug}`,
+				className: "anchor",
+				"aria-label": `Link to ${text || "heading"}`,
+			}),
 			children,
 		);
 	};
