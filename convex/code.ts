@@ -113,10 +113,6 @@ export const syncProjectsPublic = mutation({
 		assertValidSyncSecret(args.syncSecret);
 		assertCompleteSync(args.slugs, args.projects);
 
-		let created = 0;
-		let updated = 0;
-		let deleted = 0;
-
 		const now = Date.now();
 		const incomingSlugs = new Set(args.projects.map((p) => p.slug));
 
@@ -129,59 +125,58 @@ export const syncProjectsPublic = mutation({
 			existingContents.map((content) => [content.slug, content]),
 		);
 
-		for (const project of args.projects) {
+		const created = args.projects.filter(
+			(project) => !existingBySlug.has(project.slug),
+		).length;
+		const updated = args.projects.length - created;
+		const projectsToDelete = existingProjects.filter(
+			(project) => !incomingSlugs.has(project.slug),
+		);
+		const contentsToDelete = existingContents.filter(
+			(content) => !incomingSlugs.has(content.slug),
+		);
+
+		const upserts = args.projects.flatMap((project) => {
 			const existing = existingBySlug.get(project.slug);
 			const existingContent = existingContentBySlug.get(project.slug);
+			const projectWrite = existing
+				? ctx.db.replace(existing._id, {
+						slug: project.slug,
+						title: project.title,
+						href: project.href,
+						date: project.date,
+						published: project.published,
+						lastSyncedAt: now,
+					})
+				: ctx.db.insert("codeProjects", {
+						slug: project.slug,
+						title: project.title,
+						href: project.href,
+						date: project.date,
+						published: project.published,
+						lastSyncedAt: now,
+					});
+			const contentWrite = existingContent
+				? ctx.db.replace(existingContent._id, {
+						slug: project.slug,
+						content: project.content,
+						lastSyncedAt: now,
+					})
+				: ctx.db.insert("codeProjectContents", {
+						slug: project.slug,
+						content: project.content,
+						lastSyncedAt: now,
+					});
 
-			if (existing) {
-				await ctx.db.replace(existing._id, {
-					slug: project.slug,
-					title: project.title,
-					href: project.href,
-					date: project.date,
-					published: project.published,
-					lastSyncedAt: now,
-				});
-				updated++;
-			} else {
-				await ctx.db.insert("codeProjects", {
-					slug: project.slug,
-					title: project.title,
-					href: project.href,
-					date: project.date,
-					published: project.published,
-					lastSyncedAt: now,
-				});
-				created++;
-			}
+			return [projectWrite, contentWrite];
+		});
 
-			if (existingContent) {
-				await ctx.db.replace(existingContent._id, {
-					slug: project.slug,
-					content: project.content,
-					lastSyncedAt: now,
-				});
-			} else {
-				await ctx.db.insert("codeProjectContents", {
-					slug: project.slug,
-					content: project.content,
-					lastSyncedAt: now,
-				});
-			}
-		}
+		await Promise.all([
+			...upserts,
+			...projectsToDelete.map((project) => ctx.db.delete(project._id)),
+			...contentsToDelete.map((content) => ctx.db.delete(content._id)),
+		]);
 
-		for (const existing of existingProjects) {
-			if (!incomingSlugs.has(existing.slug)) {
-				await ctx.db.delete(existing._id);
-				deleted++;
-			}
-		}
-		for (const existingContent of existingContents) {
-			if (!incomingSlugs.has(existingContent.slug)) {
-				await ctx.db.delete(existingContent._id);
-			}
-		}
-
-		return { created, updated, deleted };
+		return { created, updated, deleted: projectsToDelete.length };
 	},
 });

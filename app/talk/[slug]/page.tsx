@@ -17,6 +17,12 @@ async function getTalkEventBySlugCached(slug: string) {
 	return fetchQuery(api.talk.getEventBySlug, { slug });
 }
 
+export async function generateStaticParams() {
+	const events = await fetchQuery(api.talk.getAllEvents);
+
+	return events.map(({ slug }) => ({ slug }));
+}
+
 export async function generateMetadata({
 	params,
 }: {

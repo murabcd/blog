@@ -113,10 +113,6 @@ export const syncEventsPublic = mutation({
 		assertValidSyncSecret(args.syncSecret);
 		assertCompleteSync(args.slugs, args.events);
 
-		let created = 0;
-		let updated = 0;
-		let deleted = 0;
-
 		const now = Date.now();
 		const incomingSlugs = new Set(args.events.map((e) => e.slug));
 
@@ -130,62 +126,58 @@ export const syncEventsPublic = mutation({
 			existingContents.map((content) => [content.slug, content]),
 		);
 
-		// Upsert incoming events
-		for (const event of args.events) {
+		const created = args.events.filter(
+			(event) => !existingBySlug.has(event.slug),
+		).length;
+		const updated = args.events.length - created;
+		const eventsToDelete = existingEvents.filter(
+			(event) => !incomingSlugs.has(event.slug),
+		);
+		const contentsToDelete = existingContents.filter(
+			(content) => !incomingSlugs.has(content.slug),
+		);
+
+		const upserts = args.events.flatMap((event) => {
 			const existing = existingBySlug.get(event.slug);
 			const existingContent = existingContentBySlug.get(event.slug);
+			const eventWrite = existing
+				? ctx.db.replace(existing._id, {
+						slug: event.slug,
+						title: event.title,
+						summary: event.summary,
+						publishedAt: event.publishedAt,
+						image: event.image,
+						lastSyncedAt: now,
+					})
+				: ctx.db.insert("talkEvents", {
+						slug: event.slug,
+						title: event.title,
+						summary: event.summary,
+						publishedAt: event.publishedAt,
+						image: event.image,
+						lastSyncedAt: now,
+					});
+			const contentWrite = existingContent
+				? ctx.db.replace(existingContent._id, {
+						slug: event.slug,
+						content: event.content,
+						lastSyncedAt: now,
+					})
+				: ctx.db.insert("talkEventContents", {
+						slug: event.slug,
+						content: event.content,
+						lastSyncedAt: now,
+					});
 
-			if (existing) {
-				// Update existing event
-				await ctx.db.replace(existing._id, {
-					slug: event.slug,
-					title: event.title,
-					summary: event.summary,
-					publishedAt: event.publishedAt,
-					image: event.image,
-					lastSyncedAt: now,
-				});
-				updated++;
-			} else {
-				// Create new event
-				await ctx.db.insert("talkEvents", {
-					slug: event.slug,
-					title: event.title,
-					summary: event.summary,
-					publishedAt: event.publishedAt,
-					image: event.image,
-					lastSyncedAt: now,
-				});
-				created++;
-			}
-			if (existingContent) {
-				await ctx.db.replace(existingContent._id, {
-					slug: event.slug,
-					content: event.content,
-					lastSyncedAt: now,
-				});
-			} else {
-				await ctx.db.insert("talkEventContents", {
-					slug: event.slug,
-					content: event.content,
-					lastSyncedAt: now,
-				});
-			}
-		}
+			return [eventWrite, contentWrite];
+		});
 
-		// Delete events that no longer exist in the repo
-		for (const existing of existingEvents) {
-			if (!incomingSlugs.has(existing.slug)) {
-				await ctx.db.delete(existing._id);
-				deleted++;
-			}
-		}
-		for (const existingContent of existingContents) {
-			if (!incomingSlugs.has(existingContent.slug)) {
-				await ctx.db.delete(existingContent._id);
-			}
-		}
+		await Promise.all([
+			...upserts,
+			...eventsToDelete.map((event) => ctx.db.delete(event._id)),
+			...contentsToDelete.map((content) => ctx.db.delete(content._id)),
+		]);
 
-		return { created, updated, deleted };
+		return { created, updated, deleted: eventsToDelete.length };
 	},
 });

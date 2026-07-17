@@ -98,10 +98,6 @@ export const syncPagesPublic = mutation({
 		assertValidSyncSecret(args.syncSecret);
 		assertCompleteSync(args.slugs, args.pages);
 
-		let created = 0;
-		let updated = 0;
-		let deleted = 0;
-
 		const now = Date.now();
 		const incomingSlugs = new Set(args.pages.map((p) => p.slug));
 
@@ -114,55 +110,54 @@ export const syncPagesPublic = mutation({
 			existingContents.map((content) => [content.slug, content]),
 		);
 
-		for (const page of args.pages) {
+		const created = args.pages.filter(
+			(page) => !existingBySlug.has(page.slug),
+		).length;
+		const updated = args.pages.length - created;
+		const pagesToDelete = existingPages.filter(
+			(page) => !incomingSlugs.has(page.slug),
+		);
+		const contentsToDelete = existingContents.filter(
+			(content) => !incomingSlugs.has(content.slug),
+		);
+
+		const upserts = args.pages.flatMap((page) => {
 			const existing = existingBySlug.get(page.slug);
 			const existingContent = existingContentBySlug.get(page.slug);
+			const pageWrite = existing
+				? ctx.db.replace(existing._id, {
+						slug: page.slug,
+						title: page.title,
+						published: page.published,
+						lastSyncedAt: now,
+					})
+				: ctx.db.insert("staticPages", {
+						slug: page.slug,
+						title: page.title,
+						published: page.published,
+						lastSyncedAt: now,
+					});
+			const contentWrite = existingContent
+				? ctx.db.replace(existingContent._id, {
+						slug: page.slug,
+						content: page.content,
+						lastSyncedAt: now,
+					})
+				: ctx.db.insert("staticPageContents", {
+						slug: page.slug,
+						content: page.content,
+						lastSyncedAt: now,
+					});
 
-			if (existing) {
-				await ctx.db.replace(existing._id, {
-					slug: page.slug,
-					title: page.title,
-					published: page.published,
-					lastSyncedAt: now,
-				});
-				updated++;
-			} else {
-				await ctx.db.insert("staticPages", {
-					slug: page.slug,
-					title: page.title,
-					published: page.published,
-					lastSyncedAt: now,
-				});
-				created++;
-			}
+			return [pageWrite, contentWrite];
+		});
 
-			if (existingContent) {
-				await ctx.db.replace(existingContent._id, {
-					slug: page.slug,
-					content: page.content,
-					lastSyncedAt: now,
-				});
-			} else {
-				await ctx.db.insert("staticPageContents", {
-					slug: page.slug,
-					content: page.content,
-					lastSyncedAt: now,
-				});
-			}
-		}
+		await Promise.all([
+			...upserts,
+			...pagesToDelete.map((page) => ctx.db.delete(page._id)),
+			...contentsToDelete.map((content) => ctx.db.delete(content._id)),
+		]);
 
-		for (const existing of existingPages) {
-			if (!incomingSlugs.has(existing.slug)) {
-				await ctx.db.delete(existing._id);
-				deleted++;
-			}
-		}
-		for (const existingContent of existingContents) {
-			if (!incomingSlugs.has(existingContent.slug)) {
-				await ctx.db.delete(existingContent._id);
-			}
-		}
-
-		return { created, updated, deleted };
+		return { created, updated, deleted: pagesToDelete.length };
 	},
 });

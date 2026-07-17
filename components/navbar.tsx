@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { useId } from "react";
-import { SearchCommand } from "@/components/search-command";
 
 const navItems = {
 	"/": {
@@ -30,7 +29,7 @@ export function Navbar() {
 		>
 			<div className="lg:sticky lg:top-20">
 				<nav
-					className="flex flex-row items-center justify-between relative px-0 pb-0 md:pb-4 fade md:overflow-auto scroll-pr-6 md:relative mt-6"
+					className="flex flex-row items-center relative px-0 pb-0 md:pb-4 fade md:overflow-auto scroll-pr-6 md:relative mt-6"
 					id={navId}
 				>
 					<div className="flex flex-row items-center space-x-4">
@@ -47,7 +46,6 @@ export function Navbar() {
 							);
 						})}
 					</div>
-					<SearchCommand />
 				</nav>
 			</div>
 			<div

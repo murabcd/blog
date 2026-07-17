@@ -12,6 +12,7 @@ import { ShareButton } from "@/components/share-button";
 import { CopyPageButton } from "@/components/copy-page-button";
 import { Toc, type TocSection } from "@/components/toc";
 import { FloatingChatInput } from "@/components/floating-chat-input";
+import { ConvexClientProvider } from "@/app/convex-client-provider";
 import { serializeJsonLd } from "@/lib/jsonld";
 import { calculateReadingTime, formatDate, slugify } from "@/lib/utils";
 
@@ -20,6 +21,12 @@ async function getBlogPostBySlugCached(slug: string) {
 	cacheLife({ revalidate: 300 });
 	cacheTag("blogPosts", `blogPost:${slug}`);
 	return fetchQuery(api.blog.getPostBySlug, { slug });
+}
+
+export async function generateStaticParams() {
+	const posts = await fetchQuery(api.blog.getAllPosts);
+
+	return posts.map(({ slug }) => ({ slug }));
 }
 
 function buildTocSections(content: string): TocSection[] {
@@ -152,7 +159,9 @@ export default async function Blog({
 				</div>
 
 				<div className="flex items-center gap-2 mb-4">
-					<LikeButton postSlug={post.slug} />
+					<ConvexClientProvider>
+						<LikeButton postSlug={post.slug} />
+					</ConvexClientProvider>
 					<ShareButton
 						postSlug={post.slug}
 						title={post.title}

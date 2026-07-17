@@ -113,10 +113,6 @@ export const syncPostsPublic = mutation({
 		assertValidSyncSecret(args.syncSecret);
 		assertCompleteSync(args.slugs, args.posts);
 
-		let created = 0;
-		let updated = 0;
-		let deleted = 0;
-
 		const now = Date.now();
 		const incomingSlugs = new Set(args.posts.map((p) => p.slug));
 
@@ -130,62 +126,58 @@ export const syncPostsPublic = mutation({
 			existingContents.map((content) => [content.slug, content]),
 		);
 
-		// Upsert incoming posts
-		for (const post of args.posts) {
+		const created = args.posts.filter(
+			(post) => !existingBySlug.has(post.slug),
+		).length;
+		const updated = args.posts.length - created;
+		const postsToDelete = existingPosts.filter(
+			(post) => !incomingSlugs.has(post.slug),
+		);
+		const contentsToDelete = existingContents.filter(
+			(content) => !incomingSlugs.has(content.slug),
+		);
+
+		const upserts = args.posts.flatMap((post) => {
 			const existing = existingBySlug.get(post.slug);
 			const existingContent = existingContentBySlug.get(post.slug);
+			const postWrite = existing
+				? ctx.db.replace(existing._id, {
+						slug: post.slug,
+						title: post.title,
+						summary: post.summary,
+						publishedAt: post.publishedAt,
+						image: post.image,
+						lastSyncedAt: now,
+					})
+				: ctx.db.insert("blogPosts", {
+						slug: post.slug,
+						title: post.title,
+						summary: post.summary,
+						publishedAt: post.publishedAt,
+						image: post.image,
+						lastSyncedAt: now,
+					});
+			const contentWrite = existingContent
+				? ctx.db.replace(existingContent._id, {
+						slug: post.slug,
+						content: post.content,
+						lastSyncedAt: now,
+					})
+				: ctx.db.insert("blogPostContents", {
+						slug: post.slug,
+						content: post.content,
+						lastSyncedAt: now,
+					});
 
-			if (existing) {
-				// Update existing post
-				await ctx.db.replace(existing._id, {
-					slug: post.slug,
-					title: post.title,
-					summary: post.summary,
-					publishedAt: post.publishedAt,
-					image: post.image,
-					lastSyncedAt: now,
-				});
-				updated++;
-			} else {
-				// Create new post
-				await ctx.db.insert("blogPosts", {
-					slug: post.slug,
-					title: post.title,
-					summary: post.summary,
-					publishedAt: post.publishedAt,
-					image: post.image,
-					lastSyncedAt: now,
-				});
-				created++;
-			}
-			if (existingContent) {
-				await ctx.db.replace(existingContent._id, {
-					slug: post.slug,
-					content: post.content,
-					lastSyncedAt: now,
-				});
-			} else {
-				await ctx.db.insert("blogPostContents", {
-					slug: post.slug,
-					content: post.content,
-					lastSyncedAt: now,
-				});
-			}
-		}
+			return [postWrite, contentWrite];
+		});
 
-		// Delete posts that no longer exist in the repo
-		for (const existing of existingPosts) {
-			if (!incomingSlugs.has(existing.slug)) {
-				await ctx.db.delete(existing._id);
-				deleted++;
-			}
-		}
-		for (const existingContent of existingContents) {
-			if (!incomingSlugs.has(existingContent.slug)) {
-				await ctx.db.delete(existingContent._id);
-			}
-		}
+		await Promise.all([
+			...upserts,
+			...postsToDelete.map((post) => ctx.db.delete(post._id)),
+			...contentsToDelete.map((content) => ctx.db.delete(content._id)),
+		]);
 
-		return { created, updated, deleted };
+		return { created, updated, deleted: postsToDelete.length };
 	},
 });

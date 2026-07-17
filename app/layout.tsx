@@ -11,7 +11,8 @@ import { baseUrl } from "./sitemap";
 
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { ConvexClientProvider } from "./convex-client-provider";
+
+export const instant = true;
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -85,33 +86,31 @@ export default function RootLayout({
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}
 			>
-				<ConvexClientProvider>
-					<ThemeProvider
-						attribute="class"
-						defaultTheme="system"
-						enableSystem
-						disableTransitionOnChange
+				<ThemeProvider
+					attribute="class"
+					defaultTheme="system"
+					enableSystem
+					disableTransitionOnChange
+				>
+					<a
+						href="#main-content"
+						className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-60 bg-background text-foreground border border-border rounded-md px-3 py-2 shadow-sm outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
 					>
-						<a
-							href="#main-content"
-							className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-60 bg-background text-foreground border border-border rounded-md px-3 py-2 shadow-sm outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
-						>
-							Skip to content
-						</a>
-						<div className="mx-4 lg:mx-auto max-w-xl min-h-screen flex flex-col">
-							<Navbar />
-							<div className="grow">
-								<main id="main-content" className="mt-6 px-0">
-									{children}
-									{isProduction ? <Analytics /> : null}
-									{isProduction ? <SpeedInsights /> : null}
-								</main>
-							</div>
-							<Toaster />
-							<Footer />
+						Skip to content
+					</a>
+					<div className="mx-4 lg:mx-auto max-w-xl min-h-screen flex flex-col">
+						<Navbar />
+						<div className="grow">
+							<main id="main-content" className="mt-6 px-0">
+								{children}
+								{isProduction ? <Analytics /> : null}
+								{isProduction ? <SpeedInsights /> : null}
+							</main>
 						</div>
-					</ThemeProvider>
-				</ConvexClientProvider>
+						<Toaster />
+						<Footer />
+					</div>
+				</ThemeProvider>
 			</body>
 		</html>
 	);
