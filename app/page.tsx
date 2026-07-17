@@ -4,6 +4,7 @@ import { baseUrl } from "./sitemap";
 import { fetchQuery } from "convex/nextjs";
 import { cacheLife, cacheTag } from "next/cache";
 import { api } from "@/convex/_generated/api";
+import { inlineContentLinkClassName } from "@/lib/link-styles";
 
 const ogImage = new URL("/opengraph-image", baseUrl).toString();
 
@@ -58,7 +59,7 @@ export default async function Page() {
 					href="https://flomni.com/en"
 					target="_blank"
 					rel="noopener noreferrer"
-					className="text-link hover:text-link-hover no-underline"
+					className={inlineContentLinkClassName}
 				>
 					Flomni
 				</a>

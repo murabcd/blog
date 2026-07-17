@@ -55,12 +55,12 @@ export function EmbedDialog({
 
 	const fullUrl = origin ? `${origin}/blog/${postSlug}` : `/blog/${postSlug}`;
 
-	const embedCode = `<div class="blog-post-embed" style="border: 1px solid hsl(var(--border)); border-radius: 8px; padding: 16px; max-width: 500px; font-family: system-ui, -apple-system, sans-serif; background: hsl(var(--background));">
+	const embedCode = `<div class="blog-post-embed" style="border: 1px solid #00000014; border-radius: 8px; padding: 16px; max-width: 500px; font-family: system-ui, -apple-system, sans-serif; background: #ffffff;">
   <div style="flex: 1; min-width: 0;">
-    <h3 style="font-weight: 600; color: hsl(var(--foreground)); font-size: 14px; margin: 0 0 4px 0; line-height: 1.3;">${title}</h3>
-    <p style="font-size: 14px; color: hsl(var(--muted-foreground)); margin: 0 0 4px 0;">From ${author}</p>
-    ${description ? `<p style="font-size: 14px; color: hsl(var(--muted-foreground)); margin: 0 0 8px 0; line-height: 1.4;">${description}</p>` : ""}
-    <a href="${fullUrl}" style="font-size: 14px; color: hsl(var(--primary)); text-decoration: none; font-weight: 500;" target="_blank" rel="noopener noreferrer">Read full post</a>
+    <h3 style="font-weight: 600; color: #171717; font-size: 14px; margin: 0 0 4px 0; line-height: 1.3;">${title}</h3>
+    <p style="font-size: 14px; color: #4d4d4d; margin: 0 0 4px 0;">From ${author}</p>
+    ${description ? `<p style="font-size: 14px; color: #4d4d4d; margin: 0 0 8px 0; line-height: 1.4;">${description}</p>` : ""}
+    <a href="${fullUrl}" style="font-size: 14px; color: #006bff; text-decoration: none; font-weight: 500;" target="_blank" rel="noopener noreferrer">Read full post</a>
   </div>
 </div>`;
 

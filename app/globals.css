@@ -78,7 +78,6 @@ body {
 	--input: #00000014;
 	--ring: #006bff;
 	--link: #006bff;
-	--link-hover: #0059ec;
 	--chart-1: #006bff;
 	--chart-2: #28a948;
 	--chart-3: #ffae00;
@@ -111,16 +110,6 @@ body {
 
 .anchor:hover {
 	@apply visible;
-}
-
-.prose a {
-	@apply transition-colors underline-offset-2 decoration-[0.1em];
-	color: var(--link);
-	text-decoration-color: var(--muted-foreground);
-}
-
-.prose a:hover {
-	color: var(--link-hover);
 }
 
 .prose .anchor:after {
@@ -373,7 +362,6 @@ table {
 	--color-input: var(--input);
 	--color-ring: var(--ring);
 	--color-link: var(--link);
-	--color-link-hover: var(--link-hover);
 	--color-chart-1: var(--chart-1);
 	--color-chart-2: var(--chart-2);
 	--color-chart-3: var(--chart-3);
@@ -424,7 +412,6 @@ table {
 	--input: #ffffff24;
 	--ring: #47a8ff;
 	--link: #47a8ff;
-	--link-hover: #eaf6ff;
 	--chart-1: #006efe;
 	--chart-2: #00ac3a;
 	--chart-3: #ffae00;

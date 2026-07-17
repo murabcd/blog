@@ -2,7 +2,9 @@ import Image, { type ImageProps } from "next/image";
 import Link from "next/link";
 import React from "react";
 import { CodeBlock } from "@/components/code-block";
+import { inlineContentLinkClassName } from "@/lib/link-styles";
 import { getNodeText } from "@/lib/mdx-heading";
+import { cn } from "@/lib/utils";
 
 type TableProps = {
 	data: {
@@ -51,32 +53,40 @@ export function Table({ data }: TableProps) {
 	);
 }
 
-export function CustomLink(props: CustomLinkProps) {
-	const href = props.href || "";
+export function CustomLink({
+	children,
+	href = "",
+	className,
+	...props
+}: CustomLinkProps) {
+	const content = children || href;
+	const resolvedClassName = cn(inlineContentLinkClassName, className);
 
 	if (href.startsWith("/")) {
-		const { children, ...rest } = props;
 		return (
-			<Link href={href} {...rest}>
-				{children}
+			<Link href={href} className={resolvedClassName} {...props}>
+				{content}
 			</Link>
 		);
 	}
 
 	if (href.startsWith("#")) {
-		const { children, ...rest } = props;
-		return <a {...rest}>{children || href}</a>;
+		return (
+			<a href={href} className={resolvedClassName} {...props}>
+				{content}
+			</a>
+		);
 	}
 
-	const { children, ...rest } = props;
 	return (
 		<a
+			href={href}
 			target="_blank"
 			rel="noopener noreferrer"
-			{...rest}
-			className="text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-500"
+			className={resolvedClassName}
+			{...props}
 		>
-			{children || href}
+			{content}
 		</a>
 	);
 }
