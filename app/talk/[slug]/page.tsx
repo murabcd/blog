@@ -12,7 +12,7 @@ import { serializeJsonLd } from "@/lib/jsonld";
 
 async function getTalkEventBySlugCached(slug: string) {
 	"use cache";
-	cacheLife({ revalidate: 300 });
+	cacheLife("hours");
 	cacheTag("talkEvents", `talkEvent:${slug}`);
 	return fetchQuery(api.talk.getEventBySlug, { slug });
 }

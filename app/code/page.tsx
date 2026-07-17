@@ -40,7 +40,7 @@ export const metadata: Metadata = {
 
 async function getAllCodeProjectsCached() {
 	"use cache";
-	cacheLife({ revalidate: 300 });
+	cacheLife("hours");
 	cacheTag("codeProjects");
 	return fetchQuery(api.code.getAllProjects);
 }

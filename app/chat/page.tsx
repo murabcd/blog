@@ -39,7 +39,7 @@ export const metadata: Metadata = {
 
 async function getChatPageCached() {
 	"use cache";
-	cacheLife({ revalidate: 300 });
+	cacheLife("hours");
 	cacheTag("pages", "pages:chat");
 	return fetchQuery(api.pages.getPageBySlug, { slug: "chat" });
 }

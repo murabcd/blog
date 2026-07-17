@@ -18,7 +18,7 @@ import { calculateReadingTime, formatDate, slugify } from "@/lib/utils";
 
 async function getBlogPostBySlugCached(slug: string) {
 	"use cache";
-	cacheLife({ revalidate: 300 });
+	cacheLife("hours");
 	cacheTag("blogPosts", `blogPost:${slug}`);
 	return fetchQuery(api.blog.getPostBySlug, { slug });
 }

@@ -38,7 +38,7 @@ export const metadata = {
 
 async function getAllBlogPostsCached() {
 	"use cache";
-	cacheLife({ revalidate: 60 });
+	cacheLife("hours");
 	cacheTag("blogPosts");
 	return fetchQuery(api.blog.getAllPosts);
 }

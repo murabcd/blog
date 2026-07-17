@@ -39,7 +39,7 @@ export const metadata: Metadata = {
 
 async function getAllBlogPostsCached() {
 	"use cache";
-	cacheLife({ revalidate: 60 });
+	cacheLife("hours");
 	cacheTag("blogPosts");
 	return fetchQuery(api.blog.getAllPosts);
 }
@@ -58,7 +58,7 @@ export default async function Page() {
 					href="https://flomni.com/en"
 					target="_blank"
 					rel="noopener noreferrer"
-					className="no-underline text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-500"
+					className="text-link hover:text-link-hover no-underline"
 				>
 					Flomni
 				</a>

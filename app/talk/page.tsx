@@ -38,7 +38,7 @@ export const metadata = {
 
 async function getAllTalkEventsCached() {
 	"use cache";
-	cacheLife({ revalidate: 60 });
+	cacheLife("hours");
 	cacheTag("talkEvents");
 	return fetchQuery(api.talk.getAllEvents);
 }

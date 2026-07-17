@@ -12,9 +12,21 @@ export function useCopyToClipboard({
 	onError?: (error: Error) => void;
 } = {}) {
 	const [isCopied, setIsCopied] = React.useState(false);
+	const resetTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(
+		null,
+	);
+
+	React.useEffect(() => {
+		return () => {
+			if (resetTimeoutRef.current !== null) {
+				clearTimeout(resetTimeoutRef.current);
+			}
+		};
+	}, []);
 
 	const copyToClipboard = (value: string) => {
-		if (typeof window === "undefined" || !navigator.clipboard.writeText) {
+		if (typeof window === "undefined" || !navigator.clipboard?.writeText) {
+			onError?.(new Error("Clipboard access is unavailable"));
 			return;
 		}
 
@@ -24,21 +36,21 @@ export function useCopyToClipboard({
 			() => {
 				setIsCopied(true);
 
-				if (onCopy) {
-					onCopy();
-				}
+				onCopy?.();
 
 				if (timeout !== 0) {
-					setTimeout(() => {
+					if (resetTimeoutRef.current !== null) {
+						clearTimeout(resetTimeoutRef.current);
+					}
+					resetTimeoutRef.current = setTimeout(() => {
 						setIsCopied(false);
+						resetTimeoutRef.current = null;
 					}, timeout);
 				}
 			},
 			(error) => {
 				console.error("Failed to copy to clipboard:", error);
-				if (onError) {
-					onError(error instanceof Error ? error : new Error(String(error)));
-				}
+				onError?.(error instanceof Error ? error : new Error(String(error)));
 			},
 		);
 	};
