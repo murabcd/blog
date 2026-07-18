@@ -70,8 +70,8 @@ export function EmbedDialog({
 	const escapedDescription = description ? escapeHtml(description) : "";
 
 	const embedCode = `<a href="${escapedUrl}" class="blog-post-embed" style="display: block; box-sizing: border-box; border: 1px solid #eaeaea; border-radius: 6px; padding: 16px; max-width: 500px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fafafa; color: #171717; text-decoration: none;" target="_blank" rel="noopener noreferrer">
-  <p style="font-size: 12px; color: #666666; margin: 0 0 8px 0; line-height: 1.4;">${siteDomain} · ${escapedAuthor}</p>
-  <h3 style="font-weight: 600; color: #171717; font-size: 16px; margin: 0 0 8px 0; line-height: 1.3;">${escapedTitle}</h3>
+  <p style="font-size: 12px; color: #666666; margin: 0 0 8px 0; line-height: 1.4;">${escapedAuthor} · ${siteDomain}</p>
+  <h3 style="font-weight: 600; color: #171717; font-size: 14px; margin: 0 0 8px 0; line-height: 1.3;">${escapedTitle}</h3>
   ${escapedDescription ? `<p style="font-size: 14px; color: #4d4d4d; margin: 0 0 12px 0; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${escapedDescription}</p>` : ""}
   <span style="font-size: 14px; color: #171717; font-weight: 500;">Read full post →</span>
 </a>`;
@@ -106,9 +106,9 @@ export function EmbedDialog({
 						>
 							<div className="min-w-0 space-y-2">
 								<p className="text-xs leading-none text-muted-foreground">
-									{siteDomain} · {author}
+									{author} · {siteDomain}
 								</p>
-								<h3 className="line-clamp-2 text-base font-semibold leading-snug text-foreground">
+								<h3 className="line-clamp-2 text-sm font-semibold leading-snug text-foreground">
 									{title}
 								</h3>
 								{description && (
