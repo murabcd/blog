@@ -7,8 +7,8 @@ export default defineSchema({
 		visitorId: v.string(),
 		likedAt: v.number(),
 	})
-		.index("by_post", ["postSlug"])
-		.index("by_visitor_post", ["visitorId", "postSlug"]),
+		.index("by_postSlug", ["postSlug"])
+		.index("by_visitorId_and_postSlug", ["visitorId", "postSlug"]),
 
 	// Blog posts table
 	blogPosts: defineTable({
@@ -20,19 +20,12 @@ export default defineSchema({
 		lastSyncedAt: v.number(),
 	})
 		.index("by_slug", ["slug"])
-		.index("by_publishedAt", ["publishedAt"])
-		.searchIndex("search_title", {
-			searchField: "title",
-		}),
+		.index("by_publishedAt", ["publishedAt"]),
 	blogPostContents: defineTable({
 		slug: v.string(),
 		content: v.string(),
 		lastSyncedAt: v.number(),
-	})
-		.index("by_slug", ["slug"])
-		.searchIndex("search_content", {
-			searchField: "content",
-		}),
+	}).index("by_slug", ["slug"]),
 
 	// Talk events table
 	talkEvents: defineTable({
@@ -44,19 +37,12 @@ export default defineSchema({
 		lastSyncedAt: v.number(),
 	})
 		.index("by_slug", ["slug"])
-		.index("by_publishedAt", ["publishedAt"])
-		.searchIndex("search_title", {
-			searchField: "title",
-		}),
+		.index("by_publishedAt", ["publishedAt"]),
 	talkEventContents: defineTable({
 		slug: v.string(),
 		content: v.string(),
 		lastSyncedAt: v.number(),
-	})
-		.index("by_slug", ["slug"])
-		.searchIndex("search_content", {
-			searchField: "content",
-		}),
+	}).index("by_slug", ["slug"]),
 
 	// Code projects table
 	codeProjects: defineTable({
@@ -68,9 +54,7 @@ export default defineSchema({
 		lastSyncedAt: v.number(),
 	})
 		.index("by_slug", ["slug"])
-		.index("by_date", ["date"])
-		.index("by_published", ["published"])
-		.index("by_published_date", ["published", "date"]),
+		.index("by_published_and_date", ["published", "date"]),
 	codeProjectContents: defineTable({
 		slug: v.string(),
 		content: v.string(),

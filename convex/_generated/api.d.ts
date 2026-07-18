@@ -10,6 +10,7 @@
 
 import type * as blog from "../blog.js";
 import type * as code from "../code.js";
+import type * as lib_postLikes from "../lib/postLikes.js";
 import type * as lib_syncAuth from "../lib/syncAuth.js";
 import type * as lib_syncPayload from "../lib/syncPayload.js";
 import type * as pages from "../pages.js";
@@ -25,6 +26,7 @@ import type {
 declare const fullApi: ApiFromModules<{
   blog: typeof blog;
   code: typeof code;
+  "lib/postLikes": typeof lib_postLikes;
   "lib/syncAuth": typeof lib_syncAuth;
   "lib/syncPayload": typeof lib_syncPayload;
   pages: typeof pages;
@@ -58,4 +60,6 @@ export declare const internal: FilterApi<
   FunctionReference<any, "internal">
 >;
 
-export declare const components: {};
+export declare const components: {
+  postLikes: import("@convex-dev/aggregate/_generated/component.js").ComponentApi<"postLikes">;
+};

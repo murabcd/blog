@@ -1,7 +1,7 @@
 import { query, mutation } from "./_generated/server";
 import { ConvexError, v } from "convex/values";
 import { assertValidSyncSecret } from "./lib/syncAuth";
-import { assertCompleteSync } from "./lib/syncPayload";
+import { assertCompleteSync, assertStoredSyncLimit } from "./lib/syncPayload";
 
 const MAX_PROJECTS = 100;
 
@@ -22,7 +22,7 @@ export const getAllProjects = query({
 	handler: async (ctx) => {
 		const projects = await ctx.db
 			.query("codeProjects")
-			.withIndex("by_published_date", (q) => q.eq("published", true))
+			.withIndex("by_published_and_date", (q) => q.eq("published", true))
 			.order("desc")
 			.take(MAX_PROJECTS);
 
@@ -60,7 +60,7 @@ export const getProjectBySlug = query({
 		const project = await ctx.db
 			.query("codeProjects")
 			.withIndex("by_slug", (q) => q.eq("slug", args.slug))
-			.first();
+			.unique();
 
 		if (!project || !project.published) {
 			return null;
@@ -69,7 +69,7 @@ export const getProjectBySlug = query({
 		const content = await ctx.db
 			.query("codeProjectContents")
 			.withIndex("by_slug", (q) => q.eq("slug", args.slug))
-			.first();
+			.unique();
 
 		if (!content) {
 			throw new ConvexError("Code project content is missing");
@@ -111,15 +111,17 @@ export const syncProjectsPublic = mutation({
 	}),
 	handler: async (ctx, args) => {
 		assertValidSyncSecret(args.syncSecret);
-		assertCompleteSync(args.slugs, args.projects);
+		assertCompleteSync(args.slugs, args.projects, MAX_PROJECTS);
 
 		const now = Date.now();
 		const incomingSlugs = new Set(args.projects.map((p) => p.slug));
 
 		const [existingProjects, existingContents] = await Promise.all([
-			ctx.db.query("codeProjects").collect(),
-			ctx.db.query("codeProjectContents").collect(),
+			ctx.db.query("codeProjects").take(MAX_PROJECTS + 1),
+			ctx.db.query("codeProjectContents").take(MAX_PROJECTS + 1),
 		]);
+		assertStoredSyncLimit(existingProjects.length, MAX_PROJECTS);
+		assertStoredSyncLimit(existingContents.length, MAX_PROJECTS);
 		const existingBySlug = new Map(existingProjects.map((p) => [p.slug, p]));
 		const existingContentBySlug = new Map(
 			existingContents.map((content) => [content.slug, content]),

@@ -1,7 +1,7 @@
 import { query, mutation } from "./_generated/server";
 import { ConvexError, v } from "convex/values";
 import { assertValidSyncSecret } from "./lib/syncAuth";
-import { assertCompleteSync } from "./lib/syncPayload";
+import { assertCompleteSync, assertStoredSyncLimit } from "./lib/syncPayload";
 
 const MAX_EVENTS = 100;
 
@@ -61,7 +61,7 @@ export const getEventBySlug = query({
 		const event = await ctx.db
 			.query("talkEvents")
 			.withIndex("by_slug", (q) => q.eq("slug", args.slug))
-			.first();
+			.unique();
 
 		if (!event) {
 			return null;
@@ -69,7 +69,7 @@ export const getEventBySlug = query({
 		const content = await ctx.db
 			.query("talkEventContents")
 			.withIndex("by_slug", (q) => q.eq("slug", args.slug))
-			.first();
+			.unique();
 
 		if (!content) {
 			throw new ConvexError("Talk event content is missing");
@@ -111,16 +111,18 @@ export const syncEventsPublic = mutation({
 	}),
 	handler: async (ctx, args) => {
 		assertValidSyncSecret(args.syncSecret);
-		assertCompleteSync(args.slugs, args.events);
+		assertCompleteSync(args.slugs, args.events, MAX_EVENTS);
 
 		const now = Date.now();
 		const incomingSlugs = new Set(args.events.map((e) => e.slug));
 
 		// Get all existing events
 		const [existingEvents, existingContents] = await Promise.all([
-			ctx.db.query("talkEvents").collect(),
-			ctx.db.query("talkEventContents").collect(),
+			ctx.db.query("talkEvents").take(MAX_EVENTS + 1),
+			ctx.db.query("talkEventContents").take(MAX_EVENTS + 1),
 		]);
+		assertStoredSyncLimit(existingEvents.length, MAX_EVENTS);
+		assertStoredSyncLimit(existingContents.length, MAX_EVENTS);
 		const existingBySlug = new Map(existingEvents.map((e) => [e.slug, e]));
 		const existingContentBySlug = new Map(
 			existingContents.map((content) => [content.slug, content]),

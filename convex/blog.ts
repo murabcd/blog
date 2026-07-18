@@ -1,9 +1,10 @@
 import { query, mutation } from "./_generated/server";
 import { ConvexError, v } from "convex/values";
 import { assertValidSyncSecret } from "./lib/syncAuth";
-import { assertCompleteSync } from "./lib/syncPayload";
+import { assertCompleteSync, assertStoredSyncLimit } from "./lib/syncPayload";
+import { deletePostLikes } from "./lib/postLikes";
 
-const MAX_POSTS = 100;
+const MAX_POSTS = 200;
 
 // Get all published blog posts, sorted by publishedAt descending
 export const getAllPosts = query({
@@ -61,7 +62,7 @@ export const getPostBySlug = query({
 		const post = await ctx.db
 			.query("blogPosts")
 			.withIndex("by_slug", (q) => q.eq("slug", args.slug))
-			.first();
+			.unique();
 
 		if (!post) {
 			return null;
@@ -69,7 +70,7 @@ export const getPostBySlug = query({
 		const content = await ctx.db
 			.query("blogPostContents")
 			.withIndex("by_slug", (q) => q.eq("slug", args.slug))
-			.first();
+			.unique();
 
 		if (!content) {
 			throw new ConvexError("Blog post content is missing");
@@ -111,16 +112,18 @@ export const syncPostsPublic = mutation({
 	}),
 	handler: async (ctx, args) => {
 		assertValidSyncSecret(args.syncSecret);
-		assertCompleteSync(args.slugs, args.posts);
+		assertCompleteSync(args.slugs, args.posts, MAX_POSTS);
 
 		const now = Date.now();
 		const incomingSlugs = new Set(args.posts.map((p) => p.slug));
 
 		// Get all existing posts
 		const [existingPosts, existingContents] = await Promise.all([
-			ctx.db.query("blogPosts").collect(),
-			ctx.db.query("blogPostContents").collect(),
+			ctx.db.query("blogPosts").take(MAX_POSTS + 1),
+			ctx.db.query("blogPostContents").take(MAX_POSTS + 1),
 		]);
+		assertStoredSyncLimit(existingPosts.length, MAX_POSTS);
+		assertStoredSyncLimit(existingContents.length, MAX_POSTS);
 		const existingBySlug = new Map(existingPosts.map((p) => [p.slug, p]));
 		const existingContentBySlug = new Map(
 			existingContents.map((content) => [content.slug, content]),
@@ -136,6 +139,7 @@ export const syncPostsPublic = mutation({
 		const contentsToDelete = existingContents.filter(
 			(content) => !incomingSlugs.has(content.slug),
 		);
+		const deletedPostSlugs = postsToDelete.map((post) => post.slug);
 
 		const upserts = args.posts.flatMap((post) => {
 			const existing = existingBySlug.get(post.slug);
@@ -176,6 +180,7 @@ export const syncPostsPublic = mutation({
 			...upserts,
 			...postsToDelete.map((post) => ctx.db.delete(post._id)),
 			...contentsToDelete.map((content) => ctx.db.delete(content._id)),
+			deletePostLikes(ctx, deletedPostSlugs),
 		]);
 
 		return { created, updated, deleted: postsToDelete.length };

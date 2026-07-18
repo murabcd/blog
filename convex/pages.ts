@@ -1,7 +1,7 @@
 import { query, mutation } from "./_generated/server";
 import { ConvexError, v } from "convex/values";
 import { assertValidSyncSecret } from "./lib/syncAuth";
-import { assertCompleteSync } from "./lib/syncPayload";
+import { assertCompleteSync, assertStoredSyncLimit } from "./lib/syncPayload";
 
 const MAX_PAGES = 100;
 
@@ -50,7 +50,7 @@ export const getPageBySlug = query({
 		const page = await ctx.db
 			.query("staticPages")
 			.withIndex("by_slug", (q) => q.eq("slug", args.slug))
-			.first();
+			.unique();
 
 		if (!page || !page.published) {
 			return null;
@@ -59,7 +59,7 @@ export const getPageBySlug = query({
 		const content = await ctx.db
 			.query("staticPageContents")
 			.withIndex("by_slug", (q) => q.eq("slug", args.slug))
-			.first();
+			.unique();
 
 		if (!content) {
 			throw new ConvexError("Static page content is missing");
@@ -96,15 +96,17 @@ export const syncPagesPublic = mutation({
 	}),
 	handler: async (ctx, args) => {
 		assertValidSyncSecret(args.syncSecret);
-		assertCompleteSync(args.slugs, args.pages);
+		assertCompleteSync(args.slugs, args.pages, MAX_PAGES);
 
 		const now = Date.now();
 		const incomingSlugs = new Set(args.pages.map((p) => p.slug));
 
 		const [existingPages, existingContents] = await Promise.all([
-			ctx.db.query("staticPages").collect(),
-			ctx.db.query("staticPageContents").collect(),
+			ctx.db.query("staticPages").take(MAX_PAGES + 1),
+			ctx.db.query("staticPageContents").take(MAX_PAGES + 1),
 		]);
+		assertStoredSyncLimit(existingPages.length, MAX_PAGES);
+		assertStoredSyncLimit(existingContents.length, MAX_PAGES);
 		const existingBySlug = new Map(existingPages.map((p) => [p.slug, p]));
 		const existingContentBySlug = new Map(
 			existingContents.map((content) => [content.slug, content]),
