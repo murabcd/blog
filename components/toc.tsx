@@ -4,7 +4,7 @@ import type { MouseEvent } from "react";
 import { useEffect, useReducer, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { cn } from "@/lib/utils";
-import { ChevronDown, CircleArrowUp, ChartNoAxesGantt } from "lucide-react";
+import { ChevronDown, ArrowUp, ChartNoAxesGantt } from "lucide-react";
 
 export interface TocSection {
 	id: string;
@@ -161,7 +161,7 @@ function DesktopToc({
 						onClick={scrollToTop}
 						className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors bg-transparent border-none p-0 w-auto"
 					>
-						<CircleArrowUp className="h-3 w-3" />
+						<ArrowUp className="h-3 w-3" />
 						Back to top
 					</button>
 				</div>
