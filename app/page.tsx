@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { BlogPosts } from "@/components/posts";
-import { baseUrl } from "./sitemap";
+import { baseUrl } from "@/lib/site";
 import { fetchQuery } from "convex/nextjs";
 import { cacheLife, cacheTag } from "next/cache";
 import { api } from "@/convex/_generated/api";

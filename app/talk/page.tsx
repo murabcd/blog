@@ -1,5 +1,5 @@
 import { TalksEvents } from "@/components/events";
-import { baseUrl } from "@/app/sitemap";
+import { baseUrl } from "@/lib/site";
 import { fetchQuery } from "convex/nextjs";
 import { cacheLife, cacheTag } from "next/cache";
 import { api } from "@/convex/_generated/api";

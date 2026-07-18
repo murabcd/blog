@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useSyncExternalStore } from "react";
-import { Code2, Link2, Linkedin, Share2, Twitter } from "lucide-react";
+import { Code2, Link2, Share2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { EmbedDialog } from "@/components/embed-dialog";
+import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
@@ -24,6 +25,9 @@ interface ShareButtonProps {
 	description?: string;
 	author?: string;
 }
+
+const XIcon = Icons.x;
+const LinkedInIcon = Icons.linkedin;
 
 function subscribe() {
 	return () => {};
@@ -130,7 +134,7 @@ export function ShareButton({
 					</DropdownMenuItem>
 					<DropdownMenuItem asChild>
 						<a href={twitterShareUrl} target="_blank" rel="noopener noreferrer">
-							<Twitter />
+							<XIcon />
 							Share to X
 						</a>
 					</DropdownMenuItem>
@@ -140,7 +144,7 @@ export function ShareButton({
 							target="_blank"
 							rel="noopener noreferrer"
 						>
-							<Linkedin />
+							<LinkedInIcon />
 							Share to LinkedIn
 						</a>
 					</DropdownMenuItem>
@@ -200,7 +204,7 @@ export function ShareButton({
 						onClick={() => setIsMobileMenuOpen(false)}
 					>
 						<a href={twitterShareUrl} target="_blank" rel="noopener noreferrer">
-							<Twitter />
+							<XIcon />
 							Share to X
 						</a>
 					</Button>
@@ -216,7 +220,7 @@ export function ShareButton({
 							target="_blank"
 							rel="noopener noreferrer"
 						>
-							<Linkedin />
+							<LinkedInIcon />
 							Share to LinkedIn
 						</a>
 					</Button>

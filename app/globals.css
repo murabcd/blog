@@ -76,7 +76,7 @@ body {
 	--destructive: #ea001d;
 	--border: #00000014;
 	--input: #00000014;
-	--ring: #006bff;
+	--ring: oklch(0.708 0 0);
 	--link: #006bff;
 	--chart-1: #006bff;
 	--chart-2: #28a948;
@@ -90,7 +90,7 @@ body {
 	--sidebar-accent: #f2f2f2;
 	--sidebar-accent-foreground: #171717;
 	--sidebar-border: #00000014;
-	--sidebar-ring: #006bff;
+	--sidebar-ring: oklch(0.708 0 0);
 	--shadow-raised: 0 2px 2px rgb(0 0 0 / 4%);
 	--shadow-popover:
 		0 1px 1px rgb(0 0 0 / 2%), 0 4px 8px -4px rgb(0 0 0 / 4%),
@@ -410,7 +410,7 @@ table {
 	--destructive: #e2162a;
 	--border: #ffffff24;
 	--input: #ffffff24;
-	--ring: #47a8ff;
+	--ring: oklch(0.556 0 0);
 	--link: #47a8ff;
 	--chart-1: #006efe;
 	--chart-2: #00ac3a;
@@ -424,7 +424,7 @@ table {
 	--sidebar-accent: #1a1a1a;
 	--sidebar-accent-foreground: #ededed;
 	--sidebar-border: #ffffff24;
-	--sidebar-ring: #47a8ff;
+	--sidebar-ring: oklch(0.556 0 0);
 	--shadow-raised: 0 1px 2px rgb(0 0 0 / 16%);
 }
 

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { formatDate } from "@/lib/utils";
-import { baseUrl } from "@/app/sitemap";
+import { baseUrl } from "@/lib/site";
 import { fetchQuery } from "convex/nextjs";
 import { cacheLife, cacheTag } from "next/cache";
 import { api } from "@/convex/_generated/api";

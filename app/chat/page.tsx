@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { baseUrl } from "@/app/sitemap";
+import { baseUrl } from "@/lib/site";
 import { CustomMDX } from "@/components/mdx";
 import { fetchQuery } from "convex/nextjs";
 import { cacheLife, cacheTag } from "next/cache";

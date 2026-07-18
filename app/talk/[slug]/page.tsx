@@ -6,7 +6,7 @@ import Script from "next/script";
 import { api } from "@/convex/_generated/api";
 
 import { formatDate } from "@/lib/utils";
-import { baseUrl } from "@/app/sitemap";
+import { baseUrl } from "@/lib/site";
 import { CustomMDX } from "@/components/mdx";
 import { serializeJsonLd } from "@/lib/jsonld";
 

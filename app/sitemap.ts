@@ -1,6 +1,5 @@
 import { getBlogPosts, getTalksEvents } from "@/lib/server-utils";
-
-export const baseUrl = "https://murabcd.vercel.app";
+import { baseUrl } from "@/lib/site";
 
 export default async function sitemap() {
 	const blogs = getBlogPosts().map((post) => ({

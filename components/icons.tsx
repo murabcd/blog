@@ -3,6 +3,32 @@ import type { LucideIcon, LucideProps } from "lucide-react";
 export type Icon = LucideIcon;
 
 export const Icons = {
+	x: ({ size = 24, ...props }: LucideProps) => (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width={size}
+			height={size}
+			fill="currentColor"
+			viewBox="0 0 24 24"
+			aria-hidden="true"
+			{...props}
+		>
+			<path d="M13.68 10.62 20.24 3h-1.55l-5.7 6.62L8.44 3H3.2l6.88 10.01L3.2 21h1.55l6.02-6.99L15.57 21h5.24l-7.13-10.38Zm-2.13 2.48-.69-1-5.55-7.93H7.7l4.47 6.4.7 1 5.82 8.31H16.3l-4.75-6.78Z" />
+		</svg>
+	),
+	linkedin: ({ size = 24, ...props }: LucideProps) => (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width={size}
+			height={size}
+			fill="currentColor"
+			viewBox="0 0 24 24"
+			aria-hidden="true"
+			{...props}
+		>
+			<path d="M18.34 18.34h-2.67v-4.18c0-1-.02-2.28-1.39-2.28-1.39 0-1.6 1.08-1.6 2.21v4.25h-2.67V9.75h2.56v1.17h.04c.36-.67 1.23-1.39 2.53-1.39 2.7 0 3.2 1.78 3.2 4.09v4.72ZM7 8.58a1.55 1.55 0 1 1 0-3.1 1.55 1.55 0 0 1 0 3.1Zm1.34 9.76H5.67V9.75h2.67v8.59ZM19.67 3H4.33C3.59 3 3 3.58 3 4.3v15.4c0 .72.59 1.3 1.33 1.3h15.34c.73 0 1.33-.58 1.33-1.3V4.3c0-.72-.6-1.3-1.33-1.3Z" />
+		</svg>
+	),
 	markdown: ({ ...props }: LucideProps) => (
 		<svg strokeLinejoin="round" viewBox="0 0 22 16" {...props}>
 			<title>Markdown</title>

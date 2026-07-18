@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { siteDomain } from "@/lib/site";
 
 interface EmbedDialogProps {
 	isOpen: boolean;
@@ -38,6 +39,15 @@ function getServerOriginSnapshot() {
 	return "";
 }
 
+function escapeHtml(value: string) {
+	return value
+		.replaceAll("&", "&amp;")
+		.replaceAll("<", "&lt;")
+		.replaceAll(">", "&gt;")
+		.replaceAll('"', "&quot;")
+		.replaceAll("'", "&#39;");
+}
+
 export function EmbedDialog({
 	isOpen,
 	onOpenChange,
@@ -54,15 +64,17 @@ export function EmbedDialog({
 	);
 
 	const fullUrl = origin ? `${origin}/blog/${postSlug}` : `/blog/${postSlug}`;
+	const escapedUrl = escapeHtml(fullUrl);
+	const escapedTitle = escapeHtml(title);
+	const escapedAuthor = escapeHtml(author);
+	const escapedDescription = description ? escapeHtml(description) : "";
 
-	const embedCode = `<div class="blog-post-embed" style="border: 1px solid #00000014; border-radius: 8px; padding: 16px; max-width: 500px; font-family: system-ui, -apple-system, sans-serif; background: #ffffff;">
-  <div style="flex: 1; min-width: 0;">
-    <h3 style="font-weight: 600; color: #171717; font-size: 14px; margin: 0 0 4px 0; line-height: 1.3;">${title}</h3>
-    <p style="font-size: 14px; color: #4d4d4d; margin: 0 0 4px 0;">From ${author}</p>
-    ${description ? `<p style="font-size: 14px; color: #4d4d4d; margin: 0 0 8px 0; line-height: 1.4;">${description}</p>` : ""}
-    <a href="${fullUrl}" style="font-size: 14px; color: #006bff; text-decoration: none; font-weight: 500;" target="_blank" rel="noopener noreferrer">Read full post</a>
-  </div>
-</div>`;
+	const embedCode = `<a href="${escapedUrl}" class="blog-post-embed" style="display: block; box-sizing: border-box; border: 1px solid #eaeaea; border-radius: 6px; padding: 16px; max-width: 500px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fafafa; color: #171717; text-decoration: none;" target="_blank" rel="noopener noreferrer">
+  <p style="font-size: 12px; color: #666666; margin: 0 0 8px 0; line-height: 1.4;">${siteDomain} · ${escapedAuthor}</p>
+  <h3 style="font-weight: 600; color: #171717; font-size: 16px; margin: 0 0 8px 0; line-height: 1.3;">${escapedTitle}</h3>
+  ${escapedDescription ? `<p style="font-size: 14px; color: #4d4d4d; margin: 0 0 12px 0; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${escapedDescription}</p>` : ""}
+  <span style="font-size: 14px; color: #171717; font-weight: 500;">Read full post →</span>
+</a>`;
 
 	const handleCopy = async () => {
 		try {
@@ -84,36 +96,33 @@ export function EmbedDialog({
 					</DialogDescription>
 				</DialogHeader>
 				<div className="space-y-4">
-					{/* Preview */}
 					<div className="space-y-2">
-						<Label htmlFor="embed-code" className="text-sm font-medium">
-							Preview
-						</Label>
-						<div className="border rounded-lg p-4 bg-muted/40 shadow-sm max-w-md">
-							<div className="flex-1 min-w-0">
-								<h3 className="font-semibold text-foreground text-sm mb-1 line-clamp-2">
+						<p className="text-sm font-medium">Preview</p>
+						<a
+							href={fullUrl}
+							className="group block max-w-md rounded-md border border-border bg-muted/20 p-4 no-underline outline-none transition-[background-color,border-color,box-shadow] hover:bg-muted/40 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							<div className="min-w-0 space-y-2">
+								<p className="text-xs leading-none text-muted-foreground">
+									{siteDomain} · {author}
+								</p>
+								<h3 className="line-clamp-2 text-base font-semibold leading-snug text-foreground">
 									{title}
 								</h3>
-								<p className="text-sm text-muted-foreground mb-1">{author}</p>
 								{description && (
-									<p className="text-sm text-muted-foreground mb-2 line-clamp-2">
+									<p className="line-clamp-2 text-sm leading-5 text-muted-foreground">
 										{description}
 									</p>
 								)}
-
-								<a
-									href={fullUrl}
-									className="text-sm text-primary hover:text-primary/80 font-medium no-underline"
-									target="_blank"
-									rel="noopener noreferrer"
-								>
-									Read full post
-								</a>
+								<span className="inline-flex text-sm font-medium text-foreground transition-all group-hover:text-primary">
+									Read full post →
+								</span>
 							</div>
-						</div>
+						</a>
 					</div>
 
-					{/* Embed Code */}
 					<div className="space-y-2">
 						<Label htmlFor={embedCodeId} className="text-sm font-medium">
 							Code

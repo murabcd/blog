@@ -7,7 +7,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import Footer from "@/components/footer";
 import { Toaster } from "@/components/ui/sonner";
 
-import { baseUrl } from "./sitemap";
+import { baseUrl } from "@/lib/site";
 
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
