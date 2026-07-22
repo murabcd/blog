@@ -1,12 +1,4 @@
 {
 	"$schema": "https://react.doctor/schema/config.json",
-	"projects": ["app", "components", "lib", "hooks"],
-	"ignore": {
-		"overrides": [
-			{
-				"files": ["blog/*/page.tsx", "talk/*/page.tsx"],
-				"rules": ["react-doctor/only-export-components"]
-			}
-		]
-	}
+	"projects": ["app", "components", "lib", "hooks"]
 }

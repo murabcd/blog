@@ -36,12 +36,12 @@ export function ThemeSwitcher() {
 			type="button"
 			aria-label={`Switch to ${nextTheme} theme`}
 			onClick={() => setTheme(nextTheme)}
-			className="inline-flex items-center justify-center rounded-md border border-input bg-transparent p-1.5 text-sm text-muted-foreground transition-all hover:text-primary"
+			className="inline-flex items-center justify-center rounded-md border border-input bg-transparent p-1.5 text-sm text-muted-foreground transition-colors hover:text-primary"
 		>
 			{currentTheme === "dark" ? (
-				<Sun className="size-4 transition-all" />
+				<Sun className="size-4" />
 			) : (
-				<Moon className="size-4 transition-all" />
+				<Moon className="size-4" />
 			)}
 			<span className="sr-only">Switch theme</span>
 		</button>

@@ -56,12 +56,12 @@ export function FloatingChatInput({ url }: { url: string }) {
 
 	return (
 		<div
-			className={`fixed inset-x-0 bottom-4 z-50 flex justify-center px-4 sm:bottom-6 pointer-events-none transition-all duration-300 ${
+			className={`fixed inset-x-0 bottom-4 z-50 flex justify-center px-4 sm:bottom-6 pointer-events-none transition-[opacity,transform] duration-300 ${
 				isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
 			}`}
 		>
 			<div className="w-full max-w-2xl pointer-events-none">
-				<div className="mx-auto w-full max-w-[185px] transition-[max-width] duration-300 focus-within:max-w-[315px]">
+				<div className="mx-auto w-full max-w-[185px] focus-within:max-w-[315px]">
 					<div className="pointer-events-auto relative flex items-center gap-2 rounded-full border border-foreground/10 bg-background/70 dark:bg-background/60 pl-4 pr-1 py-1.5 shadow-[0_12px_30px_rgba(0,0,0,0.22)] backdrop-blur-sm transition-shadow duration-300 focus-within:shadow-[0_18px_40px_rgba(0,0,0,0.3)]">
 						<label className="sr-only" htmlFor="floating-chat-input">
 							Ask about this post

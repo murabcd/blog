@@ -27,7 +27,7 @@ export function CodeCopyButton({ code }: CodeCopyButtonProps) {
 			variant="outline"
 			size="icon"
 			onClick={() => copyToClipboard(code)}
-			className="absolute top-2 right-2 z-10 size-7 bg-background/80 text-muted-foreground opacity-0 shadow-xs transition-all group-hover:opacity-100 hover:text-accent-foreground active:scale-95 focus-visible:opacity-100"
+			className="absolute top-2 right-2 z-10 size-7 bg-background/80 text-muted-foreground opacity-0 shadow-xs transition-[opacity,transform,color,background-color,border-color,box-shadow] group-hover:opacity-100 hover:text-accent-foreground active:scale-95 focus-visible:opacity-100"
 			aria-label={label}
 			title={label}
 		>

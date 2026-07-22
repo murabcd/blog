@@ -43,7 +43,7 @@ export function SearchCommand({ posts, talks }: SearchContent) {
 				variant="outline"
 				onClick={() => setOpen(true)}
 				aria-label="Search"
-				className="ml-auto size-[30px] border-input bg-transparent px-0 text-muted-foreground shadow-none transition-all hover:bg-transparent hover:text-primary sm:w-auto sm:px-3 dark:border-input dark:bg-transparent dark:hover:bg-transparent"
+				className="ml-auto size-[30px] border-input bg-transparent px-0 text-muted-foreground shadow-none transition-colors hover:bg-transparent hover:text-primary sm:w-auto sm:px-3 dark:border-input dark:bg-transparent dark:hover:bg-transparent"
 			>
 				<Search data-icon="inline-start" />
 				<span className="hidden sm:inline-flex">Search…</span>

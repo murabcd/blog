@@ -26,7 +26,7 @@ export default function Footer() {
 			<ul className="font-sm mt-8 flex flex-row space-x-4 space-y-0 text-foreground">
 				<li>
 					<Link
-						className="flex items-center transition-all hover:text-primary"
+						className="flex items-center transition-colors hover:text-primary"
 						aria-label="RSS feed"
 						href="/api/rss"
 					>
@@ -36,7 +36,7 @@ export default function Footer() {
 				</li>
 				<li>
 					<a
-						className="flex items-center transition-all hover:text-primary"
+						className="flex items-center transition-colors hover:text-primary"
 						aria-label="X (Twitter)"
 						rel="noopener noreferrer"
 						target="_blank"
@@ -48,7 +48,7 @@ export default function Footer() {
 				</li>
 				<li>
 					<a
-						className="flex items-center transition-all hover:text-primary"
+						className="flex items-center transition-colors hover:text-primary"
 						aria-label="LinkedIn"
 						rel="noopener noreferrer"
 						target="_blank"
@@ -60,7 +60,7 @@ export default function Footer() {
 				</li>
 				<li>
 					<a
-						className="flex items-center transition-all hover:text-primary"
+						className="flex items-center transition-colors hover:text-primary"
 						aria-label="GitHub"
 						rel="noopener noreferrer"
 						target="_blank"

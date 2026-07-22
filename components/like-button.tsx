@@ -91,7 +91,7 @@ export function LikeButton({ postSlug }: LikeButtonProps) {
 					className="h-8 shadow-none md:h-7 md:text-[0.8rem]"
 				>
 					<Heart
-						className={`w-4 h-4 transition-all duration-300 ${
+						className={`w-4 h-4 transition-colors duration-300 ${
 							isLiked
 								? "fill-foreground text-foreground"
 								: "text-muted-foreground"

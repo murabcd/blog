@@ -84,7 +84,7 @@ export default function RootLayout({
 	return (
 		<html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
 			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}
+				className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-dvh`}
 			>
 				<ThemeProvider
 					attribute="class"
@@ -98,7 +98,7 @@ export default function RootLayout({
 					>
 						Skip to content
 					</a>
-					<div className="mx-4 lg:mx-auto max-w-xl min-h-screen flex flex-col">
+					<div className="mx-4 lg:mx-auto max-w-xl min-h-dvh flex flex-col">
 						<Navbar />
 						<div className="grow">
 							<main id="main-content" className="mt-6 px-0">

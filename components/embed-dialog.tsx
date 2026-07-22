@@ -116,7 +116,7 @@ export function EmbedDialog({
 										{description}
 									</p>
 								)}
-								<span className="inline-flex text-sm font-medium text-foreground transition-all group-hover:text-primary">
+								<span className="inline-flex text-sm font-medium text-foreground transition-colors group-hover:text-primary">
 									Read full post →
 								</span>
 							</div>

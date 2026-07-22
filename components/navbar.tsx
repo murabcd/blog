@@ -40,7 +40,7 @@ export async function Navbar() {
 									key={path}
 									href={path}
 									prefetch
-									className="transition-all hover:text-primary"
+									className="transition-colors hover:text-primary"
 								>
 									{name}
 								</Link>

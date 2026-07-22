@@ -11,6 +11,7 @@ import {
 	toFrontmatter,
 } from "../lib/frontmatter";
 import dotenv from "dotenv";
+import { revalidateContentCache } from "./revalidate-content-cache";
 
 // Load environment variables based on SYNC_ENV
 const isProduction = process.env.SYNC_ENV === "production";
@@ -312,27 +313,11 @@ function getSyncErrorMessage(error: unknown) {
 	return redacted.split("\n").at(0) ?? "Unknown error";
 }
 
-async function revalidateTags(tags: string[]) {
-	if (!siteUrl || !revalidateSecret || tags.length === 0) return;
-
-	try {
-		const response = await fetch(`${siteUrl}/api/revalidate`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				"x-revalidate-secret": revalidateSecret,
-			},
-			body: JSON.stringify({ tags }),
-		});
-
-		if (!response.ok) {
-			console.warn(
-				`Revalidate failed (${response.status}): ${await response.text()}`,
-			);
-		}
-	} catch (error) {
-		console.warn("Revalidate request failed:", error);
+function requireConfiguration(value: string | undefined, name: string) {
+	if (!value) {
+		throw new Error(`${name} environment variable is not set`);
 	}
+	return value;
 }
 
 // Main sync function
@@ -342,18 +327,18 @@ async function syncContent() {
 	}
 
 	// Get Convex URL from environment
-	const convexUrl =
-		process.env.NEXT_PUBLIC_CONVEX_URL || process.env.CONVEX_URL;
-	if (!convexUrl) {
-		console.error(
-			"Error: NEXT_PUBLIC_CONVEX_URL or CONVEX_URL environment variable is not set",
-		);
-		process.exit(1);
-	}
-	if (!contentSyncSecret) {
-		console.error("Error: CONTENT_SYNC_SECRET environment variable is not set");
-		process.exit(1);
-	}
+	const convexUrl = requireConfiguration(
+		process.env.NEXT_PUBLIC_CONVEX_URL || process.env.CONVEX_URL,
+		"NEXT_PUBLIC_CONVEX_URL or CONVEX_URL",
+	);
+	const syncSecret = requireConfiguration(
+		contentSyncSecret,
+		"CONTENT_SYNC_SECRET",
+	);
+	const revalidation = {
+		secret: requireConfiguration(revalidateSecret, "REVALIDATE_SECRET"),
+		siteUrl: requireConfiguration(siteUrl, "SITE_URL"),
+	};
 
 	// Initialize Convex client
 	const client = new ConvexHttpClient(convexUrl);
@@ -385,14 +370,14 @@ async function syncContent() {
 		}
 		try {
 			const result = await client.mutation(api.blog.syncPostsPublic, {
-				syncSecret: contentSyncSecret,
+				syncSecret,
 				slugs: blogSlugs,
 				posts: blogPosts,
 			});
 			console.log(
 				`✓ Blog posts: ${result.created} created, ${result.updated} updated, ${result.deleted} deleted`,
 			);
-			await revalidateTags(["blogPosts"]);
+			await revalidateContentCache({ ...revalidation, tags: ["blogPosts"] });
 		} catch (error) {
 			console.error(`Error syncing blog posts: ${getSyncErrorMessage(error)}`);
 			process.exit(1);
@@ -426,14 +411,14 @@ async function syncContent() {
 		}
 		try {
 			const result = await client.mutation(api.talk.syncEventsPublic, {
-				syncSecret: contentSyncSecret,
+				syncSecret,
 				slugs: talkSlugs,
 				events: talkEvents,
 			});
 			console.log(
 				`✓ Talk events: ${result.created} created, ${result.updated} updated, ${result.deleted} deleted`,
 			);
-			await revalidateTags(["talkEvents"]);
+			await revalidateContentCache({ ...revalidation, tags: ["talkEvents"] });
 		} catch (error) {
 			console.error(`Error syncing talk events: ${getSyncErrorMessage(error)}`);
 			process.exit(1);
@@ -469,14 +454,14 @@ async function syncContent() {
 		}
 		try {
 			const result = await client.mutation(api.code.syncProjectsPublic, {
-				syncSecret: contentSyncSecret,
+				syncSecret,
 				slugs: codeSlugs,
 				projects: codeProjects,
 			});
 			console.log(
 				`✓ Code projects: ${result.created} created, ${result.updated} updated, ${result.deleted} deleted`,
 			);
-			await revalidateTags(["codeProjects"]);
+			await revalidateContentCache({ ...revalidation, tags: ["codeProjects"] });
 		} catch (error) {
 			console.error(
 				`Error syncing code projects: ${getSyncErrorMessage(error)}`,
@@ -495,14 +480,17 @@ async function syncContent() {
 			}
 			try {
 				const result = await client.mutation(api.pages.syncPagesPublic, {
-					syncSecret: contentSyncSecret,
+					syncSecret,
 					slugs: [chatPage.slug],
 					pages: [chatPage],
 				});
 				console.log(
 					`✓ Chat page: ${result.created} created, ${result.updated} updated, ${result.deleted} deleted`,
 				);
-				await revalidateTags(["pages", "pages:chat"]);
+				await revalidateContentCache({
+					...revalidation,
+					tags: ["pages", "pages:chat"],
+				});
 			} catch (error) {
 				console.error(`Error syncing chat page: ${getSyncErrorMessage(error)}`);
 				process.exit(1);

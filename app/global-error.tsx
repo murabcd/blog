@@ -12,7 +12,7 @@ export default function GlobalError({
 	return (
 		<html lang="en">
 			<body>
-				<section className="flex min-h-screen flex-col items-center justify-center px-4 py-10 text-center">
+				<section className="flex min-h-dvh flex-col items-center justify-center px-4 py-10 text-center">
 					<h1 className="title text-2xl font-semibold tracking-tighter">
 						Something went wrong
 					</h1>
