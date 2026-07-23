@@ -1,3 +1,5 @@
+import type { PublicContentCacheTag } from "../lib/public-content-cache-policy";
+
 const MAX_ATTEMPTS = 3;
 const RETRY_DELAY_MS = 250;
 const REQUEST_TIMEOUT_MS = 10_000;
@@ -5,7 +7,7 @@ const REQUEST_TIMEOUT_MS = 10_000;
 type RevalidateContentCacheOptions = {
 	secret: string;
 	siteUrl: string;
-	tags: readonly [string, ...string[]];
+	tags: readonly [PublicContentCacheTag, ...PublicContentCacheTag[]];
 };
 
 function isRetryableStatus(status: number) {

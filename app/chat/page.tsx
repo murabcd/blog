@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { baseUrl } from "@/lib/site";
 import { CustomMDX } from "@/components/mdx";
-import { fetchQuery } from "convex/nextjs";
-import { cacheLife, cacheTag } from "next/cache";
-import { api } from "@/convex/_generated/api";
+import { getStaticPage } from "@/lib/public-content-cache";
 
 const ogImage = new URL("/opengraph-image", baseUrl).toString();
 
@@ -37,15 +35,8 @@ export const metadata: Metadata = {
 	},
 };
 
-async function getChatPageCached() {
-	"use cache";
-	cacheLife("hours");
-	cacheTag("pages", "pages:chat");
-	return fetchQuery(api.pages.getPageBySlug, { slug: "chat" });
-}
-
 export default async function Page() {
-	const page = await getChatPageCached();
+	const page = await getStaticPage("chat");
 
 	if (!page) {
 		return (

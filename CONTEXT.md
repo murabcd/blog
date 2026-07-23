@@ -12,6 +12,10 @@ _Avoid_: Entry, item, document
 The complete, validated set of Published Content in the repository at a point in time.
 _Avoid_: Content files, markdown data
 
+**Public Content Cache**:
+The temporary reader-facing snapshot of Published Content governed by one freshness policy.
+_Avoid_: Route cache, tag cache
+
 **Blog Post**:
 A dated article with a title, summary, body, and optional image.
 _Avoid_: Blog entry, post record

@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/command";
 import { Button } from "@/components/ui/button";
 import { Kbd } from "@/components/ui/kbd";
-import type { SearchContent } from "@/lib/search-content";
+import type { SearchContent } from "@/lib/public-content-cache";
 
 export function SearchCommand({ posts, talks }: SearchContent) {
 	const router = useRouter();

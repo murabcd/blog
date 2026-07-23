@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import { BlogPosts } from "@/components/posts";
 import { baseUrl } from "@/lib/site";
-import { fetchQuery } from "convex/nextjs";
-import { cacheLife, cacheTag } from "next/cache";
-import { api } from "@/convex/_generated/api";
 import { inlineContentLinkClassName } from "@/lib/link-styles";
+import { getBlogPosts } from "@/lib/public-content-cache";
 
 const ogImage = new URL("/opengraph-image", baseUrl).toString();
 
@@ -38,15 +36,8 @@ export const metadata: Metadata = {
 	},
 };
 
-async function getAllBlogPostsCached() {
-	"use cache";
-	cacheLife("hours");
-	cacheTag("blogPosts");
-	return fetchQuery(api.blog.getAllPosts);
-}
-
 export default async function Page() {
-	const posts = await getAllBlogPostsCached();
+	const posts = await getBlogPosts();
 
 	return (
 		<section>

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { SearchCommand } from "@/components/search-command";
-import { getSearchContent } from "@/lib/search-content";
+import { getSearchContent } from "@/lib/public-content-cache";
 
 const navItems = {
 	"/": {

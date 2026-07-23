@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { fetchQuery } from "convex/nextjs";
-import { cacheLife, cacheTag } from "next/cache";
 import Script from "next/script";
-import { api } from "@/convex/_generated/api";
 
 import { baseUrl } from "@/lib/site";
 import { CustomMDX } from "@/components/mdx";
@@ -15,16 +12,10 @@ import { FloatingChatInput } from "@/components/floating-chat-input";
 import { ConvexClientProvider } from "@/app/convex-client-provider";
 import { serializeJsonLd } from "@/lib/jsonld";
 import { calculateReadingTime, formatDate, slugify } from "@/lib/utils";
-
-async function getBlogPostBySlugCached(slug: string) {
-	"use cache";
-	cacheLife("hours");
-	cacheTag("blogPosts", `blogPost:${slug}`);
-	return fetchQuery(api.blog.getPostBySlug, { slug });
-}
+import { getBlogPost, getBlogPosts } from "@/lib/public-content-cache";
 
 export async function generateStaticParams() {
-	const posts = await fetchQuery(api.blog.getAllPosts);
+	const posts = await getBlogPosts();
 
 	return posts.map(({ slug }) => ({ slug }));
 }
@@ -56,7 +47,7 @@ export async function generateMetadata({
 	params: Promise<{ slug: string }>;
 }): Promise<Metadata | undefined> {
 	const { slug } = await params;
-	const post = await getBlogPostBySlugCached(slug);
+	const post = await getBlogPost(slug);
 	if (!post) {
 		return;
 	}
@@ -108,7 +99,7 @@ export default async function Blog({
 	params: Promise<{ slug: string }>;
 }) {
 	const { slug } = await params;
-	const post = await getBlogPostBySlugCached(slug);
+	const post = await getBlogPost(slug);
 
 	if (!post) {
 		notFound();

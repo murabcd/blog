@@ -1,8 +1,6 @@
 import { TalksEvents } from "@/components/events";
 import { baseUrl } from "@/lib/site";
-import { fetchQuery } from "convex/nextjs";
-import { cacheLife, cacheTag } from "next/cache";
-import { api } from "@/convex/_generated/api";
+import { getTalkEvents } from "@/lib/public-content-cache";
 
 const ogImage = new URL("/opengraph-image", baseUrl).toString();
 
@@ -36,15 +34,8 @@ export const metadata = {
 	},
 };
 
-async function getAllTalkEventsCached() {
-	"use cache";
-	cacheLife("hours");
-	cacheTag("talkEvents");
-	return fetchQuery(api.talk.getAllEvents);
-}
-
 export default async function Page() {
-	const events = await getAllTalkEventsCached();
+	const events = await getTalkEvents();
 
 	return (
 		<section>

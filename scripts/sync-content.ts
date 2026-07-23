@@ -2,6 +2,7 @@ import { ConvexHttpClient } from "convex/browser";
 import dotenv from "dotenv";
 import { api } from "../convex/_generated/api";
 import { readContentCatalog } from "../lib/content-catalog";
+import { publicContentCacheTags } from "../lib/public-content-cache-policy";
 import { revalidateContentCache } from "./revalidate-content-cache";
 
 const isProduction = process.env.SYNC_ENV === "production";
@@ -84,7 +85,10 @@ async function syncContent() {
 		console.log(
 			`✓ Blog posts: ${result.created} created, ${result.updated} updated, ${result.deleted} deleted`,
 		);
-		await revalidateContentCache({ ...revalidation, tags: ["blogPosts"] });
+		await revalidateContentCache({
+			...revalidation,
+			tags: [publicContentCacheTags.blogPosts],
+		});
 	} catch (error) {
 		console.error(`Error syncing blog posts: ${getSyncErrorMessage(error)}`);
 		process.exit(1);
@@ -100,7 +104,10 @@ async function syncContent() {
 		console.log(
 			`✓ Talk events: ${result.created} created, ${result.updated} updated, ${result.deleted} deleted`,
 		);
-		await revalidateContentCache({ ...revalidation, tags: ["talkEvents"] });
+		await revalidateContentCache({
+			...revalidation,
+			tags: [publicContentCacheTags.talkEvents],
+		});
 	} catch (error) {
 		console.error(`Error syncing talk events: ${getSyncErrorMessage(error)}`);
 		process.exit(1);
@@ -116,7 +123,10 @@ async function syncContent() {
 		console.log(
 			`✓ Code projects: ${result.created} created, ${result.updated} updated, ${result.deleted} deleted`,
 		);
-		await revalidateContentCache({ ...revalidation, tags: ["codeProjects"] });
+		await revalidateContentCache({
+			...revalidation,
+			tags: [publicContentCacheTags.codeProjects],
+		});
 	} catch (error) {
 		console.error(`Error syncing code projects: ${getSyncErrorMessage(error)}`);
 		process.exit(1);
@@ -134,7 +144,7 @@ async function syncContent() {
 		);
 		await revalidateContentCache({
 			...revalidation,
-			tags: ["pages", "pages:chat"],
+			tags: [publicContentCacheTags.pages],
 		});
 	} catch (error) {
 		console.error(`Error syncing static pages: ${getSyncErrorMessage(error)}`);

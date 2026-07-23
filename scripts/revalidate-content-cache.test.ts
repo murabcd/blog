@@ -1,9 +1,10 @@
 import { createServer, type Server } from "node:http";
 import { afterEach, describe, expect, test, vi } from "vitest";
+import { publicContentCacheTags } from "../lib/public-content-cache-policy";
 import { revalidateContentCache } from "./revalidate-content-cache";
 
 const SECRET = "test-revalidation-secret";
-const TAGS: readonly [string] = ["blogPosts"];
+const TAGS = [publicContentCacheTags.blogPosts] as const;
 
 let server: Server | undefined;
 

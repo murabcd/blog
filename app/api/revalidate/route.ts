@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
 import { logger } from "@/lib/logger";
+import { isPublicContentCacheTag } from "@/lib/public-content-cache-policy";
 
 type RevalidateRequest = {
 	tags: string[];
@@ -29,17 +30,6 @@ type RevalidateEvent = {
 	durationMs?: number;
 };
 
-const ALLOWED_STATIC_TAGS = new Set([
-	"blogPosts",
-	"talkEvents",
-	"codeProjects",
-	"pages",
-	"pages:chat",
-]);
-
-const TAG_WITH_SLUG_PREFIXES = ["blogPost:", "talkEvent:"] as const;
-const TAG_SLUG_PATTERN = /^[a-z0-9-]+$/;
-
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_MAX_REQUESTS = 30;
 
@@ -58,21 +48,6 @@ const rateLimitMap = globalRateLimitStore.__revalidateRateLimitMap;
 
 function getSecretHeader(request: Request) {
 	return request.headers.get("x-revalidate-secret");
-}
-
-function isAllowedTag(tag: string) {
-	if (ALLOWED_STATIC_TAGS.has(tag)) {
-		return true;
-	}
-
-	for (const prefix of TAG_WITH_SLUG_PREFIXES) {
-		if (tag.startsWith(prefix)) {
-			const slug = tag.slice(prefix.length);
-			return TAG_SLUG_PATTERN.test(slug);
-		}
-	}
-
-	return false;
 }
 
 function getClientIp(request: Request) {
@@ -194,7 +169,7 @@ export async function POST(request: Request) {
 			return response;
 		}
 
-		const invalidTags = tags.filter((tag) => !isAllowedTag(tag));
+		const invalidTags = tags.filter((tag) => !isPublicContentCacheTag(tag));
 		wideEvent.invalidTagsCount = invalidTags.length;
 		if (invalidTags.length > 0) {
 			wideEvent.outcome = "bad_request";

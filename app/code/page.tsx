@@ -2,9 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { formatDate } from "@/lib/utils";
 import { baseUrl } from "@/lib/site";
-import { fetchQuery } from "convex/nextjs";
-import { cacheLife, cacheTag } from "next/cache";
-import { api } from "@/convex/_generated/api";
+import { getCodeProjects } from "@/lib/public-content-cache";
 
 const ogImage = new URL("/opengraph-image", baseUrl).toString();
 
@@ -38,15 +36,8 @@ export const metadata: Metadata = {
 	},
 };
 
-async function getAllCodeProjectsCached() {
-	"use cache";
-	cacheLife("hours");
-	cacheTag("codeProjects");
-	return fetchQuery(api.code.getAllProjects);
-}
-
 export default async function Page() {
-	const projects = await getAllCodeProjectsCached();
+	const projects = await getCodeProjects();
 
 	return (
 		<section>

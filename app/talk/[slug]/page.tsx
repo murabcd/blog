@@ -1,24 +1,15 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { fetchQuery } from "convex/nextjs";
-import { cacheLife, cacheTag } from "next/cache";
 import Script from "next/script";
-import { api } from "@/convex/_generated/api";
 
 import { formatDate } from "@/lib/utils";
 import { baseUrl } from "@/lib/site";
 import { CustomMDX } from "@/components/mdx";
 import { serializeJsonLd } from "@/lib/jsonld";
-
-async function getTalkEventBySlugCached(slug: string) {
-	"use cache";
-	cacheLife("hours");
-	cacheTag("talkEvents", `talkEvent:${slug}`);
-	return fetchQuery(api.talk.getEventBySlug, { slug });
-}
+import { getTalkEvent, getTalkEvents } from "@/lib/public-content-cache";
 
 export async function generateStaticParams() {
-	const events = await fetchQuery(api.talk.getAllEvents);
+	const events = await getTalkEvents();
 
 	return events.map(({ slug }) => ({ slug }));
 }
@@ -29,7 +20,7 @@ export async function generateMetadata({
 	params: Promise<{ slug: string }>;
 }): Promise<Metadata | undefined> {
 	const { slug } = await params;
-	const event = await getTalkEventBySlugCached(slug);
+	const event = await getTalkEvent(slug);
 	if (!event) {
 		return;
 	}
@@ -81,7 +72,7 @@ export default async function EventPage({
 	params: Promise<{ slug: string }>;
 }) {
 	const { slug } = await params;
-	const event = await getTalkEventBySlugCached(slug);
+	const event = await getTalkEvent(slug);
 
 	if (!event) {
 		notFound();
