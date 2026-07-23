@@ -12,6 +12,10 @@ _Avoid_: Entry, item, document
 The complete, validated set of Published Content in the repository at a point in time.
 _Avoid_: Content files, markdown data
 
+**Content Publication**:
+The act of replacing the public catalog with the current Content Catalog and refreshing affected reader-facing surfaces.
+_Avoid_: Sync job, upload
+
 **Public Content Cache**:
 The temporary reader-facing snapshot of Published Content governed by one freshness policy.
 _Avoid_: Route cache, tag cache
