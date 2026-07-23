@@ -1,15 +1,15 @@
-import { getBlogPosts, getTalksEvents } from "@/lib/server-utils";
+import { readBlogPosts, readTalkEvents } from "@/lib/content-catalog";
 import { baseUrl } from "@/lib/site";
 
 export default async function sitemap() {
-	const blogs = getBlogPosts().map((post) => ({
+	const blogs = readBlogPosts(process.cwd()).map((post) => ({
 		url: `${baseUrl}/blog/${post.slug}`,
-		lastModified: post.metadata.publishedAt,
+		lastModified: post.publishedAt,
 	}));
 
-	const talks = getTalksEvents().map((event) => ({
+	const talks = readTalkEvents(process.cwd()).map((event) => ({
 		url: `${baseUrl}/talk/${event.slug}`,
-		lastModified: event.metadata.publishedAt,
+		lastModified: event.publishedAt,
 	}));
 
 	const routes = ["", "/blog", "/chat", "/code", "/talk"].map((route) => ({

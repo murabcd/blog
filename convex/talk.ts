@@ -2,6 +2,7 @@ import { query, mutation } from "./_generated/server";
 import { ConvexError, v } from "convex/values";
 import { assertValidSyncSecret } from "./lib/syncAuth";
 import { assertCompleteSync, assertStoredSyncLimit } from "./lib/syncPayload";
+import { talkEventValidator } from "../lib/content-catalog/model";
 
 const MAX_EVENTS = 100;
 
@@ -93,16 +94,7 @@ export const syncEventsPublic = mutation({
 	args: {
 		syncSecret: v.string(),
 		slugs: v.array(v.string()),
-		events: v.array(
-			v.object({
-				slug: v.string(),
-				title: v.string(),
-				summary: v.string(),
-				content: v.string(),
-				publishedAt: v.string(),
-				image: v.optional(v.string()),
-			}),
-		),
+		events: v.array(talkEventValidator),
 	},
 	returns: v.object({
 		created: v.number(),

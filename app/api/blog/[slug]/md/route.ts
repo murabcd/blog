@@ -1,11 +1,13 @@
-import { getBlogPosts } from "@/lib/server-utils";
+import { readBlogPosts } from "@/lib/content-catalog";
 
 export async function GET(
 	_request: Request,
 	{ params }: { params: Promise<{ slug: string }> },
 ): Promise<Response> {
 	const { slug } = await params;
-	const post = getBlogPosts().find((p) => p.slug === slug);
+	const post = readBlogPosts(process.cwd()).find(
+		(candidate) => candidate.slug === slug,
+	);
 
 	if (!post) {
 		return new Response("Not found", { status: 404 });
@@ -13,12 +15,10 @@ export async function GET(
 
 	const frontmatterLines = [
 		"---",
-		`title: ${JSON.stringify(post.metadata.title)}`,
-		`publishedAt: ${JSON.stringify(post.metadata.publishedAt)}`,
-		`summary: ${JSON.stringify(post.metadata.summary)}`,
-		post.metadata.image
-			? `image: ${JSON.stringify(post.metadata.image)}`
-			: null,
+		`title: ${JSON.stringify(post.title)}`,
+		`publishedAt: ${JSON.stringify(post.publishedAt)}`,
+		`summary: ${JSON.stringify(post.summary)}`,
+		post.image ? `image: ${JSON.stringify(post.image)}` : null,
 		"---",
 	].filter(Boolean);
 

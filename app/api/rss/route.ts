@@ -1,12 +1,12 @@
 import { baseUrl } from "@/lib/site";
-import { getBlogPosts } from "@/lib/server-utils";
+import { readBlogPosts } from "@/lib/content-catalog";
 
 export async function GET(): Promise<Response> {
-	const allBlogs = getBlogPosts();
+	const blogPosts = readBlogPosts(process.cwd());
 
-	const itemsXml = allBlogs
+	const itemsXml = blogPosts
 		.sort((a, b) => {
-			if (new Date(a.metadata.publishedAt) > new Date(b.metadata.publishedAt)) {
+			if (new Date(a.publishedAt) > new Date(b.publishedAt)) {
 				return -1;
 			}
 			return 1;
@@ -14,10 +14,10 @@ export async function GET(): Promise<Response> {
 		.map(
 			(post) =>
 				`<item>
-          <title>${post.metadata.title}</title>
+          <title>${post.title}</title>
           <link>${baseUrl}/blog/${post.slug}</link>
-          <description>${post.metadata.summary || ""}</description>
-          <pubDate>${new Date(post.metadata.publishedAt).toUTCString()}</pubDate>
+          <description>${post.summary}</description>
+          <pubDate>${new Date(post.publishedAt).toUTCString()}</pubDate>
         </item>`,
 		)
 		.join("\n");

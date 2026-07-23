@@ -3,6 +3,7 @@ import { ConvexError, v } from "convex/values";
 import { assertValidSyncSecret } from "./lib/syncAuth";
 import { assertCompleteSync, assertStoredSyncLimit } from "./lib/syncPayload";
 import { deletePostLikes } from "./lib/postLikes";
+import { blogPostValidator } from "../lib/content-catalog/model";
 
 const MAX_POSTS = 200;
 
@@ -94,16 +95,7 @@ export const syncPostsPublic = mutation({
 	args: {
 		syncSecret: v.string(),
 		slugs: v.array(v.string()),
-		posts: v.array(
-			v.object({
-				slug: v.string(),
-				title: v.string(),
-				summary: v.string(),
-				content: v.string(),
-				publishedAt: v.string(),
-				image: v.optional(v.string()),
-			}),
-		),
+		posts: v.array(blogPostValidator),
 	},
 	returns: v.object({
 		created: v.number(),

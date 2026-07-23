@@ -2,6 +2,7 @@ import { query, mutation } from "./_generated/server";
 import { ConvexError, v } from "convex/values";
 import { assertValidSyncSecret } from "./lib/syncAuth";
 import { assertCompleteSync, assertStoredSyncLimit } from "./lib/syncPayload";
+import { staticPageValidator } from "../lib/content-catalog/model";
 
 const MAX_PAGES = 100;
 
@@ -80,14 +81,7 @@ export const syncPagesPublic = mutation({
 	args: {
 		syncSecret: v.string(),
 		slugs: v.array(v.string()),
-		pages: v.array(
-			v.object({
-				slug: v.string(),
-				title: v.string(),
-				content: v.string(),
-				published: v.boolean(),
-			}),
-		),
+		pages: v.array(staticPageValidator),
 	},
 	returns: v.object({
 		created: v.number(),

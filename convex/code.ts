@@ -2,6 +2,7 @@ import { query, mutation } from "./_generated/server";
 import { ConvexError, v } from "convex/values";
 import { assertValidSyncSecret } from "./lib/syncAuth";
 import { assertCompleteSync, assertStoredSyncLimit } from "./lib/syncPayload";
+import { codeProjectValidator } from "../lib/content-catalog/model";
 
 const MAX_PROJECTS = 100;
 
@@ -93,16 +94,7 @@ export const syncProjectsPublic = mutation({
 	args: {
 		syncSecret: v.string(),
 		slugs: v.array(v.string()),
-		projects: v.array(
-			v.object({
-				slug: v.string(),
-				title: v.string(),
-				href: v.string(),
-				date: v.string(),
-				content: v.string(),
-				published: v.boolean(),
-			}),
-		),
+		projects: v.array(codeProjectValidator),
 	},
 	returns: v.object({
 		created: v.number(),
