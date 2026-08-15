@@ -36,7 +36,9 @@ describe("createLlmsText", () => {
 			],
 		});
 
-		expect(manifest).toContain("# Murad Abdulkadyrov\n\n>");
+		expect(manifest).toContain(
+			"# Murad Abdulkadyrov\n\n> Personal site and blog of Murad Abdulkadyrov, Chief Product Officer at Flomni, sharing practical lessons on building AI products and leading product teams, alongside talks and open-source work.",
+		);
 		expect(manifest).toContain(
 			"[AI \\[Agents\\]](https://example.com/api/blog/ai-agents/md): Published 2026-02-01. A practical guide to agents.",
 		);

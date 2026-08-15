@@ -78,7 +78,7 @@ export function createLlmsText({
 	return [
 		"# Murad Abdulkadyrov",
 		"",
-		"> Personal site and blog of Murad Abdulkadyrov, Chief Product Officer at Flomni, covering AI, technology, product building, leadership, talks, and open-source projects.",
+		"> Personal site and blog of Murad Abdulkadyrov, Chief Product Officer at Flomni, sharing practical lessons on building AI products and leading product teams, alongside talks and open-source work.",
 		"",
 		"Use the Markdown article links below when full source content is needed.",
 		"",
