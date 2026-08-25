@@ -76,10 +76,14 @@ export function FloatingChatInput({ url }: { url: string }) {
 			<div className="w-full max-w-2xl pointer-events-none">
 				<div className="mx-auto w-full max-w-[315px]">
 					<div
-						className={`group relative flex items-center gap-2 rounded-full border border-foreground/10 bg-background/95 dark:bg-background/90 pl-4 pr-1 py-1.5 [clip-path:inset(0_65px_round_9999px)] transition-[clip-path] duration-200 ease-[cubic-bezier(0.77,0,0.175,1)] motion-reduce:transition-none focus-within:[clip-path:inset(0_0_round_9999px)] ${
+						className={`group relative flex items-center gap-2 rounded-full bg-foreground/10 pl-4 pr-1 py-1.5 [clip-path:inset(0_65px_round_9999px)] transition-[clip-path] duration-200 ease-[cubic-bezier(0.77,0,0.175,1)] motion-reduce:transition-none focus-within:[clip-path:inset(0_0_round_9999px)] ${
 							isVisible ? "pointer-events-auto" : "pointer-events-none"
 						}`}
 					>
+						<div
+							aria-hidden="true"
+							className="pointer-events-none absolute inset-px rounded-full bg-background/95 dark:bg-background/90 [clip-path:inset(0_65px_round_9999px)] transition-[clip-path] duration-200 ease-[cubic-bezier(0.77,0,0.175,1)] motion-reduce:transition-none group-focus-within:[clip-path:inset(0_0_round_9999px)]"
+						/>
 						<label className="sr-only" htmlFor="floating-chat-input">
 							Ask about this post
 						</label>
