@@ -6,6 +6,7 @@ import { api } from "@/convex/_generated/api";
 import { useSyncExternalStore } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { optimisticallyToggleLike } from "./like-button-optimistic";
 
 interface LikeButtonProps {
 	postSlug: string;
@@ -45,19 +46,15 @@ export function LikeButton({ postSlug }: LikeButtonProps) {
 		api.posts.getIsLiked,
 		visitorId ? { postSlug, visitorId } : "skip",
 	);
-	const toggleLike = useMutation(api.posts.toggleLike);
+	const toggleLike = useMutation(api.posts.toggleLike).withOptimisticUpdate(
+		optimisticallyToggleLike,
+	);
 
 	const handleLike = async () => {
 		if (!visitorId) return;
 
 		try {
-			const liked = await toggleLike({ postSlug, visitorId });
-
-			if (liked) {
-				toast.success("Post liked");
-			} else {
-				toast.success("Post unliked");
-			}
+			await toggleLike({ postSlug, visitorId });
 		} catch (error) {
 			console.error("Failed to toggle like:", error);
 			toast.error("Failed to update like status");
@@ -91,7 +88,7 @@ export function LikeButton({ postSlug }: LikeButtonProps) {
 					className="h-8 shadow-none md:h-7 md:text-[0.8rem]"
 				>
 					<Heart
-						className={`w-4 h-4 transition-colors duration-300 ${
+						className={`w-4 h-4 ${
 							isLiked
 								? "fill-foreground text-foreground"
 								: "text-muted-foreground"
