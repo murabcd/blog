@@ -10,9 +10,11 @@ type BlogPost = {
 export function BlogPosts({
 	posts,
 	limit,
+	titleElement: TitleElement,
 }: {
 	posts: BlogPost[];
 	limit?: number;
+	titleElement: "h2" | "h3";
 }) {
 	const sortedBlogs = posts.toSorted(
 		(a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt),
@@ -32,9 +34,9 @@ export function BlogPosts({
 							<p className="text-muted-foreground w-[110px] tabular-nums">
 								{formatDate(post.publishedAt, false)}
 							</p>
-							<p className="text-foreground tracking-tight group-hover:underline">
+							<TitleElement className="text-foreground tracking-tight group-hover:underline">
 								{post.title}
-							</p>
+							</TitleElement>
 						</div>
 					</Link>
 				))}

@@ -72,7 +72,7 @@ export function HomePage({ posts }: HomePageProps) {
 				<h2 className="mb-4 text-sm font-medium text-muted-foreground">
 					{homeContent.latestWritingHeading}
 				</h2>
-				<BlogPosts posts={posts} limit={5} />
+				<BlogPosts posts={posts} limit={5} titleElement="h3" />
 			</div>
 		</section>
 	);

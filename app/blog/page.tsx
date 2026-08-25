@@ -42,7 +42,7 @@ export default async function Page() {
 			<h1 className="title font-semibold text-2xl mb-8 tracking-tighter">
 				Blog
 			</h1>
-			<BlogPosts posts={posts} />
+			<BlogPosts posts={posts} titleElement="h2" />
 		</section>
 	);
 }
