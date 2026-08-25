@@ -1,7 +1,7 @@
 "use client";
 
 import type { MouseEvent } from "react";
-import { useEffect, useReducer, useRef, useState } from "react";
+import { useEffect, useReducer, useRef, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { cn } from "@/lib/utils";
 import { ChevronDown, ArrowUp, ChartNoAxesGantt } from "lucide-react";
@@ -25,6 +25,18 @@ function getSectionIds(sections: TocSection[]) {
 }
 
 const headingScrollOffset = 96;
+
+function subscribeToMobileTocSlot() {
+	return () => {};
+}
+
+function getMobileTocSlotSnapshot() {
+	return document.querySelector<HTMLElement>("[data-mobile-toc-slot]");
+}
+
+function getServerMobileTocSlotSnapshot() {
+	return null;
+}
 
 interface TocState {
 	activeId: string;
@@ -292,10 +304,10 @@ export function Toc({ sections, variant = "desktop" }: TocProps) {
 		mobileOpen: false,
 	}));
 	const mobileRevealOffsetRef = useRef(64);
-	const [mobileTocSlot] = useState<HTMLElement | null>(() =>
-		typeof document === "undefined"
-			? null
-			: document.querySelector<HTMLElement>("[data-mobile-toc-slot]"),
+	const mobileTocSlot = useSyncExternalStore(
+		subscribeToMobileTocSlot,
+		getMobileTocSlotSnapshot,
+		getServerMobileTocSlotSnapshot,
 	);
 	const mobilePanelRef = useRef<HTMLDivElement | null>(null);
 	const ignoreScrollActiveUpdateRef = useRef(false);
