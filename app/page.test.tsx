@@ -8,7 +8,10 @@ describe("HomePage", () => {
 
 		expect(html).toContain("<h1");
 		expect(html).toContain(">Murad Abdulkadyrov</h1>");
-		expect(html).toContain('<h2 class="sr-only">Latest writing</h2>');
+		expect(html).toContain(
+			'<h2 class="mb-4 text-sm font-medium text-muted-foreground">Latest writing</h2>',
+		);
+		expect(html).not.toContain("sr-only");
 		expect(html.replace(/<[^>]+>/g, "").length).toBeGreaterThan(500);
 	});
 });

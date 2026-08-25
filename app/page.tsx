@@ -69,7 +69,9 @@ export function HomePage({ posts }: HomePageProps) {
 				</p>
 			))}
 			<div className="my-8">
-				<h2 className="sr-only">{homeContent.latestWritingHeading}</h2>
+				<h2 className="mb-4 text-sm font-medium text-muted-foreground">
+					{homeContent.latestWritingHeading}
+				</h2>
 				<BlogPosts posts={posts} limit={5} />
 			</div>
 		</section>
