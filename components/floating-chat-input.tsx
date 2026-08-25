@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { ArrowUp } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -43,6 +43,7 @@ function subscribeToChatVisibility(onStoreChange: () => void) {
 
 export function FloatingChatInput({ url }: { url: string }) {
 	const [value, setValue] = useState("");
+	const [hasScrolled, setHasScrolled] = useState(false);
 	const isVisible = useSyncExternalStore(
 		subscribeToChatVisibility,
 		getChatVisibilitySnapshot,
@@ -54,19 +55,35 @@ export function FloatingChatInput({ url }: { url: string }) {
 		return `${BASE_URL}?q=${encodeURIComponent(prompt)}`;
 	}, [url, value]);
 
+	useEffect(() => {
+		const enableScrollTransitions = () => setHasScrolled(true);
+		window.addEventListener("scroll", enableScrollTransitions, {
+			once: true,
+			passive: true,
+		});
+
+		return () => window.removeEventListener("scroll", enableScrollTransitions);
+	}, []);
+
 	return (
 		<div
-			className={`fixed inset-x-0 bottom-4 z-50 flex justify-center px-4 sm:bottom-6 pointer-events-none transition-[opacity,translate] duration-300 ${
-				isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-			}`}
+			className={`fixed inset-x-0 bottom-4 z-50 flex justify-center px-4 sm:bottom-6 pointer-events-none motion-reduce:translate-y-0 ${
+				hasScrolled
+					? "transition-[opacity,translate] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-opacity"
+					: ""
+			} ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
 		>
 			<div className="w-full max-w-2xl pointer-events-none">
-				<div className="mx-auto w-full max-w-[185px] transition-[max-width] duration-300 focus-within:max-w-[315px]">
-					<div className="pointer-events-auto relative flex items-center gap-2 rounded-full border border-foreground/10 bg-background/70 dark:bg-background/60 pl-4 pr-1 py-1.5 shadow-[0_12px_30px_rgba(0,0,0,0.22)] backdrop-blur-sm transition-shadow duration-300 focus-within:shadow-[0_18px_40px_rgba(0,0,0,0.3)]">
+				<div className="mx-auto w-full max-w-[315px]">
+					<div
+						className={`group relative flex items-center gap-2 rounded-full border border-foreground/10 bg-background/95 dark:bg-background/90 pl-4 pr-1 py-1.5 [clip-path:inset(0_65px_round_9999px)] transition-[clip-path] duration-200 ease-[cubic-bezier(0.77,0,0.175,1)] motion-reduce:transition-none focus-within:[clip-path:inset(0_0_round_9999px)] ${
+							isVisible ? "pointer-events-auto" : "pointer-events-none"
+						}`}
+					>
 						<label className="sr-only" htmlFor="floating-chat-input">
 							Ask about this post
 						</label>
-						<div className="min-w-0 flex-1">
+						<div className="min-w-0 flex-1 translate-x-[65px] transition-[translate] duration-200 ease-[cubic-bezier(0.77,0,0.175,1)] motion-reduce:transition-none group-focus-within:translate-x-0">
 							<Input
 								id="floating-chat-input"
 								value={value}
@@ -87,7 +104,7 @@ export function FloatingChatInput({ url }: { url: string }) {
 							size="icon"
 							disabled={!canSubmit}
 							aria-label="Ask about this post"
-							className="shrink-0 size-8 rounded-full bg-foreground text-background transition-transform duration-200 hover:-translate-y-0.5 disabled:cursor-not-allowed"
+							className="shrink-0 size-8 -translate-x-[65px] rounded-full bg-foreground text-background transition-[translate] duration-200 ease-[cubic-bezier(0.77,0,0.175,1)] motion-reduce:transition-none group-focus-within:translate-x-0 disabled:cursor-not-allowed"
 							onClick={() =>
 								window.open(promptUrl, "_blank", "noopener,noreferrer")
 							}
