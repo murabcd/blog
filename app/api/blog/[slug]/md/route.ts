@@ -1,4 +1,5 @@
 import { readBlogPosts } from "@/lib/content-catalog";
+import { createApiErrorResponse } from "@/lib/api-error";
 
 export async function GET(
 	_request: Request,
@@ -10,7 +11,12 @@ export async function GET(
 	);
 
 	if (!post) {
-		return new Response("Not found", { status: 404 });
+		return createApiErrorResponse({
+			code: "post_not_found",
+			message: "The requested article does not exist.",
+			resolution: "Use /llms.txt to discover published article slugs.",
+			status: 404,
+		});
 	}
 
 	const frontmatterLines = [

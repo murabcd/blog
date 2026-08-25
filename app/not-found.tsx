@@ -18,7 +18,9 @@ export default function NotFound() {
 					<EmptyTitle>404 - Not Found</EmptyTitle>
 					<EmptyDescription>
 						The page you&apos;re looking for doesn&apos;t exist. Use the
-						navigation or search.
+						navigation, search, <Link href="/sitemap.xml">sitemap</Link>, or
+						{` `}
+						<Link href="/llms.txt">machine-readable index</Link>.
 					</EmptyDescription>
 				</EmptyHeader>
 				<EmptyContent>
