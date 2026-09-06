@@ -3,15 +3,14 @@ export const homeContent = {
 	description:
 		"Murad Abdulkadyrov, Chief Product Officer at Flomni. Writing about AI, product building, and engineering leadership.",
 	intro: {
-		beforeOrganization: "I'm a Chief Product Officer at ",
+		beforeOrganization: "I'm the Chief Product Officer at ",
 		organization: "Flomni",
 		organizationUrl: "https://flomni.com/en",
-		afterOrganization:
-			", where I lead the Product and Engineering teams. My job is to help build useful tools that make life easier for our customers, mostly in B2B SaaS companies.",
+		afterOrganization: ", where I lead Product and Engineering.",
 	},
 	paragraphs: [
-		"I like figuring out how things work and finding better ways to build them. Sometimes I write code, sometimes I sketch out ideas, and most of the time I'm connecting the dots between people, problems, and solutions.",
-		"This blog is where I share what I'm learning from working with AI and tech, to building products and leading teams. Nothing fancy - just real experiences, ideas, and lessons worth sharing.",
+		"I like figuring out how things work and finding better ways to build them. Sometimes that means writing code, sometimes sketching an idea, and sometimes questioning a process everyone has gotten used to.",
+		"Here I write about AI, products, leadership, and whatever else gets me thinking. Some posts come from things I've tried. Others start with a question I haven't figured out yet.",
 	],
 } as const;
 
