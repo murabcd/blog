@@ -5,12 +5,12 @@ const nextConfig: NextConfig = {
 	headers() {
 		return [
 			{
-				source: "/",
+				// Proxy negotiates both homepage and unknown-path responses.
+				source: "/:path*",
 				headers: [
 					{
 						key: "Vary",
-						value:
-							"Accept, RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch, Accept-Encoding",
+						value: "Accept",
 					},
 				],
 			},

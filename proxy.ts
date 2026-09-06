@@ -1,6 +1,7 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { createApiErrorResponse } from "./lib/api-error";
+import { readBlogPosts, readTalkEvents } from "./lib/content-catalog";
 import { createHomeMarkdown } from "./lib/home-content";
 
 const MARKDOWN_HEADERS = {
@@ -19,21 +20,35 @@ type MediaRange = {
 	specificity: number;
 };
 
+// Reject unknown slugs before Cache Components can stream an empty error shell.
+// This is the same source catalog used by the sitemap and Markdown endpoints.
+const contentPaths = [
+	...readBlogPosts(process.cwd()).map(({ slug }) => `/blog/${slug}`),
+	...readTalkEvents(process.cwd()).map(({ slug }) => `/talk/${slug}`),
+];
+
 const KNOWN_PUBLIC_PATHS = new Set([
 	"/",
 	"/blog",
+	"/blog/twitter-image",
 	"/chat",
+	"/chat/twitter-image",
 	"/code",
+	"/code/twitter-image",
 	"/llms.txt",
 	"/openapi.json",
 	"/opengraph-image",
 	"/robots.txt",
 	"/sitemap.xml",
 	"/talk",
+	"/talk/twitter-image",
 	"/twitter-image",
+	...contentPaths.flatMap((path) => [
+		path,
+		`${path}/opengraph-image`,
+		`${path}/twitter-image`,
+	]),
 ]);
-
-const KNOWN_PUBLIC_PREFIXES = ["/blog/", "/talk/"];
 
 function isKnownApiPath(pathname: string) {
 	return (
@@ -117,14 +132,7 @@ function normalizePathname(pathname: string) {
 }
 
 function isKnownPublicPath(pathname: string) {
-	const normalizedPathname = normalizePathname(pathname);
-	return (
-		KNOWN_PUBLIC_PATHS.has(normalizedPathname) ||
-		isKnownApiPath(normalizedPathname) ||
-		KNOWN_PUBLIC_PREFIXES.some((prefix) =>
-			normalizedPathname.startsWith(prefix),
-		)
-	);
+	return KNOWN_PUBLIC_PATHS.has(pathname) || isKnownApiPath(pathname);
 }
 
 function createMarkdownNotFound(request: NextRequest) {
@@ -186,8 +194,19 @@ export function proxy(request: NextRequest) {
 		return NextResponse.next();
 	}
 
-	if (preferred === "text/markdown" && !isKnownPublicPath(pathname)) {
+	if (preferred === "text/markdown" && !isKnownPublicPath(normalizedPathname)) {
 		return createMarkdownNotFound(request);
+	}
+
+	if (normalizedPathname === "/404") {
+		return NextResponse.next({ status: 404 });
+	}
+
+	if (
+		/^\/(blog|talk)\/[^/]+$/.test(normalizedPathname) &&
+		!isKnownPublicPath(normalizedPathname)
+	) {
+		return NextResponse.rewrite(new URL("/404", request.url), { status: 404 });
 	}
 
 	return NextResponse.next();
