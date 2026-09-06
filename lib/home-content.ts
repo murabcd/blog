@@ -1,5 +1,7 @@
 export const homeContent = {
 	name: "Murad Abdulkadyrov",
+	description:
+		"Murad Abdulkadyrov, Chief Product Officer at Flomni. Writing about AI, product building, and engineering leadership.",
 	intro: {
 		beforeOrganization: "I'm a Chief Product Officer at ",
 		organization: "Flomni",
@@ -11,7 +13,6 @@ export const homeContent = {
 		"I like figuring out how things work and finding better ways to build them. Sometimes I write code, sometimes I sketch out ideas, and most of the time I'm connecting the dots between people, problems, and solutions.",
 		"This blog is where I share what I'm learning from working with AI and tech, to building products and leading teams. Nothing fancy - just real experiences, ideas, and lessons worth sharing.",
 	],
-	latestWritingHeading: "Latest writing",
 } as const;
 
 export function createHomeMarkdown(siteUrl: string) {
@@ -24,8 +25,6 @@ export function createHomeMarkdown(siteUrl: string) {
 		`${intro.beforeOrganization}[${intro.organization}](${intro.organizationUrl})${intro.afterOrganization}`,
 		"",
 		...homeContent.paragraphs.flatMap((paragraph) => [paragraph, ""]),
-		`## ${homeContent.latestWritingHeading}`,
-		"",
 		"The blog covers practical work with AI, product building, engineering leadership, and the decisions behind shipping software in real teams.",
 		"",
 		`- [Read all articles](${url("/blog")})`,

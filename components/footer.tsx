@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import { CurrentYear } from "@/components/current-year";
+import { socialProfiles } from "@/lib/site";
 
 function ArrowIcon() {
 	return (
@@ -40,7 +41,7 @@ export default function Footer() {
 						aria-label="X (Twitter)"
 						rel="noopener noreferrer"
 						target="_blank"
-						href="https://x.com/murabcd"
+						href={socialProfiles.x}
 					>
 						<ArrowIcon />
 						<p className="ml-2 h-7">x</p>
@@ -52,7 +53,7 @@ export default function Footer() {
 						aria-label="LinkedIn"
 						rel="noopener noreferrer"
 						target="_blank"
-						href="https://www.linkedin.com/in/murabcd/"
+						href={socialProfiles.linkedin}
 					>
 						<ArrowIcon />
 						<p className="ml-2 h-7">li</p>
@@ -64,7 +65,7 @@ export default function Footer() {
 						aria-label="GitHub"
 						rel="noopener noreferrer"
 						target="_blank"
-						href="https://github.com/murabcd"
+						href={socialProfiles.github}
 					>
 						<ArrowIcon />
 						<p className="ml-2 h-7">git</p>

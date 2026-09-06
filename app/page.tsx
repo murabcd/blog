@@ -1,26 +1,26 @@
 import type { Metadata } from "next";
 import { BlogPosts } from "@/components/posts";
-import { baseUrl } from "@/lib/site";
+import { baseUrl, socialProfiles } from "@/lib/site";
 import { inlineContentLinkClassName } from "@/lib/link-styles";
 import { getBlogPosts } from "@/lib/public-content-cache";
 import { homeContent } from "@/lib/home-content";
+import { serializeJsonLd } from "@/lib/jsonld";
 
 const ogImage = new URL("/opengraph-image", baseUrl).toString();
 
 export const metadata: Metadata = {
-	title: "Home",
-	description:
-		"Chief Product Officer at Flomni. Exploring AI, tech, and product building. Sharing real experiences, ideas, and lessons from building products and leading teams.",
+	title: { absolute: `${homeContent.name} — AI and Product Building` },
+	description: homeContent.description,
+	authors: [{ name: homeContent.name, url: baseUrl }],
 	alternates: {
 		canonical: baseUrl,
 	},
 	openGraph: {
-		title: "Murad Abdulkadyrov",
-		description:
-			"Chief Product Officer at Flomni. Exploring AI, tech, and product building. Sharing real experiences, ideas, and lessons from building products and leading teams.",
+		title: homeContent.name,
+		description: homeContent.description,
 		url: baseUrl,
 		type: "website",
-		siteName: "Murad Abdulkadyrov",
+		siteName: homeContent.name,
 		locale: "en_US",
 		images: [
 			{
@@ -30,11 +30,38 @@ export const metadata: Metadata = {
 	},
 	twitter: {
 		card: "summary_large_image",
-		title: "Murad Abdulkadyrov",
-		description:
-			"Chief Product Officer at Flomni. Exploring AI, tech, and product building. Sharing real experiences, ideas, and lessons from building products and leading teams.",
+		title: homeContent.name,
+		description: homeContent.description,
 		creator: "@murabcd",
 	},
+};
+
+const jsonLd = {
+	"@context": "https://schema.org",
+	"@graph": [
+		{
+			"@type": "Person",
+			"@id": `${baseUrl}/#person`,
+			name: homeContent.name,
+			description: homeContent.description,
+			url: baseUrl,
+			jobTitle: "Chief Product Officer",
+			worksFor: {
+				"@type": "Organization",
+				name: homeContent.intro.organization,
+				url: homeContent.intro.organizationUrl,
+			},
+			sameAs: Object.values(socialProfiles),
+		},
+		{
+			"@type": "WebSite",
+			"@id": `${baseUrl}/#website`,
+			name: homeContent.name,
+			description: homeContent.description,
+			url: baseUrl,
+			publisher: { "@id": `${baseUrl}/#person` },
+		},
+	],
 };
 
 type HomePageProps = {
@@ -48,6 +75,11 @@ type HomePageProps = {
 export function HomePage({ posts }: HomePageProps) {
 	return (
 		<section>
+			<script
+				type="application/ld+json"
+				// biome-ignore lint/security/noDangerouslySetInnerHtml: serializeJsonLd escapes HTML delimiters in this structured data.
+				dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
+			/>
 			<h1 className="title mb-8 text-2xl font-semibold tracking-tighter">
 				{homeContent.name}
 			</h1>
@@ -69,10 +101,7 @@ export function HomePage({ posts }: HomePageProps) {
 				</p>
 			))}
 			<div className="my-8">
-				<h2 className="mb-4 text-sm font-medium text-muted-foreground">
-					{homeContent.latestWritingHeading}
-				</h2>
-				<BlogPosts posts={posts} limit={5} titleElement="h3" />
+				<BlogPosts posts={posts} limit={5} titleElement="h2" />
 			</div>
 		</section>
 	);

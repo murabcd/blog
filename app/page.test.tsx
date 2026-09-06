@@ -18,13 +18,12 @@ describe("HomePage", () => {
 
 		expect(html).toContain("<h1");
 		expect(html).toContain(">Murad Abdulkadyrov</h1>");
-		expect(html).toContain(
-			'<h2 class="mb-4 text-sm font-medium text-muted-foreground">Latest writing</h2>',
-		);
+		expect(html).not.toContain("Latest writing");
 		expect(html).not.toContain("sr-only");
 		expect(html).toContain(
-			'<h3 class="text-foreground tracking-tight group-hover:underline">Semantic HTML</h3>',
+			'<h2 class="text-foreground tracking-tight group-hover:underline">Semantic HTML</h2>',
 		);
-		expect(html.replace(/<[^>]+>/g, "").length).toBeGreaterThan(500);
+		const visibleHtml = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "");
+		expect(visibleHtml.replace(/<[^>]+>/g, "").length).toBeGreaterThan(500);
 	});
 });

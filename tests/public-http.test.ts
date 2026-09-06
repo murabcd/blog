@@ -50,6 +50,73 @@ function visibleHtml(html: string) {
 }
 
 describe("production HTTP contracts", () => {
+	test("exposes the homepage owner and site identity in raw JSON-LD", async () => {
+		const response = await fetch(origin, { headers: { Accept: "text/html" } });
+		const html = await response.text();
+		const scripts = [
+			...html.matchAll(
+				/<script\b[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi,
+			),
+		];
+		expect(scripts).toHaveLength(1);
+		const data = JSON.parse(scripts[0][1]);
+		const url = "https://murabcd.vercel.app";
+		const profiles = [
+			"https://x.com/murabcd",
+			"https://www.linkedin.com/in/murabcd/",
+			"https://github.com/murabcd",
+		];
+		expect(data["@context"]).toBe("https://schema.org");
+		expect(data["@graph"]).toEqual(
+			expect.arrayContaining([
+				expect.objectContaining({
+					"@type": "Person",
+					"@id": `${url}/#person`,
+					name: "Murad Abdulkadyrov",
+					description: expect.stringContaining(
+						"Chief Product Officer at Flomni",
+					),
+					url,
+					jobTitle: "Chief Product Officer",
+					worksFor: {
+						"@type": "Organization",
+						name: "Flomni",
+						url: "https://flomni.com/en",
+					},
+					sameAs: profiles,
+				}),
+				expect.objectContaining({
+					"@type": "WebSite",
+					"@id": `${url}/#website`,
+					name: "Murad Abdulkadyrov",
+					url,
+					publisher: { "@id": `${url}/#person` },
+				}),
+			]),
+		);
+		for (const profile of profiles)
+			expect(visibleHtml(html)).toContain(`href="${profile}"`);
+	});
+
+	test("leads homepage search metadata with the owner name and canonical URL", async () => {
+		const response = await fetch(origin, { headers: { Accept: "text/html" } });
+		const html = await response.text();
+		expect(html).toContain(
+			"<title>Murad Abdulkadyrov — AI and Product Building</title>",
+		);
+		expect(html).toMatch(
+			/<meta name="description" content="Murad Abdulkadyrov, Chief Product Officer at Flomni\./,
+		);
+		expect(html).toContain('rel="canonical" href="https://murabcd.vercel.app"');
+		expect(html).toContain(
+			'property="og:site_name" content="Murad Abdulkadyrov"',
+		);
+		expect(html).toContain('name="author" content="Murad Abdulkadyrov"');
+		expect(html).toContain('rel="author" href="https://murabcd.vercel.app"');
+		expect(html).toContain('name="robots" content="index, follow"');
+		expect(response.headers.get("x-robots-tag")).toBeNull();
+	});
+
 	test.each([
 		{
 			accept: "text/html",
@@ -80,7 +147,9 @@ describe("production HTTP contracts", () => {
 		expect(vary).toContain("accept");
 		expect(response.status).toBe(status);
 		expect(response.headers.get("content-type")).toContain(type);
-		expect(await response.text()).toContain(body);
+		const text = await response.text();
+		expect(text).toContain(body);
+		expect(text).not.toContain("Latest writing");
 	});
 
 	test("preserves Next.js cache variation and server-rendered homepage content", async () => {
@@ -98,7 +167,8 @@ describe("production HTTP contracts", () => {
 		expect(vary?.length).toBe(new Set(vary).size);
 		const html = visibleHtml(await response.text());
 		expect(html).toMatch(/<h1[^>]*>Murad Abdulkadyrov<\/h1>/);
-		expect(html).toMatch(/<h2[^>]*>Latest writing<\/h2>/);
+		expect(html.match(/<h2\b/g)).toHaveLength(5);
+		expect(html).not.toContain("<h3");
 		const main = html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/)?.[1] ?? "";
 		expect(main.replace(/<[^>]+>/g, "").length).toBeGreaterThanOrEqual(500);
 	});
