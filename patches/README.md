@@ -13,5 +13,16 @@ The pinned version and Bun's `patchedDependencies` make the fix reproducible
 on installation. `bun run test:http` verifies the actual production response;
 testing Proxy alone would miss the overwrite.
 
+On Vercel, the rendered route's `Vary` still overrides the configured field.
+`vercel.json` appends `Accept` with a
+[response header transform](https://vercel.com/docs/project-configuration/vercel-json#route-transforms)
+at the delivery layer, preserving the framework's RSC fields.
+
+Verify the deployed response with the same HTTP contracts:
+
+```sh
+PUBLIC_HTTP_ORIGIN=https://murabcd.vercel.app bunx vitest run --config vitest.http.config.ts
+```
+
 When upgrading Next.js, first check whether the upstream fix has shipped. Remove
-this patch only when the production HTTP tests pass against the unpatched version.
+this patch only when both local and deployed HTTP tests pass against the unpatched version.

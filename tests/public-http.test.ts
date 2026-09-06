@@ -3,11 +3,12 @@ import { once } from "node:events";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { readContentCatalog } from "../lib/content-catalog";
 
-let server: ChildProcess;
-let origin: string;
+let server: ChildProcess | undefined;
+let origin = process.env.PUBLIC_HTTP_ORIGIN ?? "";
 
 beforeAll(async () => {
-	server = spawn(
+	if (origin) return;
+	const child = spawn(
 		process.execPath,
 		[
 			"node_modules/next/dist/bin/next",
@@ -19,6 +20,7 @@ beforeAll(async () => {
 		],
 		{ stdio: ["ignore", "pipe", "pipe"] },
 	);
+	server = child;
 	await new Promise<void>((resolve, reject) => {
 		let output = "";
 		const readOutput = (chunk: Buffer) => {
@@ -29,17 +31,17 @@ beforeAll(async () => {
 				resolve();
 			}
 		};
-		server.stdout?.on("data", readOutput);
-		server.stderr?.on("data", readOutput);
-		server.once("error", reject);
-		server.once("exit", (code) =>
+		child.stdout.on("data", readOutput);
+		child.stderr.on("data", readOutput);
+		child.once("error", reject);
+		child.once("exit", (code) =>
 			reject(new Error(`Next.js exited (${code}): ${output}`)),
 		);
 	});
 });
 
 afterAll(async () => {
-	if (server.exitCode !== null || server.signalCode !== null) return;
+	if (!server || server.exitCode !== null || server.signalCode !== null) return;
 	const exited = once(server, "exit");
 	server.kill();
 	await exited;
