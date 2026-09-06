@@ -39,7 +39,6 @@ export async function Navbar() {
 								<Link
 									key={path}
 									href={path}
-									prefetch
 									className="transition-colors hover:text-primary"
 								>
 									{name}
