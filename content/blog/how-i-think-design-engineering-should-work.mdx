@@ -1,0 +1,77 @@
+---
+title: "How I Think Design Engineering Should Work"
+publishedAt: "2026-09-28"
+summary: "How I think about design engineering: working in Figma and code, owning the behavior of an interface, and turning design judgment into reusable rules."
+---
+
+## Where the Work Begins
+
+A form can match its mockup exactly and still lose everything someone entered when saving fails. The layout is correct. The error message might even be correct. But the person using it has to do the work again.
+
+Calling that an implementation detail does not help much. Keeping the data, explaining what happened, and making it possible to try again are decisions about the experience. They become visible in code, but they are still design decisions.
+
+This is why design engineering makes sense to me. Someone needs to be able to follow the problem from an idea into a working interface, and change the solution as they learn more. That can be someone who started in product design or frontend engineering. The useful part is being able to work in both, rather than treating either artifact as the end of the task.
+
+## Different From Product Design
+
+Being able to implement a flow does not tell you whether it is the right flow. Product design goes deeper into understanding customer problems, shaping the product's structure and visual direction, and testing ideas with people. Design engineering goes deeper into what happens when that solution becomes interactive.
+
+There is overlap, especially when improving an existing flow or exploring an alternative. But writing the code does not replace the work of understanding why someone needs the change. I see a difference in emphasis, not a replacement for product design.
+
+## Start With the Problem
+
+A prototype is only useful if you know what you are trying to learn from it. Without that, it is easy to spend a day making an assumption look convincing. Before choosing a layout, I want to know who the change is for and what it should let them do.
+
+That is enough to start exploring, even if the specification is incomplete. The prototype can reveal missing decisions, expose a technical constraint, or show that the first version needs less than expected. Its job is to reduce uncertainty about the solution.
+
+The scope should develop with that understanding: what matters now, what can wait, and which assumptions still need testing. The cost of implementation belongs here too. A behavior can be possible and still not be worth building. Usage and feedback after release should help answer whether the change was worth making.
+
+## Let Figma and Code Develop Together
+
+Some questions are easier to answer visually. Others need a browser. A sequence of frames can show where an animation starts and ends, but it is harder to judge how it feels when interrupted or triggered twice. Building that small interaction can be more useful than drawing more screens.
+
+For that reason, I do not want a finished Figma file to be a prerequisite for implementation. The layout and the behavior can develop together. If working code reveals a problem with the design, the design should change. Forcing the code to imitate the mockup preserves the artifact at the expense of the result.
+
+This also makes technical tradeoffs visible earlier. Existing components might solve the task, or a custom interaction might add complexity without much benefit. Keyboard navigation and touch input can expose a weakness that is invisible with a mouse. Short recordings and previews help inspect those details without relying on memory of how the last attempt felt.
+
+## Test While Building
+
+The first working version tends to use the data and sequence of actions it was built around. Long text, a slow connection, or a repeated action can reveal behavior that version never accounted for. Trying these conditions while the design is still flexible lets you fix the solution rather than patch around it later.
+
+That means opening the flow with real data, different permissions, and different screen sizes. It means checking supported browsers, keyboard and touch input, assistive technology, and user preferences such as reduced motion. Loading speed, feedback, and accessibility all affect whether the interaction works. They are not a polish stage after the design is finished.
+
+A change to a shared component needs checking in its existing uses as well as the new screen. Some discoveries will be open decisions with more than one reasonable answer. Others will be failures. Losing entered data or breaking keyboard access does not become acceptable because nobody wrote it into the specification.
+
+## Check Existing Components
+
+A component in Figma can look like an existing component without supporting the same behavior. It might have a variant that does not exist in code, or leave out a state the implementation already handles. Matching the appearance will not resolve that difference.
+
+This is why Storybook is useful before implementation. Inspecting the properties, states, and usage examples tells you whether the task needs a new component at all. Sometimes composing what exists is enough. Otherwise, the choice is between extending the shared component and keeping the solution local.
+
+A local component is fine when the need is local. Repeated use is a reason to reconsider it, not a reason to turn every experiment into an abstraction from the start. Shared components create obligations: their stories, documentation, and checks need to stay current, and changes to existing behavior need checking wherever it is used.
+
+## Give AI Rules, Not Only a Mockup
+
+An agent can reproduce what it sees without knowing why it is there. Access to Figma through MCP does not change that. A disabled action can be visible in the mockup without the permission rule behind it. If that rule is missing, the agent has to ask or guess. I want it to ask.
+
+A project-level `design.md` can provide context the mockup leaves out: page structure, copy, data handling, component use, accessibility, responsive behavior, and the decisions an implementation must preserve. Storybook provides another part of the picture by showing which components and states actually exist. The agent needs these inputs together.
+
+Repeated corrections are a good place to start turning judgment into instructions. A `storybook-review` skill can require checking existing components before creating another one. Motion guidance can explain when animation helps and which timing and easing to use. Icon guidance can capture grids, sizes, stroke widths, and SVG export rules. These are things you should not have to reconstruct in every prompt.
+
+Review instructions need to produce evidence too. An accessibility skill can check keyboard use, focus, contrast, and assistive technology; a browser-review skill can require trying the important states and reporting what happened. A successful build only tells you that the code built. It does not tell you whether the interaction works.
+
+## Own the Implementation
+
+If the work ends at a prototype, the behavior can change again on the way to release. The prototype may have answered the right question without being code the product can maintain. I expect design engineering to include that next step: writing and maintaining the implementation in the area being worked on.
+
+That code needs to fit the existing architecture, pass its checks, and meet the same review standards as any other change. Repeated mechanical corrections can become tests or lint rules; guidance that needs context can become project instructions. A visually correct result should not keep producing the same maintenance problems.
+
+## Lead Independent Improvements
+
+Some problems are too small to become a feature and too annoying to leave alone. Unclear feedback, an awkward interaction, or an accessibility failure can make a task worse every time someone does it. Waiting for a larger project gives those problems no natural place to be fixed.
+
+A design engineer should be able to investigate one of them, try a solution, get feedback, check the edges, and release it. The same applies to documentation, help content, marketing pages, and demos. The work does not need a large scope to be worth owning.
+
+It does need a reason. The question is whether the change improves someone's task, not whether another detail could be polished. Release a good working version and use real usage to decide what deserves more attention.
+
+When that usage reveals a problem, the work should not stop because the mockup was finished or the code already shipped. I want the person who notices the problem to be able to fix it.
