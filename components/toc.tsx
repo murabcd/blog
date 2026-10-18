@@ -422,14 +422,13 @@ export function Toc({ sections, variant = "desktop" }: TocProps) {
 		window.addEventListener("resize", handleViewportChange);
 		updateMobileToc();
 
-		let footerObserver: IntersectionObserver | null = null;
-		if (footer) {
-			footerObserver = new IntersectionObserver(([entry]) => {
-				dispatch({
-					type: "setShowBackToTop",
-					showBackToTop: entry.isIntersecting,
-				});
+		const footerObserver = new IntersectionObserver(([entry]) => {
+			dispatch({
+				type: "setShowBackToTop",
+				showBackToTop: entry.isIntersecting,
 			});
+		});
+		if (footer) {
 			footerObserver.observe(footer);
 			dispatch({
 				type: "setShowBackToTop",
@@ -442,9 +441,7 @@ export function Toc({ sections, variant = "desktop" }: TocProps) {
 		return () => {
 			window.removeEventListener("scroll", handleViewportChange);
 			window.removeEventListener("resize", handleViewportChange);
-			if (footerObserver) {
-				footerObserver.disconnect();
-			}
+			footerObserver.disconnect();
 		};
 	}, [stableSections]);
 
