@@ -1,8 +1,8 @@
 diff --git a/dist/build/templates/app-page-runtime.js b/dist/build/templates/app-page-runtime.js
-index f1ab03f292340fe08b563990110ac0835d3415fb..94cc016f28dc8a7d3de9f69f8331735e5c14b7b9 100644
+index fc5eef172bc3e2567ab414416590f85fb49e4ef1..3dc0941bb84989166e4fabbab6f40add2f342e0e 100644
 --- a/dist/build/templates/app-page-runtime.js
 +++ b/dist/build/templates/app-page-runtime.js
-@@ -456,7 +456,10 @@ function createAppPageEntrypoint({ tree, page, pathname, require: __next_app_req
+@@ -464,7 +464,10 @@ function createAppPageEntrypoint({ tree, page, pathname, require: __next_app_req
          };
          try {
              const varyHeader = routeModule.getVaryHeader(resolvedPathname, interceptionRoutePatterns);
@@ -12,13 +12,13 @@ index f1ab03f292340fe08b563990110ac0835d3415fb..94cc016f28dc8a7d3de9f69f8331735e
 +                .split(',').map((field)=>field.trim().toLowerCase()).filter(Boolean);
 +            res.setHeader('Vary', varyFields.includes('*') ? '*' : [...new Set(varyFields)].join(', '));
              let parentSpan;
-             const invokeRouteModule = async (span, context)=>{
+             const invokeRouteModule = async (span, context, renderOperation)=>{
                  const nextReq = new _node.NodeNextRequest(req);
 diff --git a/dist/esm/build/templates/app-page-runtime.js b/dist/esm/build/templates/app-page-runtime.js
-index 1970588724b6e4880f27a8be60ca32ae6437bc28..fbc5c5886df4e2cb4c96671142bf951facdfb0d2 100644
+index 96beb1b9bd89e6eb55e9d0cfbed49fa3aa9c42ea..40f2e5941d564b6546eb0b5d07935243eeaee74d 100644
 --- a/dist/esm/build/templates/app-page-runtime.js
 +++ b/dist/esm/build/templates/app-page-runtime.js
-@@ -471,7 +471,10 @@ export function createAppPageEntrypoint({ tree, page, pathname, require: __next_
+@@ -483,7 +483,10 @@ export function createAppPageEntrypoint({ tree, page, pathname, require: __next_
          };
          try {
              const varyHeader = routeModule.getVaryHeader(resolvedPathname, interceptionRoutePatterns);
@@ -28,5 +28,5 @@ index 1970588724b6e4880f27a8be60ca32ae6437bc28..fbc5c5886df4e2cb4c96671142bf951f
 +                .split(',').map((field)=>field.trim().toLowerCase()).filter(Boolean);
 +            res.setHeader('Vary', varyFields.includes('*') ? '*' : [...new Set(varyFields)].join(', '));
              let parentSpan;
-             const invokeRouteModule = async (span, context)=>{
+             const invokeRouteModule = async (span, context, renderOperation)=>{
                  const nextReq = new NodeNextRequest(req);

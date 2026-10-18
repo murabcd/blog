@@ -14,6 +14,8 @@ import { serializeJsonLd } from "@/lib/jsonld";
 import { calculateReadingTime, formatDate, slugify } from "@/lib/utils";
 import { getBlogPost, getBlogPosts } from "@/lib/public-content-cache";
 
+export const ensureStatic = "navigation";
+
 export async function generateStaticParams() {
 	const posts = await getBlogPosts();
 

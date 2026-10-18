@@ -1,6 +1,6 @@
 # Next.js response headers
 
-`next@16.3.4.patch` fixes the App Router runtime overwriting `Vary` before
+`next@16.4.2.patch` fixes the App Router runtime overwriting `Vary` before
 rendering a page. It merges existing fields with Next.js's required RSC fields,
 deduplicates field names case-insensitively, and preserves `Vary: *` semantics.
 Both shipped module formats receive the same change.

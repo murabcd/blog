@@ -29,6 +29,7 @@ export function BlogPosts({
 						key={post.slug}
 						className="block group"
 						href={`/blog/${post.slug}`}
+						prefetch={true}
 					>
 						<div className="flex flex-col md:flex-row gap-2">
 							<p className="text-muted-foreground w-[110px] tabular-nums">

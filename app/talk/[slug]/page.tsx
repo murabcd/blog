@@ -8,6 +8,8 @@ import { CustomMDX } from "@/components/mdx";
 import { serializeJsonLd } from "@/lib/jsonld";
 import { getTalkEvent, getTalkEvents } from "@/lib/public-content-cache";
 
+export const ensureStatic = "navigation";
+
 export async function generateStaticParams() {
 	const events = await getTalkEvents();
 

@@ -25,6 +25,7 @@ export function TalksEvents({ events }: { events: TalkEvent[] }) {
 						key={event.slug}
 						className="block group"
 						href={`/talk/${event.slug}`}
+						prefetch={true}
 					>
 						<div className="flex flex-col md:flex-row gap-2">
 							<p className="text-muted-foreground w-[110px] tabular-nums">
