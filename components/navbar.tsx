@@ -51,7 +51,7 @@ export async function Navbar() {
 			</div>
 			<div
 				data-mobile-toc-slot
-				className="lg:hidden absolute top-full left-1/2 z-40 w-screen -translate-x-1/2"
+				className="md:hidden absolute top-full inset-x-0 z-40"
 			/>
 		</aside>
 	);

@@ -1,10 +1,10 @@
 "use client";
 
 import type { MouseEvent } from "react";
-import { useEffect, useReducer, useRef, useSyncExternalStore } from "react";
-import { createPortal } from "react-dom";
+import { useEffect, useReducer, useRef } from "react";
 import { cn } from "@/lib/utils";
-import { ChevronDown, ArrowUp, ChartNoAxesGantt } from "lucide-react";
+import { ArrowUp, ChartNoAxesGantt } from "lucide-react";
+import { ResponsiveToc } from "@/components/responsive-toc";
 
 export interface TocSection {
 	id: string;
@@ -25,18 +25,6 @@ function getSectionIds(sections: TocSection[]) {
 }
 
 const headingScrollOffset = 96;
-
-function subscribeToMobileTocSlot() {
-	return () => {};
-}
-
-function getMobileTocSlotSnapshot() {
-	return document.querySelector<HTMLElement>("[data-mobile-toc-slot]");
-}
-
-function getServerMobileTocSlotSnapshot() {
-	return null;
-}
 
 interface TocState {
 	activeId: string;
@@ -182,118 +170,6 @@ function DesktopToc({
 	);
 }
 
-function MobileToc({
-	sections,
-	activeId,
-	activeParentId,
-	mobileOpen,
-	panelRef,
-	onToggle,
-	onSelect,
-}: {
-	sections: TocSection[];
-	activeId: string;
-	activeParentId: string | undefined;
-	mobileOpen: boolean;
-	panelRef: React.RefObject<HTMLDivElement | null>;
-	onToggle: () => void;
-	onSelect: (
-		id: string,
-		event: MouseEvent<HTMLAnchorElement>,
-		options?: { closeMobile?: boolean },
-	) => void;
-}) {
-	return (
-		<div
-			ref={panelRef}
-			className="w-full rounded-none bg-background dark:bg-background"
-		>
-			<button
-				type="button"
-				onClick={onToggle}
-				className="w-full flex items-center justify-between gap-3 pl-4 pr-5.5 py-3 text-base font-normal"
-			>
-				<span className="flex items-center gap-2">
-					<ChartNoAxesGantt className="h-4 w-4" />
-					On this page
-				</span>
-				<ChevronDown
-					className={`h-4 w-4 transition-transform ${
-						mobileOpen ? "rotate-180" : ""
-					}`}
-				/>
-			</button>
-			<div
-				className={`overflow-hidden transition-[max-height,opacity] duration-300 ${
-					mobileOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-				}`}
-			>
-				<div className="px-4 pb-4">
-					<ul className="flex list-none flex-col gap-0 pl-0 text-base font-normal">
-						{sections.map(({ id, label, children }) => {
-							const expanded = activeParentId === id;
-							const active = activeId === id || expanded;
-
-							return (
-								<li key={id}>
-									<a
-										href={`#${id}`}
-										onClick={(event) =>
-											onSelect(id, event, { closeMobile: true })
-										}
-										className={cn(
-											"block -ml-px border-l py-1.5 pl-3 transition-colors",
-											active
-												? "border-foreground text-foreground"
-												: "border-border/60 text-muted-foreground",
-										)}
-									>
-										{label}
-									</a>
-									{children ? (
-										<div
-											aria-hidden={!expanded}
-											className={cn(
-												"grid transition-[grid-template-rows,opacity] duration-200 ease-out",
-												expanded
-													? "grid-rows-[1fr] opacity-100"
-													: "pointer-events-none grid-rows-[0fr] opacity-0",
-											)}
-										>
-											<ul className="flex min-h-0 list-none flex-col gap-0 overflow-hidden pl-0">
-												{children.map((child) => (
-													<li key={child.id}>
-														<a
-															href={`#${child.id}`}
-															onClick={(event) =>
-																onSelect(child.id, event, {
-																	closeMobile: true,
-																})
-															}
-															className={cn(
-																"block -ml-px border-l py-1.5 pl-7 transition-colors",
-																activeId === child.id
-																	? "border-foreground text-foreground"
-																	: "border-border/60 text-muted-foreground",
-															)}
-														>
-															{child.label}
-														</a>
-													</li>
-												))}
-											</ul>
-										</div>
-									) : null}
-								</li>
-							);
-						})}
-					</ul>
-				</div>
-			</div>
-		</div>
-	);
-}
-
 export function Toc({ sections, variant = "desktop" }: TocProps) {
 	const sectionsRef = useRef(sections);
 	const stableSections = sectionsRef.current;
@@ -304,22 +180,12 @@ export function Toc({ sections, variant = "desktop" }: TocProps) {
 		mobileOpen: false,
 	}));
 	const mobileRevealOffsetRef = useRef(64);
-	const mobileTocSlot = useSyncExternalStore(
-		subscribeToMobileTocSlot,
-		getMobileTocSlotSnapshot,
-		getServerMobileTocSlotSnapshot,
-	);
 	const mobilePanelRef = useRef<HTMLDivElement | null>(null);
 	const ignoreScrollActiveUpdateRef = useRef(false);
 	const scrollActiveUpdateTimeoutRef = useRef<number | null>(null);
 	const isMobile = variant === "mobile";
 	const isDesktop = variant === "desktop";
 	const isCombined = variant === "combined";
-	const activeParentId = stableSections.find(
-		({ id, children }) =>
-			id === state.activeId ||
-			children?.some((child) => child.id === state.activeId),
-	)?.id;
 
 	useEffect(() => {
 		const headings = getSectionIds(stableSections)
@@ -491,19 +357,20 @@ export function Toc({ sections, variant = "desktop" }: TocProps) {
 		return null;
 	}
 
-	const selectSection = (
-		id: string,
-		event: MouseEvent<HTMLAnchorElement>,
-		options?: { closeMobile?: boolean },
-	) => {
-		event.preventDefault();
+	const revealSection = (id: string, behavior: ScrollBehavior) => {
 		ignoreScrollActiveUpdateRef.current = true;
 		if (scrollActiveUpdateTimeoutRef.current !== null) {
 			window.clearTimeout(scrollActiveUpdateTimeoutRef.current);
 		}
 
 		dispatch({ type: "setActiveId", activeId: id });
-		window.history.pushState(null, "", `#${id}`);
+		if (window.location.hash !== `#${id}`) {
+			if (behavior === "auto") {
+				window.history.replaceState(null, "", `#${id}`);
+			} else {
+				window.history.pushState(null, "", `#${id}`);
+			}
+		}
 
 		const target = document.getElementById(id);
 		if (target) {
@@ -513,7 +380,12 @@ export function Toc({ sections, variant = "desktop" }: TocProps) {
 				headingScrollOffset;
 			window.scrollTo({
 				top,
-				behavior: "smooth",
+				// Scrubbing must bypass the page's CSS smooth scrolling.
+				behavior:
+					behavior === "auto" ||
+					window.matchMedia("(prefers-reduced-motion: reduce)").matches
+						? "instant"
+						: behavior,
 			});
 		}
 
@@ -521,35 +393,37 @@ export function Toc({ sections, variant = "desktop" }: TocProps) {
 			ignoreScrollActiveUpdateRef.current = false;
 			scrollActiveUpdateTimeoutRef.current = null;
 		}, 3000);
+	};
+
+	const selectSection = (
+		id: string,
+		event: MouseEvent<HTMLAnchorElement>,
+		options?: { closeMobile?: boolean },
+	) => {
+		event.preventDefault();
+		revealSection(id, "smooth");
 
 		if (options?.closeMobile) {
 			dispatch({ type: "setMobileOpen", mobileOpen: false });
 		}
 	};
 
-	const mobileTocContent = (
-		<MobileToc
-			sections={stableSections}
-			activeId={state.activeId}
-			activeParentId={activeParentId}
-			mobileOpen={state.mobileOpen}
-			panelRef={mobilePanelRef}
-			onToggle={() => dispatch({ type: "toggleMobileOpen" })}
-			onSelect={selectSection}
-		/>
-	);
-
 	return (
 		<>
-			{(isMobile || isCombined) && state.showMobileToc ? (
-				mobileTocSlot ? (
-					createPortal(mobileTocContent, mobileTocSlot)
-				) : (
-					<div className="lg:hidden">{mobileTocContent}</div>
-				)
+			{isMobile || isCombined ? (
+				<ResponsiveToc
+					sections={stableSections}
+					activeId={state.activeId}
+					mobileOpen={state.mobileOpen}
+					showMobileToc={state.showMobileToc}
+					panelRef={mobilePanelRef}
+					onToggle={() => dispatch({ type: "toggleMobileOpen" })}
+					onSelect={selectSection}
+					onReveal={revealSection}
+				/>
 			) : null}
 			{isDesktop ? (
-				<div className="sticky top-24 hidden lg:block">
+				<div className="sticky top-24 hidden xl:block">
 					<DesktopToc
 						sections={stableSections}
 						activeId={state.activeId}
@@ -560,7 +434,7 @@ export function Toc({ sections, variant = "desktop" }: TocProps) {
 				</div>
 			) : null}
 			{isCombined ? (
-				<aside className="hidden lg:block absolute top-0 left-full h-full pl-8">
+				<aside className="hidden xl:block absolute top-0 left-full h-full pl-8">
 					<div className="sticky top-24 w-64">
 						<DesktopToc
 							sections={stableSections}
