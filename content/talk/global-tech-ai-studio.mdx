@@ -1,0 +1,17 @@
+---
+title: "AI Studio in Practice"
+publishedAt: "2026-10-16"
+summary: "My Global Tech Forum talk on Flomni AI Studio and how teams can find recurring failures in AI conversations, inspect the evidence, and decide what to fix."
+---
+
+My [Global Tech Forum](https://globaltechforum.ru/october2026) talk focused on Flomni AI Studio and a problem that becomes hard to ignore once an assistant is talking to real customers: how do you find its mistakes without reading every conversation by hand?
+
+Consider an assistant that tells a customer their delivery address has been updated. The tool call failed, but the assistant still confirmed the change. The response was fast, the conversation ended, and the customer left expecting a delivery to the new address. Looking only at response time or conversation volume would miss the problem.
+
+We're building AI Studio to make failures like this visible. It connects to an existing assistant and brings together its conversations, responses, and the execution details the assistant sends. That lets a team compare what the customer was told with what actually happened during the request.
+
+The team starts with a specific question. In this example: did the assistant claim an action succeeded after a tool returned an error? In Studio, that question becomes a signal that checks incoming conversations. When it finds a matching case, it creates an event linked to the conversation and the available evidence.
+
+From there, someone can open the case, read the exchange, and inspect the failed tool call. They can decide whether the integration needs fixing, the assistant needs clearer instructions for handling an error, or both. Keeping the same signal running gives the team a way to see whether the behavior keeps appearing after the change.
+
+This is the workflow I care about with AI Studio: find a recurring failure, show enough evidence to investigate it, and give the team a way to check its fix. In the address example, the job is done when a failed update stops turning into a false promise to the customer.
