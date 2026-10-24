@@ -24,6 +24,8 @@ export function CodeBlock({ children, className }: CodeBlockProps) {
 				PreTag="div"
 				className="code-highlight"
 				useInlineStyles={false}
+				// The default code-tag styles still inject Prism's light theme.
+				codeTagProps={{ className: `language-${language}` }}
 			>
 				{code}
 			</SyntaxHighlighter>

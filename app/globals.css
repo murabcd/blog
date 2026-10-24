@@ -334,6 +334,33 @@ table {
 	white-space: nowrap;
 }
 
+.prose .benchmark-table {
+	max-width: 100%;
+	overflow-x: auto;
+	margin: 1.25rem 0;
+}
+
+.prose .benchmark-table table {
+	display: table;
+	width: 100%;
+	min-width: 32rem;
+	max-width: none;
+	border-collapse: collapse;
+	font-size: 0.875rem;
+}
+
+.prose .benchmark-table th,
+.prose .benchmark-table td {
+	padding: 0.625rem 0.75rem;
+	border-bottom: 1px solid var(--border);
+	text-align: right;
+}
+
+.prose .benchmark-table th:first-child,
+.prose .benchmark-table td:first-child {
+	text-align: left;
+}
+
 .title {
 	text-wrap: balance;
 }
