@@ -1,0 +1,166 @@
+---
+title: "Fev"
+publishedAt: "2026-10-24"
+summary: "Inside Fev-4B: native decision scoring, typed APIs, routing, calibration, compiled inference and shared-adapter training."
+---
+
+I've been building **Fev-4B** around a small interface: give the model a state and a set of typed questions, and get scores over the possible answers. It is an open-weight 4B decision model that returns probability distributions without generating answer tokens. The [model package](https://huggingface.co/murabcd/fev-4b) and [runtime](https://github.com/murabcd/fev) are now available under Apache-2.0.
+
+I wanted a model I could use directly in application logic: select a route, check a condition or assign a rubric level. A language model can express those decisions as JSON, but that still leaves generation constraints, response parsing and the question of what confidence means. I built Fev's interface around scores over the supplied answers, with definitions passed at runtime and one shared checkpoint across configurations.
+
+I'll walk through how the decision readout works, why routing sometimes needs a second pass, what I measured against Kev and Jev, and how I approached compilation and adapter training. Those boundaries are the parts I found most useful to make explicit in the implementation.
+
+## From Hidden States to Decisions
+
+Fev uses the Qwen3.5-4B architecture, a shared rank-8 LoRA adapter and a native decision readout. The adapter contains roughly 10.4 million parameters. Definitions and examples arrive with each request; the checkpoint is shared across configurations.
+
+The encoder places the state, question instructions and answer options into one sequence. The backbone processes that sequence with full, non-causal attention. At each question marker, a learned readout projects the hidden state into option logits. The runtime selects the logits corresponding to that question's options and applies temperature scaling followed by softmax.
+
+This gives each question a normalized distribution over its supplied answers. The model does not generate a label token, an explanation or a JSON document. The server constructs the response from the scores and validates its types, option keys and probability sums.
+
+Removing autoregressive decoding does not make inference free. The backbone still processes the complete input, including every rule and option description. Long definitions and large question sets still cost compute and memory. Fev limits the encoded request to 16,384 tokens and rejects overflow; silently truncating a rule would change the decision being asked.
+
+Questions also share attention. Adding a question can affect an existing question's scores, so a multi-question request should be evaluated as a unit. This implementation does not provide isolated question branches or a reusable encoded-state cache. That distinction matters when deciding how much work to batch into one call.
+
+## A Typed Interface
+
+The API supports three decision shapes:
+
+- **Choice:** a distribution over named options, plus the selected option and its probability.
+- **Noul:** a yes/no check represented by the probability of yes.
+- **Score:** a distribution over ordered rubric levels and their expected zero-based index.
+
+[TypeSafe's Jev](https://typesafe.ai) and [Jared Palmer's Kev](https://jaredpalmer.com/blog/introducing-kev) are useful references for this interface. Fev implements the text-only `POST /v1/systemone` contract, allowing the TypeSafe SDK to call a local server through a custom base URL.
+
+Here is a request with two related decisions. Install the client with `pip install 'typesafe-sdk[zstd]==0.7.5'`:
+
+```python
+from typesafe_sdk import Choice, Noul, TypeSafeClient
+
+client = TypeSafeClient(
+    api_key="local",
+    base_url="http://127.0.0.1:8000",
+    model="fev-4b",
+    timeout=120,
+)
+
+response = client.system_one(
+    state="I was charged twice. Please refund the duplicate payment.",
+    questions={
+        "team": Choice(criteria={
+            "billing": "Payments, duplicate charges and refunds",
+            "delivery": "Shipping, tracking and delivery problems",
+        }),
+        "refund": Noul(instructions="Is the customer requesting a refund?"),
+    },
+)
+
+print(response.choices["team"].choice)
+print(response.nouls["refund"].noul)
+```
+
+The same state supports both a mutually exclusive classification and an independent condition. Those are different questions: assigning a message to billing does not establish that it requests a refund. Encoding the distinction explicitly makes the result easier to use and evaluate.
+
+State can be a string, JSON object or array. The runtime accepts up to 64 named questions; a `Choice` can contain up to 255 options. These are interface limits, not evidence that every combination will retain the same accuracy. A `Score` is an expected rubric-level index, so a five-level rubric returns a value between zero and four, not a percentage.
+
+## Turning Scores into Routes
+
+A closed set of choices always has a winner. If every option is a poor fit, taking the largest probability still selects one. This is why classification and route applicability need separate treatment.
+
+Fev's conversation router first scores the available routes. When applicable, it then submits up to three shortlisted routes as yes/no applicability checks in a second native call. An explicit resolver handles the supported priority rules and can return a clarification signal. Each native decision request takes one forward pass; the complete routing policy can take two.
+
+Consider a message that mentions both a duplicate charge and an undelivered parcel. The application needs to define whether one issue takes priority, whether multiple actions are allowed, or whether to ask which issue to handle first. A larger top-option score cannot supply a missing policy. I keep those definitions in the request so they remain inspectable alongside the evidence.
+
+That separation also gives failures a location. A wrong shortlist points toward classification. A plausible shortlist followed by an incorrect acceptance points toward applicability or policy. A correct route followed by a failed action belongs to the downstream workflow. Measuring only the final route would collapse those into one error rate.
+
+## What I Measured
+
+I compared frozen Fev-4B, Kev-4B and hosted Jev-1.14.0 on the same 812 requests containing 908 typed questions. No temperature or acceptance threshold was fitted on these inputs.
+
+<div className="benchmark-table">
+<table>
+  <thead>
+    <tr><th>Evaluation</th><th>Kev‑4B</th><th>Fev‑4B</th><th>Jev‑1.14.0</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Public dev.</td><td>80.2%</td><td><strong>83.6%</strong></td><td>84.6%</td></tr>
+    <tr><td>Russian probes</td><td>99.3%</td><td><strong>100.0%</strong></td><td>100.0%</td></tr>
+    <tr><td>Combined</td><td>83.3%</td><td><strong>86.2%</strong></td><td>87.0%</td></tr>
+  </tbody>
+</table>
+</div>
+
+The public development set contains 764 questions. The authored Russian set contains 144 questions across six fictional domains, using repeated templates. All three runs completed without failed responses. The open models used their supported BF16 paths on the same A10G GPU class in separate jobs; Jev used its hosted API. This is not Kev's published FP32 evaluation setup.
+
+The public inputs come from Kev's published [`transfer-v4` development split](https://github.com/jaredpalmer/kev/blob/2074cc44256200bb37540103fa4572901faa10f3/evals/v4/transfer-v4/development.jsonl). Neither set entered the new training smoke run, and upstream training exposure is unknown. The [benchmark report](https://github.com/murabcd/fev/blob/v0.2.1/BENCHMARKS.md) includes revisions, methods, exact counts and saved predictions.
+
+I put more weight on the public row than the combined number. Repeated probes are useful for checking behavior across configurations, but they raise the aggregate without providing the diversity of natural conversations. These are engineering comparisons on development data, not an independent leaderboard or a measurement of conversation resolution.
+
+The subsets reveal more than the ranking. Fev scored 87.5% on composition against Kev's 97.9%, and 74.1% on knowledge against Jev's 83.6%. Those are more specific targets for investigation than trying to improve the combined score indiscriminately.
+
+### Confidence Is a Separate Measurement
+
+Fev made 26 wrong decisions with a top-option probability of at least 0.9 across the full comparison. On the public split, its Brier score was 0.2330, compared with 0.2543 for Kev and 0.2250 for Jev; lower is better. Accuracy measures which option wins, while Brier also penalizes the probability assigned to the wrong answer.
+
+The shipped checkpoint applies a fixed temperature. Fitting a new positive temperature can soften or sharpen its distributions without changing their argmax. It cannot repair a wrong ranking. For deployment, I would inspect confident errors and measure the accepted subset at the intended threshold on separate workload data, rather than interpreting `0.9` as a universal reliability guarantee.
+
+## Compiling the Inference Path
+
+The reference environment is Linux, Python 3.12 and CUDA BF16 on an NVIDIA A10G with 24 GB of memory. I kept the model at 4B and tested an optional compiled execution path before considering changes to the checkpoint.
+
+<div className="benchmark-table">
+<table>
+  <thead>
+    <tr><th>Routing workload</th><th>Reference</th><th>Compiled</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Warm median</td><td>2.452 seconds</td><td>1.690 seconds</td></tr>
+    <tr><td>Peak allocated GPU memory</td><td>10.00 GB</td><td>10.09 GB</td></tr>
+  </tbody>
+</table>
+</div>
+
+That is a 31.1% reduction in warm median latency across three selected workloads, with five repeats each. All 303 final routing decisions in the regression stayed unchanged. Internal shortlists changed in 33 cases and probabilities can differ, so final-decision agreement should not be confused with numerical equivalence.
+
+The compiled path trades a small memory increase and compilation overhead for faster warm execution on those workloads. Timings exclude model loading, compilation, HTTP, queueing and concurrency. Reference execution remains the default; compilation is opt-in. CPU, Apple Silicon, quantization and concurrent throughput have not been qualified.
+
+This is the distinction I wanted to preserve in the release: a measured runtime improvement can ship independently of a new model. It needs its own regression evidence, especially when small numerical differences feed into routing thresholds.
+
+## Training the Shared Adapter
+
+Changing categories or their definitions does not require training. A repeated weakness in the model's ability to follow unfamiliar criteria across domains is a different problem. The training workflow targets that shared capability.
+
+Fev includes a native trainer that continues the existing rank-8 adapter while freezing the backbone and decision readout. It uses the same encoder, attention pattern and question-marker logits as inference. The loss is cross-entropy over the labelled options, averaged across the questions in each training record. There is no generated explanation or answer text to imitate.
+
+I separate the workflow into four data partitions: training updates the adapter, development guides model selection, calibration fits temperature, and test measures the selected result. Related source records, states and paraphrases need to stay in the same group when splitting; a random row split can make memorized wording look like transfer.
+
+Training writes a separate adapter overlay tied to the base package's identity. Loading that overlay is explicit. This keeps the released checkpoint intact and makes it possible to compare both versions under the same runtime and routing policy.
+
+The training mechanics have a GPU smoke test: six steps across four fictional domains, all 240 adapter tensors updated, frozen parameters preserved, and exact predictions reproduced after a fresh-process reload. Development accuracy was already 12/12 and remained 12/12. That verifies the training and reload path; it provides no evidence of an accuracy gain. The toy overlay and fitted temperature are not in the published model.
+
+The [training guide](https://github.com/murabcd/fev/blob/v0.2.1/skills/fev-finetune/references/training.md) covers data format, grouped splits, calibration, evaluation and bounded Hugging Face GPU jobs. The companion agent skill packages the same workflow:
+
+```bash
+npx skills add murabcd/fev@fev-finetune
+```
+
+## Running the Model
+
+On a compatible GPU server, download the versioned package, verify its files and start the HTTP server:
+
+```bash
+git clone https://github.com/murabcd/fev.git
+cd fev
+
+uvx --from huggingface-hub==1.31.0 hf download murabcd/fev-4b \
+  --revision v0.2.1 --local-dir models/fev-4b
+
+uv venv --python 3.12
+uv pip install -r requirements.txt -r requirements-serve.txt
+.venv/bin/python run.py --model-dir models/fev-4b --verify-only
+.venv/bin/python serve.py --model-dir models/fev-4b --port 8000
+```
+
+The server keeps one model resident and processes requests sequentially. Cold initialization needs a larger timeout than a warm request; the SDK example allows 120 seconds. The default binding is local. Set `FEV_API_KEY` before exposing the server beyond localhost, and use a reverse proxy for TLS and traffic controls. After download and dependency installation, inference uses local files without an external model service.
+
+The useful starting point is a small request with explicit answer definitions. Save its distributions, test ambiguous and unsupported inputs, and inspect what changes when you add another question. That makes the model's behavior visible before its decisions become application behavior.
