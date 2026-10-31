@@ -21,7 +21,7 @@ at the delivery layer, preserving the framework's RSC fields.
 Verify the deployed response with the same HTTP contracts:
 
 ```sh
-PUBLIC_HTTP_ORIGIN=https://murabcd.vercel.app bunx vitest run --config vitest.http.config.ts
+PUBLIC_HTTP_ORIGIN=https://muradabdulkadyrov.com bunx vitest run --config vitest.http.config.ts
 ```
 
 When upgrading Next.js, first check whether the upstream fix has shipped. Remove
