@@ -1,4 +1,4 @@
-<a href="https://murabcd.vercel.app">
+<a href="https://muradabdulkadyrov.com">
   <img alt="An Open-source AI Chatbot Built With Next.js." src="./public/preview/blog.png">
   <h1 align="center">Blog</h1>
 </a>

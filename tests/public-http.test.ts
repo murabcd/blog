@@ -62,7 +62,7 @@ describe("production HTTP contracts", () => {
 		];
 		expect(scripts).toHaveLength(1);
 		const data = JSON.parse(scripts[0][1]);
-		const url = "https://murabcd.vercel.app";
+		const url = "https://muradabdulkadyrov.com";
 		const profiles = [
 			"https://x.com/murabcd",
 			"https://www.linkedin.com/in/murabcd/",
@@ -109,12 +109,14 @@ describe("production HTTP contracts", () => {
 		expect(html).toMatch(
 			/<meta name="description" content="Murad Abdulkadyrov, Chief Product Officer at Flomni\./,
 		);
-		expect(html).toContain('rel="canonical" href="https://murabcd.vercel.app"');
+		expect(html).toContain(
+			'rel="canonical" href="https://muradabdulkadyrov.com"',
+		);
 		expect(html).toContain(
 			'property="og:site_name" content="Murad Abdulkadyrov"',
 		);
 		expect(html).toContain('name="author" content="Murad Abdulkadyrov"');
-		expect(html).toContain('rel="author" href="https://murabcd.vercel.app"');
+		expect(html).toContain('rel="author" href="https://muradabdulkadyrov.com"');
 		expect(html).toContain('name="robots" content="index, follow"');
 		expect(response.headers.get("x-robots-tag")).toBeNull();
 	});
@@ -224,7 +226,7 @@ describe("production HTTP contracts", () => {
 		const html = visibleHtml(await response.text());
 		expect(html).toContain("<h1");
 		expect(html).toContain(
-			`rel="canonical" href="https://murabcd.vercel.app${path}"`,
+			`rel="canonical" href="https://muradabdulkadyrov.com${path}"`,
 		);
 	});
 

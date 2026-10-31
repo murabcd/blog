@@ -1,4 +1,4 @@
-export const siteDomain = "murabcd.vercel.app";
+export const siteDomain = "muradabdulkadyrov.com";
 export const baseUrl = `https://${siteDomain}`;
 
 export const socialProfiles = {
