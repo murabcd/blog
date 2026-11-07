@@ -34,7 +34,11 @@ export const metadata: Metadata = {
 	},
 	description: "Exploring AI, tech, and product building.",
 	icons: {
-		icon: "/logo.svg",
+		icon: {
+			url: "/favicon.png",
+			type: "image/png",
+			sizes: "192x192",
+		},
 	},
 	openGraph: {
 		title: "Murad Abdulkadyrov",
