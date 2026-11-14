@@ -1,0 +1,15 @@
+---
+title: "When AI Mistakes Start Costing Money"
+publishedAt: "2026-11-12"
+summary: "My Flomni Conf talk on using AI Studio to decide which assistant mistakes to fix first and see whether those fixes save the support team time."
+---
+
+My Flomni Conf talk on November 12 was about a decision support teams have to make once their AI is live. Of the mistakes the assistant keeps making, which one should we fix first? I showed how we use Flomni AI Studio to make that call.
+
+One example I showed was a customer asking to cancel a subscription and get a refund. The assistant correctly explains that the charge came from a renewal, and the refund still needs a decision. If the customer comes back, an operator has to read the first conversation and pick up the same request.
+
+In Studio, we can set up a signal for refund requests that end without a next step. I showed how a team can start with the recurring issue in Pulse and open the conversations behind it. Reading them together helps the team see where the refund flow breaks. In this example, I’d give the assistant a way to check whether it can handle the refund and route the request to an operator when someone needs to make a decision.
+
+Frequency is only part of how I’d rank these issues. A common wording problem can be cheap to leave for later if customers still get where they need to go. A less common refund issue can be worth fixing first if it repeatedly brings customers back and takes an operator several minutes to sort out.
+
+I also showed how to schedule a follow-up check in Studio. It can look at new refund conversations after the change and surface cases that still end without a next step. Then I’d look at the support numbers for similar requests before and after the fix. Did fewer customers have to ask twice? Did operators spend less time per request? That’s what I’d want to know before calling it fixed.
