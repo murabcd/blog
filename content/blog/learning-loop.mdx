@@ -8,9 +8,9 @@ summary: "AI tools are excellent at helping us finish work. They are much worse 
 
 One of the easiest mistakes to make with AI is assuming that shipping and learning are basically the same thing.
 
-They are not. The bug is fixed. The refactor is merged. The feature ships. On paper, everything looks good. But a different question matters much more over time: do you understand the system better than you did before the tool stepped in?
+The bug can be fixed and the refactor merged while your understanding of the system stays the same. Before closing the work, try explaining the failure and the reason the change resolves it. That exposes a gap the completed ticket cannot show.
 
-Very often, the answer is no. You dropped in a stack trace, a vague spec, or a broken test. The model returned something plausible. You verified that the immediate symptom was gone and moved on. The work shipped, but the learning loop never really happened. The struggle that used to force a better mental model got bypassed.
+That explanation can be harder than expected. You dropped in a stack trace, a vague spec, or a broken test. The model returned something plausible. You verified that the immediate symptom was gone and moved on. The work shipped, but the learning loop never really happened. The struggle that used to force a better mental model got bypassed.
 
 ## The Default Tooling Optimizes for Closure
 
@@ -18,7 +18,7 @@ I use these tools constantly, and I would not give them up. They make me faster.
 
 But it is worth being honest about what they are optimized for. The default interface is built to help you finish the task in front of you. It is not built to make you sharper. It does not ask for your hypothesis first. It does not make you explain the failure mode in your own words. It does not force you to re-derive the abstraction before revealing the answer.
 
-That is not a moral failure by the product team. It is simply the incentive. AI tools are rewarded for velocity, merged code, and shorter cycle times. They are not rewarded because you became a stronger engineer six months later. That responsibility stays with you.
+That emphasis follows the product's immediate promise: help the person finish the task. AI tools are rewarded for velocity, merged code, and shorter cycle times. They are not rewarded because you became a stronger engineer six months later. That responsibility stays with you.
 
 ## Skill Decay Is Quiet
 
@@ -26,13 +26,13 @@ The dangerous part is that this rarely feels bad in the moment. It usually feels
 
 The gap shows up later, when the model is wrong, the framework changes, the abstraction leaks, or the problem stops looking like the median example on GitHub. Suddenly you are outside the comfortable zone where pattern matching is enough, and the quality of your own understanding matters again.
 
-If too many of your recent wins came from accepting answers instead of building mental models, that is where the cost appears. Not because AI failed you, but because you quietly trained yourself not to do the hard part.
+If too many of your recent wins came from accepting answers instead of building mental models, that is where the cost appears. Repeatedly skipping the investigation leaves fewer opportunities to practice the reasoning you later need when the answer is wrong.
 
-## The Research Points in the Same Direction
+## Inspect the Work You Still Do
 
-What makes this more than a vague fear is that the evidence is starting to rhyme. Different studies with different methods keep finding the same pattern: when AI removes too much of the cognitive work, comprehension suffers.
+The practical question is which cognitive work remains with you. Asking for an explanation, predicting the result, and checking the proposed mechanism create opportunities to test understanding. Accepting a finished answer without examining it creates fewer of those opportunities.
 
-The useful distinction is posture. People who use AI to ask conceptual questions tend to retain more than people who use it as a vending machine for finished answers. The problem is not assistance. The problem is passive assistance.
+I would be cautious about treating all AI use as one learning behavior. The same tool can support an investigation or let someone bypass it. Look at what the person can explain and do afterward.
 
 That matters because the hard work in engineering does not stay in the disposable-task zone. Systems break. Migrations happen. Security issues surface. Performance degrades in weird ways. Requirements move off the happy path. At some point, someone has to understand what is actually going on.
 
@@ -48,7 +48,7 @@ That is why I think engineers should end more sessions with one question: did I 
 
 ## The Fix Is Behavioral
 
-You do not need to reject the tools. You need to change how you use them.
+Make a small change to the interaction: state your hypothesis before asking the model for an answer. Then compare its explanation with your own and resolve the disagreement.
 
 Form a view before asking for one. Explain the problem to yourself before you ask the model to explain it. Ask for concepts and tradeoffs before asking for code. Treat generated output like a pull request from a junior engineer: inspect it, challenge it, and understand it before accepting it. From time to time, rebuild something by hand just to check whether your own competence is still there.
 
@@ -56,6 +56,6 @@ None of this is dramatic. These are small changes in posture. But over hundreds 
 
 ## The Tools Optimize for Shipping
 
-AI can make you better. It can compress feedback loops, expose better patterns, and teach you quickly when you use it with intent.
+AI can compress feedback loops, expose better patterns, and help you learn quickly when you stay involved in the reasoning. It can also let you finish work while leaving your understanding almost untouched. Both experiences can look productive in the moment.
 
-It can also let you substitute task completion for real understanding. The tools will not solve that for you. Their default job is to help you ship. Your job is to make sure you are still learning while you do.
+The default tool is trying to help you close the task. You have to decide how much of the thinking you want to carry away from it. That responsibility remains after the code ships.

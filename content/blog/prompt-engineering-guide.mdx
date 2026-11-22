@@ -6,7 +6,7 @@ summary: "Learn the key principles of prompt engineering to get better results f
 
 ## Why Prompt Engineering Matters
 
-As AI becomes central to product development, understanding how to effectively communicate with language models is becoming a critical skill. Prompt engineering isn't just about writing good prompts it's about designing reliable interactions that consistently deliver value to your users.
+A prompt gives the model a task, relevant context, and a description of an acceptable result. Missing any of those can produce an answer that looks reasonable while failing the intended job. Start by making the request clear enough to evaluate.
 
 Let's explore the key techniques that can help you get better results from AI models, whether you're building AI features or using AI in your workflow.
 
@@ -14,7 +14,7 @@ Let's explore the key techniques that can help you get better results from AI mo
 
 The foundation of working with AI models is understanding two basic approaches: zero-shot and few-shot prompting.
 
-## Zero-Shot
+### Zero-Shot
 
 Zero-shot prompting is like giving clear instructions to a capable assistant who's never seen the task before. You simply describe what you want:
 
@@ -26,9 +26,9 @@ Classify this product feedback as positive, negative, or neutral:
 
 This works well for simple tasks, but you might not always get consistent results, especially for complex requests.
 
-## Few-Shot
+### Few-Shot
 
-Few-shot prompting is like training an assistant by showing them examples before asking them to do the task. This often leads to more reliable results:
+Few-shot prompting supplies examples in the current context. It can help demonstrate a classification or output format without updating the model’s weights:
 
 ```
 Classify the product feedback (positive, negative, or neutral):
@@ -48,7 +48,7 @@ Sentiment:
 
 ## Making Your Prompts More Effective
 
-## Be Specific About Context
+### Be Specific about Context
 
 Always provide relevant context about:
 
@@ -76,7 +76,7 @@ Format the notes with:
 - Use present tense
 ```
 
-## Structure Complex Tasks
+### Structure Complex Tasks
 
 For complex tasks, break down your prompt into clear components:
 
@@ -106,13 +106,11 @@ Requirements:
 
 ## Advanced Techniques
 
-## Chain-of-Thought Prompting
+### Chain-of-Thought Prompting
 
-For complex reasoning tasks, guide the AI to show its work. This is particularly useful when you need to:
+For some reasoning tasks, asking for intermediate steps can make the proposed approach easier to inspect. The explanation is still generated output. [Research on unfaithful chain-of-thought explanations](https://arxiv.org/abs/2305.04388) shows why a plausible rationale should not be treated as a complete account of how the model reached its answer.
 
-- Debug AI responses
-- Ensure logical reasoning
-- Build trust with users who see the output
+Use the explanation to identify assumptions and claims to check. Verify calculations, inspect source records, or run the relevant test before relying on the result.
 
 Example for a product pricing decision:
 
@@ -130,9 +128,13 @@ Please think through this step by step:
 For each step, explain your reasoning before moving to the next.
 ```
 
-## Self-Consistency Checking
+### Review the Draft
 
-When accuracy is crucial, have the AI verify its own work:
+Asking the model to review a draft can expose an omission or contradiction. It remains a review by the same fallible system, so compare the result with external evidence. The prompt below requests that kind of self-review; it does not establish that the proposed fix works.
+
+[Self-consistency](https://arxiv.org/abs/2203.11171) is a different technique: sample multiple reasoning paths and aggregate their answers. Agreement can help on suitable tasks, but several attempts can share the same mistake.
+
+For a support response, a review prompt might look like:
 
 ```
 Solve this customer's technical issue:
@@ -153,7 +155,7 @@ Revise your response based on this verification.
 
 ## Practical Tips for Product Teams
 
-## Create Prompt Libraries
+### Create Prompt Libraries
 
 Maintain a collection of proven prompts for common tasks:
 
@@ -164,7 +166,7 @@ Maintain a collection of proven prompts for common tasks:
 
 This ensures consistency and saves time, especially when multiple team members are working with AI tools.
 
-## Test Prompt Variations
+### Test Prompt Variations
 
 When implementing AI features, test different prompt structures:
 
@@ -173,7 +175,7 @@ When implementing AI features, test different prompt structures:
 - Test various levels of specificity
 - Measure the consistency of results
 
-## Monitor and Iterate
+### Monitor and Iterate
 
 Keep track of where your prompts succeed or fail:
 
@@ -192,13 +194,8 @@ Keep track of where your prompts succeed or fail:
 
 4. **Forgetting Context Limits:** Large Language Models have token limits. Be mindful of how much context you're including.
 
-## Conclusion
+## Keep the Examples That Expose a Failure
 
-Effective prompt engineering is becoming a core product development skill. By understanding these techniques and applying them thoughtfully, you can:
+A prompt that works on the example you wrote can still fail on the next customer's request. Keep the cases where the output missed the intended format, used the wrong fact, or ignored a condition. Those cases make the next revision easier to judge.
 
-- Get more reliable results from AI models
-- Build better AI-powered features
-- Save time on repetitive tasks
-- Create more consistent user experiences
-
-The key is to start simple, test thoroughly, and iterate based on real-world usage. As AI capabilities evolve, these fundamental principles of clear communication and structured thinking will remain valuable.
+A prompt library becomes useful when it carries that evidence with it. Otherwise the team inherits a collection of instructions without knowing which tasks they were tested on or why the wording matters.

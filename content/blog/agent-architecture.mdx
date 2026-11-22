@@ -1,64 +1,55 @@
 ---
 title: "Agent-Native Architecture"
 publishedAt: "2026-01-10"
-summary: "We used to build software by guessing what users wanted and writing code to do exactly that. Those days are over. The future belongs to 'Agent-Native' apps where the developer builds the tools, and the AI figures out how to use them."
+summary: "Agent-native applications expose useful operations that an assistant can combine. The architecture needs clear tools, permissions, shared context, and a way to inspect the result."
 ---
 
-## The Death of the Feature Request
+## Building Operations Agents Can Use
 
-For as long as software has existed, it has been rigid. If a user wanted to do something, a developer had to predict it, design it, and write the code for it. If the developer didn't build it, the user couldn't do it.
+A user asks an app to find notes from the meetings they had with the design team last month. The app already has a calendar and a notes library, but its interface may offer no way to connect the two. The data exists; the requested workflow was never built.
 
-This model is breaking. We are moving to a world where software is fluid. We are building **Agent-Native applications**. In this new world, you don't build features. You build powers. You give an AI agent a set of tools, and then you let the agent figure out how to combine them to solve the user's problem.
-
-The result is software that can do things you never explicitly programmed it to do.
+An agent-native application can expose calendar search and note search as tools. An agent can use those operations together, check the matches, and present the result. The developer still defines what the system can access and do. The agent chooses a sequence of supported operations for the user's request.
 
 ## The Rule of Equality
 
-The first rule of this new architecture is simple but strict. **The agent is a user.**
+Treat the agent as a participant in the application. Important actions available through the interface should have corresponding operations the agent can use: create a folder, rename a file, search a document, or draft an email.
 
-Anything a human can do by clicking buttons, the agent must be able to do by using tools. If your app lets a human create a folder, rename a file, or send an email, your agent needs a tool for each of those actions.
+This parity has to include permissions and validation. A tool should enforce the same access rules as the human-facing path, and consequential actions may need confirmation. Giving an agent an operation that bypasses the application's rules creates a second, less trustworthy product.
 
-If you break this rule, the agent becomes useless. It becomes a frustrated assistant that knows what to do but has no hands. But if you follow this rule, you unlock a massive amount of power. The agent stops being a chatbot and starts being a driver.
+## Give Tools Clear Boundaries
 
-## Give Tools, Not Scripts
+A tool such as `clean_up_inbox_and_archive_emails` hides several decisions inside one operation. That may be useful for a stable workflow, but it makes a poor general building block if users need different definitions of “clean up.”
 
-The biggest mistake developers make is trying to control the agent too much. They build "super-tools" that do ten things at once because they don't trust the AI.
+Operations such as `read_email`, `archive_email`, and `create_folder` let the agent inspect messages and assemble a sequence appropriate to the request. The same tools might organize a client's correspondence or archive a specific category of messages.
 
-For example, a developer might build a tool called `clean_up_inbox_and_archive_emails`. This is a mistake. It forces the agent to follow a strict script. It’s boring and rigid.
+Small operations also have costs. More calls can increase latency, and a long sequence can fail halfway through. Use higher-level operations where they preserve an important invariant or make a common task reliable. Tool boundaries should follow the product's behavior rather than a rule that every operation must be tiny.
 
-The better approach is to give the agent atomic tools: `read_email`, `archive_email`, `create_folder`.
+## Combining Existing Capabilities
 
-When you give the agent small, simple blocks, it can build whatever castle the user asks for. It might clean the inbox today, but tomorrow it might use those same tools to find every email from a specific client and organize them by date. You didn't build a "Client Organizer" feature. The agent built it on the fly because you gave it the right blocks.
+The calendar-and-notes example works only if the tools expose enough information to match records. The agent needs dates, participants, relevant text, and a way to handle ambiguous results. It may need to ask which design team the user means.
 
-## The "Magic" Moment
+This is the useful part of the architecture: users can request combinations you did not build as dedicated screens. Watch those requests. Repeated combinations may deserve a saved workflow or a conventional interface that makes them faster and more predictable.
 
-When you build this way, you eventually hit a moment that feels like magic. This is called **Emergent Capability**.
+## Files as a Shared Workspace
 
-It happens when a user asks for something crazy. They might say, "Look at my calendar, find the meetings I had with the design team, and find the notes I wrote during those times."
+Human-readable files can provide a convenient workspace for notes, drafts, and project context. Both the user and agent can inspect the same Markdown document, and changes can be reviewed with familiar tools.
 
-In the old world, you would have to say, "Sorry, we don't have a cross-reference feature."
+Files are a design choice with limits. They do not remove the need for access control, concurrent-edit handling, search, or structured storage. Use them where their transparency helps; retain database constraints where the application depends on them.
 
-In the Agent-Native world, the agent just does it. It uses its `read_calendar` tool and its `search_notes` tool. It combines them in a way you never planned. The software creates a new feature in real-time to solve a specific problem. You stop guessing what users want, and you start watching them create their own workflows.
+## Give the Agent Current Instructions
 
-## The File System Secret
+An instruction file such as `AGENTS.md` can explain the workspace, the available tools, and the rules for making changes. Keep durable instructions separate from temporary task state so the file does not become a stale transcript.
 
-Agents are smart, but they need a simple way to understand the world. It turns out that the best interface for an agent isn't a complex database. It's a simple **file system**.
+Useful instructions cover:
 
-Agents understand files perfectly. They know how to read text files, edit them, and move them around. By storing your app's data in simple, human-readable files (like Markdown), you create a shared workspace. The user can open a file and type notes. The agent can open the same file and fix typos or add a summary.
+- What the user is working on and where authoritative information lives
+- Which operations the agent can perform and what requires approval
+- How to verify a result and report uncertainty
 
-It is transparent. It is simple. And it works on every device.
+The application must actually load the relevant instructions. A file in the repository has no effect if the runtime never reads it.
 
-## The Cheat Sheet
+## Leave Room for an Unplanned Request
 
-Finally, an agent needs to know who it is. You can't expect it to guess the context every time.
+The calendar-and-notes request is the reason to build this way. The user needs a workflow that the application never received a dedicated screen for. Clear operations give the agent a way to assemble that workflow from capabilities the product already has.
 
-The best pattern is to give the agent a "Cheat Sheet" (often called `AGENTS.md`). This is a file that sits in the root of the project. It tells the agent:
-*   Here is who you are.
-*   Here is what the user is working on right now.
-*   Here are the rules you must follow.
-
-The agent reads this sheet before doing anything else. It’s like giving a new employee a handbook on their first day. It ensures that every action the agent takes is grounded in the current reality of the user's work.
-
-## Conclusion
-
-We are leaving the era of static software. We are no longer building rigid machines that can only do what they are told. We are building flexible workflows filled with tools. The developer's job is to keep the tools sharp and the lights on. The agent's job is to build whatever the user needs, right in the moment.
+Developers still own those capabilities, their rules, and the evidence that they worked. The architectural gain is that every useful combination no longer needs its own feature ticket before a user can try it.

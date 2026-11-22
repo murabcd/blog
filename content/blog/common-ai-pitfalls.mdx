@@ -6,9 +6,9 @@ summary: "Learn how to avoid the most common pitfalls when implementing AI in en
 
 ## The AI Implementation Challenge
 
-As AI becomes increasingly central to product development, teams face a common set of challenges that can derail even the most promising initiatives. While the technology is powerful, successfully implementing AI requires navigating numerous pitfalls that aren't immediately obvious. Drawing from real-world implementations, let's explore these challenges and practical strategies to address them.
+A team demonstrates an AI feature on a handful of examples, then discovers how much work remains when real customers use it. Inputs vary, the surrounding workflow has exceptions, and a plausible answer can still be wrong. The decision to ship needs evidence from those conditions.
 
-David Heinemeier Hansson (creator of Ruby on Rails and CTO at 37signals) makes a crucial point about AI implementation that sets the tone for our discussion:
+David Heinemeier Hansson (creator of Ruby on Rails and CTO at 37signals) argues that an AI feature should earn its release by improving the product:
 
 <blockquote className="twitter-tweet">
     AI is awesome, but do you know what else is awesome? Not releasing AI-powered features
@@ -21,7 +21,7 @@ David Heinemeier Hansson (creator of Ruby on Rails and CTO at 37signals) makes a
 </blockquote>
 <script async src="https://platform.twitter.com/widgets.js" charSet="utf-8"></script>
 
-This perspective captures a fundamental truth about AI implementation: the goal isn't to add AI for its own sake, but to meaningfully improve your product. With this principle in mind, let's explore the common traps teams fall into when implementing AI solutions.
+Use the current workflow as the comparison. The team should be able to explain what becomes better, which new failure modes appear, and whether the benefit survives the additional cost.
 
 ## Starting with the Wrong Problem
 
@@ -42,7 +42,7 @@ Instead, start by clearly defining the problem and its constraints:
 
 ## The Demo Trap
 
-There's a dangerous gap between a compelling demo and a production-ready AI feature. I've seen many teams fall into what I call the "demo trap" - getting excited by initial results without understanding the full complexity of production deployment.
+There's a dangerous gap between a persuasive demo and a production-ready AI feature. I've seen many teams fall into what I call the "demo trap" - getting excited by initial results without understanding the full complexity of production deployment.
 
 A typical pattern:
 
@@ -55,11 +55,11 @@ A typical pattern:
    - Building monitoring systems
    - Implementing fallbacks
 
-The reality is that getting from a working demo to a reliable production system often takes 3-5x longer than getting to the initial demo. This isn't because teams are incompetent - it's because production AI systems have fundamentally different requirements than demos.
+The demo does not establish how long production work will take. Estimate the missing pieces explicitly: evaluation coverage, integration, monitoring, failure handling, and support. A single accuracy percentage can hide the difference between a harmless mistake and one that blocks the customer.
 
 ## Integration Blindspot
 
-Another common pitfall is focusing too much on model performance while neglecting integration challenges. AI doesn't exist in isolation - it needs to work seamlessly with existing systems and workflows.
+Another common pitfall is focusing too much on model performance while neglecting integration challenges. The feature needs to receive the right data, return its result to the right place, and fit the steps people already perform.
 
 Key integration challenges often overlooked:
 
@@ -68,7 +68,7 @@ Key integration challenges often overlooked:
 - **User Experience:** How do you make the AI's capabilities discoverable without overwhelming users?
 - **Performance:** How do you maintain responsiveness when adding AI processing to the pipeline?
 
-I've seen teams build impressive models that ended up unused because they couldn't be effectively integrated into existing workflows. Success requires thinking through the entire system, not just the AI component.
+I've seen teams build impressive models that ended up unused because they couldn't be effectively integrated into existing workflows. Evaluate the complete workflow, including the work someone must do before and after the model responds.
 
 ## Overcomplicating the Solution
 
@@ -80,7 +80,7 @@ Common examples:
 - Implementing complex agent systems when simple API calls would suffice
 - Building elaborate vector databases for small-scale search problems
 
-Complexity isn't just about code. Each layer of sophistication adds:
+Each additional layer can add operating obligations:
 
 - More potential points of failure
 - Higher operational costs
@@ -89,7 +89,7 @@ Complexity isn't just about code. Each layer of sophistication adds:
 
 ## The Human Element
 
-Perhaps the most overlooked aspect of AI implementation is the human factor. Many teams focus so heavily on technical metrics that they forget about the human elements crucial for success:
+Perhaps the most overlooked aspect of AI implementation is the human factor. Many teams focus so heavily on technical metrics that they forget about the human requirements for adoption:
 
 1. **User Trust:** How do you build and maintain user confidence in AI-powered features?
 2. **Feedback Loops:** How do you gather and incorporate user feedback effectively?
@@ -98,6 +98,8 @@ Perhaps the most overlooked aspect of AI implementation is the human factor. Man
 
 I've seen technically excellent AI implementations fail because they didn't adequately address these human factors.
 
-## Conclusion
+## Set a Release Threshold
 
-The key is to remain focused on solving real problems rather than implementing AI for its own sake. Start simple, plan for production, integrate thoughtfully, and maintain human oversight. This approach might not be the most exciting or headline-grabbing, but it's the one that consistently delivers results.
+Before expanding a prototype, define the cases it must handle, the failures the customer can tolerate, and the fallback when it cannot complete the task. Compare its result with the current workflow, including review time and operating cost.
+
+Keep an experiment internal if it cannot yet meet that threshold. Learning that a rule-based approach or an existing interface works better is a useful product result, even when the AI feature never ships.

@@ -1,7 +1,7 @@
 ---
 title: "The End of the Non-Technical Product Team"
 publishedAt: "2025-09-24"
-summary: "For years, product teams have operated as requesters, dependent on engineering for every tool and data pull. In an AI-native company, this model is a fatal bottleneck. It's time to onboard everyone like an engineer."
+summary: "Product teams spend too much time requesting tools and data they could investigate themselves. Onboarding everyone into the technical working environment shortens the distance between a problem and a useful answer."
 ---
 
 ## The Great Divide
@@ -10,33 +10,33 @@ In most tech companies, a subtle but powerful divide exists. There are the "buil
 
 This dependency is a source of constant friction. It manifests as a product manager waiting weeks for a new analytics dashboard, a designer unable to query production data to validate a hypothesis, or a product marketer begging for engineering time to build a simple internal tool. This model creates a bottleneck that slows down the entire product development lifecycle.
 
-In an AI-native world, this dependency is no longer just a source of friction; it is a strategic liability. The new generation of code-assisted AI tools is erasing the line between builder and user, and it's time for the structure of our product teams to catch up.
+Code-assisted tools let more roles attempt some of this work directly. The organization needs to support that access with documentation, safe environments, and a clear way to review the result.
 
-## The New Mandate: Everyone is a Builder
+## The New Mandate: Everyone Is a Builder
 
-The thesis is simple but profound: **onboard every member of the product organization as if they are an engineer.** This does not mean everyone needs to become a senior software developer. It means that the expectation is now that you will leverage code-assisted tools to directly access data, automate tasks, and solve your own problems.
+I think we should **onboard every member of the product organization into the technical working environment**. Give them repository access, a way to run examples, and code-assisted tools. Make investigating data, automating a repeated task, and testing an idea part of the job, with clear boundaries around changes that need engineering review.
 
 We recently put this into practice. A new product manager joined our team. Traditionally, their first week would be a marathon of getting access to a dozen different SaaS tools, learning the intricacies of our analytics dashboards, and scheduling meetings with engineers to understand the data schema.
 
-Instead, we set them up with a Github account, cloned our repository, and gave them access to Cursor.
+Instead, we set them up with a GitHub account, cloned our repository, and gave them access to Cursor.
 
 Within their first week, without writing a single line of production code, they were able to use AI to:
 -   Write complex SQL queries to analyze user retention for a feature they were researching.
 -   Build a small script to pull a list of users who had requested a specific integration.
 -   Identify a gap in our API documentation that was causing confusion for a new partner.
 
-At most companies, each of these tasks would have resulted in a ticket in the engineering backlog. Here, they were accomplished in minutes, not weeks. The PM was not a requester; they were a builder, empowered to find their own answers.
+At most companies, each of these tasks would have resulted in a ticket in the engineering backlog. Here, they were accomplished in minutes, not weeks. The PM could investigate the question and bring a result to the team for review. That reduced the handoff needed before useful discussion could begin.
 
 ## Your APIs Are Your Internal Tools
 
-This approach forces a critical shift in thinking. The best internal tools you have are your own APIs. By providing safe, well-documented API endpoints and empowering the entire team with AI assistants that can interact with them, you eliminate the need for a sprawling, disconnected suite of third-party tools.
+This approach forces a critical shift in thinking. The best internal tools you have are your own APIs. Well-documented APIs and appropriate access let more people investigate a task directly. That can reduce the need for one-off internal tools without assuming every specialist application should disappear.
 
 Instead of building a one-off Retool app for the marketing team, you give them the tools to query the marketing API themselves. Instead of waiting for an engineer to build a custom dashboard, you empower the product manager to use AI to generate the data visualizations they need on the fly.
 
-This triggers a common and valid concern: what about security and safety? Giving more people access to the codebase can feel risky. This is where the product leader's job is crucial. Our responsibility is to provide safe, powerful tools. This means enforcing access through a well-designed API layer with clear permissions, not allowing direct database writes. The goal is not to unleash chaos, but to provide a secure and sandboxed environment where the entire team can build.
+This triggers a common and valid concern: what about security and safety? Giving more people access to the codebase can feel risky. This is where the product leader's job is crucial. Our responsibility is to provide safe, powerful tools. This means enforcing access through a well-designed API layer with clear permissions, not allowing direct database writes. Provide isolated environments and role-appropriate credentials, then verify that access limits apply to the actual operations. Repository access and production authority should remain separate decisions.
 
-## Builders, Not Ticket Writers
+## Shorten the Distance to an Answer
 
-The useful distinction is no longer technical versus non-technical. It is between people who can move a problem forward themselves and people who can only describe work for somebody else to do.
+A product manager who can investigate a question arrives at a different conversation. They have evidence to discuss, a prototype to challenge, or a specific gap that needs engineering help. The team can begin further into the problem because somebody has already moved it forward.
 
-AI gives more roles access to code, data, and prototypes, but access is not the outcome. The outcome is a shorter distance between noticing a problem and testing a solution. Product teams should be organized around that ownership, not around who was historically allowed to build.
+That is the organizational change I care about. Give people the tools, context, and appropriate access to take that responsibility. A title should not decide who has to wait for somebody else to start the work.

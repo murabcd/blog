@@ -10,13 +10,13 @@ Most developers use AI agents like a chat buddy. You open a window, paste in a r
 
 It is faster than coding by hand, but you are still the bottleneck. You have to be there. You are the human router passing data back and forth.
 
-A new pattern called "Ralph" flips this model. Instead of a conversation, it’s a **loop**. You give the AI a plan, a set of tools, and a simple script. The AI wakes up, grabs the first task, finishes it, commits the code, and then *restarts itself* to do the next one. You go to sleep, and you wake up to a stack of completed features.
+A new pattern called "Ralph" flips this model. Instead of a conversation, it’s a **loop**. You give the AI a plan, a set of tools, and a simple script. The AI wakes up, grabs the first task, finishes it, commits the code, and then *restarts itself* to do the next one. The loop can make progress without a person handing over every next task. Whether that progress is useful still depends on the task definition, checks, and later review.
 
 ## How Ralph Works
 
-Ralph isn't a product you buy; it's a technique you use. It relies on a few simple text files and a bash script working together.
+[Ralph](https://ghuntley.com/ralph/) describes a repeated coding-agent loop. The example here combines that idea with a task list and progress notes; it is one possible implementation, rather than a required file format or an official product setup.
 
-The core philosophy is **Fresh Context**. Long conversations make AI stupid. They get confused by their own history. Ralph solves this by wiping the agent's memory after every single task. It starts fresh every time, looking at the code as it exists right now, not remembering the mistakes it made ten minutes ago.
+This version starts a fresh agent invocation for each iteration. The next run reconstructs its task from the repository, plan, and notes instead of inheriting the whole conversation. That can leave irrelevant history behind, but it also makes the quality of the handoff important. Restarting does not undo earlier changes or guarantee a better decision.
 
 To make this work, you need three things:
 1.  **The Brain:** A CLI agent (like Anthropic's `claude`).
@@ -25,7 +25,7 @@ To make this work, you need three things:
 
 ## The Blueprint: How to Build It
 
-Here is the exact setup you can use to run a Ralph loop on your own machine.
+The following sketch shows how the pieces fit together. It omits runtime permissions, spending controls, recovery, and a reliable external completion check. Configure those for your agent and environment before treating the loop as unattended automation.
 
 ### 1. The File Structure
 Create a folder in your project (e.g., `ralph/`) and add these files:
@@ -37,7 +37,7 @@ Create a folder in your project (e.g., `ralph/`) and add these files:
   └── loop.sh         # The script that runs everything
 ```
 
-### 2. The Plan (PRD.md)
+### 2. The Plan (`PRD.md`)
 This is your backlog. The trick is to be extremely granular. Don't write "Build Login." Break it down so each step fits in one context window.
 
 ```markdown
@@ -50,7 +50,7 @@ This is your backlog. The trick is to be extremely granular. Don't write "Build 
 - [ ] Write a test for the registration flow
 ```
 
-### 3. The Loop Script (loop.sh)
+### 3. The Loop Script (`loop.sh`)
 This is the engine. It runs the agent, captures the output, and checks if the job is done.
 
 ```bash
@@ -90,30 +90,24 @@ for ((i=1; i<=10; i++)); do
 done
 ```
 
-## The Secret Sauce: Compound Learning
+## Carry Lessons between Runs
 
-The most brilliant part of this architecture is the `progress.txt` file.
+The `progress.txt` file gives the next invocation a place to find decisions and corrections that would otherwise disappear with the conversation. A useful entry records what failed, what fixed it, and the conditions under which the fix applies.
 
-Since the agent's memory is wiped every time the loop restarts, how does it avoid making the same mistake twice? It writes it down.
+For example, after a failed test command, the agent can record the actual command the project requires and the evidence that it passed. The next run can use that note and check whether it remains current. Copying an unverified guess into the file would preserve the mistake instead.
 
-If the agent tries to run a database migration in Iteration 1 and fails because of a missing library, it fixes it and writes in `progress.txt`: *"Note: The migration command requires the 'ts-node' flag."*
-
-In Iteration 2, the *new* agent starts up. It has no memory of Iteration 1, but it reads `progress.txt`. It sees the warning. It avoids the error.
-
-By the tenth iteration, your agent has built up a customized handbook for your specific codebase. It knows your quirky naming conventions, your testing commands, and your architecture better than a human contractor would.
+These notes change the context supplied to later runs. They do not update the model's weights, and their value depends on whether the later run finds and applies the right lesson.
 
 ## Success Factors
 
-Running Ralph isn't magic; it requires a new kind of engineering discipline.
+The loop needs a bounded task and feedback strong enough to stop a bad attempt from becoming the next run’s starting assumption.
 
-*   **Granularity is King:** If a task is too big ("Refactor the entire backend"), the agent will timeout or get confused. You must break tasks down into 10-minute chunks.
+* **Bounded Tasks:** Choose a change small enough to complete and verify within one run. An arbitrary time limit does not establish the right scope; the task needs a clear completion condition.
 *   **Fast Feedback:** The agent needs to know if it succeeded. Your project needs a reliable command (like `npm test` or `npm run typecheck`) that the agent can run to verify its own work before committing.
-*   **Sandboxing:** Because the agent is running `rm` and `git commit` commands while you sleep, you should run this inside a Docker container. This prevents the agent from accidentally deleting your home directory.
+* **Scoped Execution:** Use a disposable workspace and permissions limited to the task. A container can help isolate execution, but mounted files, credentials, and network access still determine what it can affect. Keep iteration and spending limits outside the model, and verify completion outside its own stop signal.
 
-## From Copilot to Coworker
+## Own the Loop
 
-We are moving from **Copilots** to **Coworkers**.
+A coding loop moves some of the repeated coordination into software. The plan supplies the next task, the checks return feedback, and the repository carries the result into another iteration. A commit records what happened; it does not prove that the feature is finished.
 
-A Copilot helps you type faster. A Coworker takes a ticket, disappears for four hours, and comes back with a finished feature. Ralph is the first primitive version of that AI Coworker.
-
-Your job changes from "writing code" to "managing the loop." You become the architect who writes the PRD and the reviewer who merges the PRs. The actual implementation becomes a background process, an infinite loop running quietly on a server, building your software one commit at a time.
+The engineer still owns the conditions under which the loop runs and the review that follows. If each iteration leaves a result the next one can trust, unattended work can be useful. If the checks are weak, the same loop can compound a mistake while producing a very convincing history of progress.

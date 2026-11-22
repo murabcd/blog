@@ -1,7 +1,7 @@
 ---
 title: "Your Repository Has Two Users"
 publishedAt: "2026-05-17"
-summary: "A modern codebase is no longer just the thing that runs in production. It is also the environment AI agents read to decide what to change. Most teams still optimize only for the first user."
+summary: "People and agents both use the repository to understand what should change. Clear authority, local instructions, and executable checks make that environment easier to work in."
 ---
 
 ## We Still Design Repositories for Humans
@@ -10,7 +10,7 @@ Most teams think about a codebase in one dimension. It is the source code that p
 
 That view is no longer complete.
 
-The repository now has a second user: the agent. An agent does not just execute tasks inside the codebase. It reads the codebase to decide what the system is, what the team expects, and what it should do next. That means the repo is no longer only implementation. It is also context.
+An agent uses the repository to infer the system's behavior, the team's expectations, and the next appropriate change. Code, instructions, examples, and old plans all influence that interpretation. Their organization affects what the agent is likely to copy or trust.
 
 Once you see that clearly, a lot of old habits start looking broken.
 
@@ -24,7 +24,7 @@ This matters because agent onboarding is continuous. A human joins the company o
 
 ## The Real Problem Is Ambiguous Authority
 
-The biggest mistake teams make is not bad code. It is ambiguous authority.
+Ambiguous authority makes even readable code harder to change correctly. The agent needs to know which artifact describes current behavior and which records an intention or historical decision.
 
 If a planning doc describes one thing, the code does another, and an old ticket says a third thing, what should the agent believe? Humans can usually resolve that tension with intuition. Agents need the answer to be explicit.
 
@@ -50,28 +50,26 @@ You cannot rely on "the engineer will catch it later" as the main control mechan
 
 This changes the role of standards as well. A style guide sitting quietly in Confluence is almost useless here. Standards only matter when they are present where the work happens and enforced where the work lands.
 
-## Cleanup Comes Before the Gains
+## Cleanup Comes before the Gains
 
 A lot of teams want the productivity upside of coding agents without paying the cleanup cost first.
 
 That usually does not work.
 
-If bad patterns already dominate the visible parts of the repo, agents will learn and reproduce those patterns faster than humans ever did. The result is not only messy output. It is accelerated inconsistency. Before the codebase becomes a good environment for agents, it often has to become a stricter environment for everyone.
+If bad patterns already dominate the visible parts of the repo, agents will learn and reproduce those patterns faster than humans ever did. Each new change can reproduce a different local convention, making the next agent's evidence even less consistent. Before the codebase becomes a good environment for agents, it often has to become a stricter environment for everyone.
 
 That means rewriting instructions, separating current truth from old intent, moving context closer to usage, and fixing the parts of the codebase that agents are most likely to copy from. There is no glamorous shortcut here. The repository has to become more internally coherent because it is now being read at machine speed.
 
-## The Payoff Is Not Better Prompting
+## Give the Next Task a Clear Starting Point
 
 When teams talk about getting more from coding agents, they usually focus on prompts, models, and tools.
 
 Those things matter. But they are not the full story. A strong repository gives agents better judgment before the prompt even begins. It reduces confusion, narrows the search space, and makes correctness easier to verify. In practice, that often matters more than another round of prompt tuning.
 
-The important shift is strategic. You are no longer just maintaining a codebase. You are maintaining an operating environment for machine reasoning.
+A useful repository reduces the work required to establish the current rules before implementation begins. The agent still has to investigate, but it has clearer evidence about where to start.
 
-## The Shift
+## The Repository Is Part of the System
 
-The repository now serves two users: the humans who change the system and the agents who interpret it. Most companies still organize their codebases as if only the first one matters.
+The repository now serves the people who change the software and the agents that interpret it. Old plans, local examples, instructions, and checks all affect what those agents believe they should do. Organizing that material is part of designing the environment they work in.
 
-That will not hold.
-
-The teams that get the most from agents will not simply have better models. They will have codebases with clearer authority, more local context, tighter verification, and less accidental ambiguity. They will treat repository design as part of the intelligence stack.
+I think teams underestimate how much of agent performance lives there. A better model still has to work out which of the repository's conflicting stories to believe. Clear authority and coherent examples remove work the prompt would otherwise have to keep repairing.

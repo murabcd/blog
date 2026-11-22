@@ -1,47 +1,41 @@
 ---
 title: "Building Domain-Specific AI"
 publishedAt: "2023-12-26"
-summary: "Exploring the architectural and practical challenges of developing specialized AI assistants, drawing lessons from implementing AI in the legal domain."
+summary: "Specialized AI assistance needs domain rules, data controls, and review inside the professional workflow. A contract-management assistant is useful only when those boundaries are clear."
 ---
 
-## The Challenge in Regulated Industries
+## The Challenge in Specialized Work
 
-The legal sector, like many specialized fields, presents unique hurdles for deploying general-purpose AI. Accuracy requirements are paramount, privacy concerns are heightened due to sensitive data, and integration into existing professional workflows is crucial for adoption. Simply applying Large Language Model (LLM) out-of-the-box often falls short.
+A contract assistant can produce fluent language while missing a term that changes the agreement's meaning. The professional reviewing it needs to know which source informed the suggestion, which policy applies, and what still requires judgment.
 
-## Key Principles for Effective Legal AI
+Based on my experience building AI features within a contract lifecycle management platform, I would treat those requirements as part of the product architecture. The assistant needs access to the relevant material and a bounded role in the review process.
 
-Based on my experience building AI features within a contract lifecycle management platform, several core principles emerged as vital for success:
+## Rules with a Clear Scope
 
-**1. Beyond Prompt Engineering**
+Legal teams may define preferred terms, liability limits, or jurisdictional requirements for a contract type. Store those rules with the templates or policies they apply to, and make the relationship visible in the interface.
 
-While prompt engineering is a start, robust safety requires embedding constraints directly into the system architecture.
+Natural-language instructions can express intent, but the system still needs a way to check the result. Where a rule can be validated deterministically, use that check. Route uncertain interpretations to a qualified reviewer rather than treating a fluent explanation as compliance.
 
-- **Configurable Guardrails:** Implementing mechanisms for legal teams to define operational boundaries in natural language (e.g., acceptable liability caps, jurisdictional constraints).
-- **Template-Level Controls:** Linking these guardrails to specific contract templates or types.
+## Privacy and Data Handling
 
-**2. Privacy-Centric Design from the Ground Up**
+Contractual data can be sensitive. Establish where it is processed, which services receive it, who may access it, how long it is retained, and what the provider's data-use terms permit. These choices need to fit the organization's requirements.
 
-Handling sensitive contractual data demands a proactive approach to privacy.
+Keep permissions consistent with the existing platform. An assistant should not expose a clause or agreement that the person asking could not otherwise access. Record enough of the operation to investigate errors without unnecessarily duplicating sensitive material.
 
-- **Data Processing Choices:** Considerations around regional hosting (e.g., EEA data centers), API choices that prevent data being used for model training.
-- **Compliance Integration:** Aligning AI features with existing security certifications (SOC2, GDPR) and data handling protocols.
+## Fit the Contract Workflow
 
-**3. Seamless Workflow Integration**
+Place assistance where drafting, review, and analysis already happen. Preserve the link between a suggestion, the source agreement, and the current version so the reviewer can inspect the change in context.
 
-AI tools are most effective when they augment, not disrupt, existing processes.
+Some tasks may fit a separate interface, but the result still has to return to the authoritative workflow. Extra copying and reconciliation can consume the time the assistant was intended to save.
 
-- **Embedded Functionality:** Building AI assistance directly into the core platform (drafting, review, analysis) rather than requiring users to switch contexts to separate tools.
-- **End-to-End Context:** Leveraging the platform's existing data structure to provide the AI with relevant context throughout the contract lifecycle.
+## Tradeoffs to Evaluate
 
-## Trade-offs
+Model choice, retrieval, and domain-specific evaluation all affect quality and cost. Test representative clauses and failure cases before deciding that fine-tuning or a larger model is the missing piece.
 
-Developing and deploying such a system involves specific technical hurdles:
+Latency also matters in interactive review. A slower, more complete analysis may be appropriate for a full agreement while a drafting suggestion needs a shorter response. Define the task and review obligation before optimizing either.
 
-- **Model Selection and Fine-tuning:** Balancing the capabilities of general LLMs with the need for domain-specific accuracy.
-- **Guardrail Implementation:** Designing a system that reliably translates natural language rules into enforceable constraints on AI output.
-- **Latency vs. Accuracy:** Optimizing response times for interactive features like drafting assistance without compromising the quality or safety of suggestions.
-- **Monitoring and Auditing:** Establishing processes to continuously monitor AI performance and ensure compliance with defined guardrails.
+## Keep the Reviewer in Control
 
-## Conclusion
+A useful assistant makes the proposed change easier to assess. It shows the source, relevant policy, and unresolved uncertainty while leaving a clear path to accept, edit, or reject the suggestion.
 
-Building effective AI for specialized domains like legal tech goes beyond simply calling an API. It requires a thoughtful approach combining robust safety architectures, stringent privacy measures, and deep integration into user workflows. The goal is not to replace professionals but to augment their capabilities by automating routine tasks and providing intelligent assistance within a secure and controlled environment. Future developments will likely focus on refining these integrations and expanding AI capabilities across the entire contract lifecycle.
+Evaluate the product on the quality of that completed review, including the time needed to catch mistakes. Generating more clauses is a weak measure if professionals have to reconstruct every recommendation before using it.

@@ -1,26 +1,22 @@
 ---
 title: "Bots vs Agents"
 publishedAt: "2025-11-14"
-summary: "AI agents are incredibly powerful, but making them work reliably is the real challenge. The problem isn't the AI's intelligence; it's our old building habits. Here's a new approach for building agents that don't break."
+summary: "An agent can choose the wrong action even when its tools work correctly. Focused roles, useful context, evaluations, and bounded permissions make those failures easier to detect and recover from."
 ---
 
 ## Building Blocks Are Different
 
-The number one reason AI agents fail in the real world is simple: we try to build them like we build traditional software, and the parts are completely different. A normal piece of code is like a predictable gear in a machine. An AI agent is more like a clever but sometimes forgetful new team member. It interprets, it guesses, and it can get confused.
+A conventional function can satisfy its contract while the agent calling it misunderstands the task. The tool executes correctly, but the overall workflow still fails. That is a different problem from fixing an exception inside the function.
 
-Building a powerful agent isn't about finding the perfect prompt. It's about being a better architect and creating a system where a thinking, reasoning component can succeed. This requires a new set of patterns.
+The architecture has to account for interpretation as well as execution. Give the model a clear job, expose the information it needs, and make the result inspectable before another action depends on it.
 
-## Build a Team, Not a Single Hero
+## Start with a Focused Job
 
-Our first instinct is often to build one giant "do-everything" agent and give it a hundred different tools. This is a recipe for failure. With every tool you add, you increase the chances that the agent will pick the wrong one, get confused, or fail in a complex way that’s impossible to debug.
+One agent with a hundred tools can be difficult to debug. Splitting it into several agents adds handoffs and coordination, so that is a tradeoff to test rather than an automatic improvement. [Anthropic's agent-building guidance](https://www.anthropic.com/research/building-effective-agents) recommends starting with the simplest approach that works and adding complexity when it is needed.
 
-A more robust approach is to build a system of multiple, smaller, **specialized agents**.
-
-*   **Start with a Whiteboard:** Before writing any code, list out all the jobs you need the system to do. Group these jobs into logical roles, like "Researcher," "Writer," or "Code Executor."
-*   **Build One Agent at a Time:** Solve your most pressing problem with one focused agent that does its one job extremely well.
-*   **Create a Workflow:** Once you have multiple agents, you add a "routing" agent that acts like a project manager, passing the task to the right specialist at the right time.
-
-This way, each part of your system is simple, focused, and much easier to fix when something goes wrong.
+* **Map the Work:** List the decisions and actions required, including where one result becomes another step's input.
+* **Build One Useful Path:** Start with a focused agent or workflow and test it on representative tasks.
+* **Separate Roles When It Helps:** Add a specialist when the work needs different context, tools, or an independent review. Keep responsibility for the combined result clear.
 
 ## Actively Manage the Agent's Memory
 
@@ -28,23 +24,25 @@ An agent's "context" is its working memory. The common mistake is to just keep a
 
 *   **Prevent Information Overload:** Don't just dump entire documents into the context. Use techniques to find the most relevant snippets first. Periodically, have the agent **summarize its work so far** to clean out old, unnecessary details.
 *   **Stop Bad Information from Spreading:** A single wrong fact can "poison" the agent's memory, causing it to make a chain of bad decisions. By keeping the context clean and focused, you limit the damage of any single mistake.
-*   **Let It Learn from Errors:** This is a crucial pattern. When an agent tries to run code and fails, don't just hide the error. **Feed the error message back into the agent's context.** Often, the agent can read the error, understand what went wrong, and fix its own code on the next try. This creates a resilient, self-correcting system.
+*   **Let It Learn from Errors:** This is a crucial pattern. When an agent tries to run code and fails, don't just hide the error. **Feed the error message back into the agent's context.** The error can help the agent diagnose the failure and attempt a correction. Check the new result and bound retries so the loop does not keep repeating a bad approach.
 
 ## Test for Success, Not Just Accuracy
 
 Testing an AI is tricky because it doesn't give a simple "pass" or "fail." It can be technically correct but completely wrong for your business, or it can sound confident while making things up. A new approach to testing is needed.
 
 *   **List Your Failure Modes:** Create a checklist of all the specific ways the agent can fail. For a legal agent, this might include "missed a critical clause" or "misinterpreted a date." This gives you concrete things to test for.
-*   **Use Real Experts to Grade It:** Software engineers are not qualified to judge an agent's medical or financial advice. The only way to know if your agent is truly working is to have **subject matter experts (SMEs)** review its outputs. These experts create a "golden set" of correct answers that you can test against.
+*   **Use Real Experts to Grade It:** Software engineers are not qualified to judge an agent's medical or financial advice. Use **subject matter experts (SMEs)** to define quality criteria and review cases that require domain judgment. Combine that review with reference cases, executable checks, and evaluation of the completed workflow.
 *   **Build a Test Suite from Real Data:** The best test cases come from your actual users. Log the agent's real-world interactions (especially the failures), and use this data to build a test suite that reflects how the agent will actually be used.
 
 ## Build a Safe Environment for Action
 
 An agent that can take actions like executing code, sending emails, or deleting files is powerful but also dangerous. Safety cannot be an afterthought; it must be part of the initial design.
 
-*   **Use a Sandbox:** Never let an agent run code directly on your production systems or your own computer. A **sandbox** is a secure, isolated environment where the agent can execute code and use tools without any risk of causing permanent damage.
-*   **Set Up Guardrails:** You need filters that watch what goes into the agent and what comes out. **Input guardrails** can block malicious prompts or attempts to trick the agent. **Output guardrails** can stop the agent from leaking sensitive data or generating harmful content.
+*   **Use a Sandbox:** Choose an execution environment with permissions appropriate to the task, and isolate untrusted code from resources it does not need. A **sandbox** isolates execution from the host environment. Its connected credentials, network access, and writable resources still determine what an action can affect.
+*   **Set Up Guardrails:** Input and output checks can catch some suspicious instructions or sensitive content. Treat them as additional checks, with authorization enforced by the tools and services themselves. A classifier or a prompt cannot guarantee that an action is permitted.
 
-## Conclusion
+## The Workflow Has to Handle a Wrong Answer
 
-Building reliable agents shifts the focus of our work. The job is less about writing code line-by-line and more about being a systems architect. Your primary tasks are designing a clean workflow, managing the flow of information, defining what "correct" means, and building a safe environment. By adopting these patterns, we can move from building brittle bots that fail unpredictably to engineering reliable systems that we can trust.
+An agent can misunderstand the task even when each tool works correctly. The workflow needs enough structure to make that mistake visible: a source to inspect, a result to test, and a way to stop or recover before the next action compounds it.
+
+That is the architectural work around the model. A reliable system has to account for what happens after a plausible answer turns out to be wrong.

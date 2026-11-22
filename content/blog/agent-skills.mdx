@@ -6,46 +6,36 @@ summary: "We are accidentally building slow, expensive agents by forcing them to
 
 ## The Weight of Possibility
 
-In traditional software, we learned a long time ago that you shouldn't load every single library into memory the moment an application starts. It kills performance. We use "lazy loading" to fetch resources only when they are actually needed.
+In traditional software, we avoid loading every library before the application needs it. With agents, we can make the same mistake in a different place: filling the context with every available tool definition before knowing what the task requires.
 
-Strangely, we forgot this lesson when we started building AI agents.
-
-With the rise of the Model Context Protocol (MCP), it became easy to give an agent access to powerful external systems like web browsers, database connectors, and developer tools. But the standard way to do this is to dump every single tool definition into the agent's "context window" (its active memory) right at the start of the conversation.
-
-This is the equivalent of a plumber walking into a house carrying every single tool they own—wrenches, pipes, saws, welding gear—just to check a leaky faucet. It’s exhausting, expensive, and unnecessary.
+MCP makes tools easier to connect. It does not require the host to present the entire catalog to the model on every turn. That choice belongs to the application, and it can become expensive as the catalog grows.
 
 ## The Cost of Being Prepared
 
-The numbers behind this "eager loading" strategy are shocking.
+A tool definition takes space even when the agent never calls it. Descriptions, argument schemas, and examples can consume a substantial part of the input before the user's task begins. The cost depends on the actual definitions, model pricing, and caching; there is no useful universal cost per connected tool.
 
-Take a standard browser integration. To give an agent the ability to interact with a website, you might connect a standard Chrome toolkit. This toolkit defines about 26 different actions (tools). Just describing these 26 tools to the AI consumes around 17,000 tokens.
+Measure the catalog in your own runtime. Compare how much context it occupies with how many tools a representative task actually uses. A large gap gives you a concrete reason to change how discovery works.
 
-That is roughly 10% of a massive model's capacity, and nearly **$0.10 per message** on top-tier models, wasted on definitions the agent might never use. Worse, all this noise degrades the agent's reasoning. When the context is crowded with irrelevant tools, the model is more likely to hallucinate or get confused.
+## The Skill Pattern
 
-## The "Skill" Pattern
+[Agent Skills](https://www.anthropic.com/research/equipping-agents-for-the-real-world-with-agent-skills) package instructions, scripts, and supporting resources. A short name and description can be available first, with the full instructions loaded when the task needs them. A skill can explain how to use tools, but it is not itself a tool server or an automatic permission boundary.
 
-The solution is to stop treating tools as a global list and start treating them as **Skills**.
+The same progressive-disclosure idea can apply to tool definitions:
 
-A Skill is a smart wrapper around a set of tools. Instead of forcing the agent to memorize the technical definition of every function in the API, you simply give it a menu.
+1. **Describe What Is Available:** Give the agent a compact way to find a capability.
+2. **Load the Relevant Contract:** Retrieve the actual tool schema or API definition when the task needs it.
+3. **Execute through the Host:** Validate arguments and enforce access in the system that runs the operation.
 
-1.  **The Menu Phase:** At the start, the agent is given a short, human-readable description: *"Web Browser: Use this to view pages and take screenshots."* This costs almost nothing—maybe 30 tokens.
-2.  **The Order Phase:** The agent converses normally. Only when it decides "I need to see what is on this website" does it "activate" the Skill.
-3.  **The Loading Phase:** At that precise moment, the system injects the heavy technical definitions of the tools into the context.
-
-This "Just-in-Time" delivery keeps the agent light and fast for 99% of the conversation, only adding weight when it is strictly necessary.
+Anthropic's [code execution with MCP](https://www.anthropic.com/research/code-execution-with-mcp) describes one implementation: expose tools as code APIs and let the agent inspect relevant definitions. Skills and deferred tool discovery are related ways to manage context, with different responsibilities.
 
 ## Curating the Toolkit
 
-We can take this efficiency a step further. Even when an agent asks for a Skill, it rarely needs the *entire* toolkit.
+A documentation task may need navigation and page reading without performance tracing or device emulation. Start with that scope and leave a discovery path for a genuinely missing capability. Hiding too much can make the task fail just as loading too much can make it harder to navigate.
 
-A developer might need an agent to browse a documentation site. For this, the agent needs to `navigate_page` and maybe `take_screenshot`. It definitely does not need `start_performance_trace` or `emulate_mobile_device` or `inspect_network_packets`.
-
-The Skill pattern allows for **whitelisting**. You can define a "Documentation Reader" skill that connects to the heavy Chrome server but filters the output to show only the 4 relevant tools instead of the full 26.
-
-By combining Lazy Loading (time) with Whitelisting (scope), we can reduce the token overhead by over 90%.
+Filtering what the model sees also differs from restricting what it can execute. The host must enforce permissions even if a tool is absent from the current menu. A shorter prompt cannot replace that control.
 
 ## Agents Should Travel Light
 
-A capable agent does not need every tool in every context. It needs to know what is available, then load the smallest useful set when the task demands it.
+A capable agent needs a way to discover what it can do, then enough detail to use the relevant capability correctly. Making every definition available in advance asks each task to carry the cost of every other possible task.
 
-That is the point of modular skills. They reduce context cost without reducing capability. The agent can still do broad work, but it does not have to carry the entire system while doing one narrow job.
+Keep the catalog discoverable and the working context focused. The test is whether the agent completes the work with less overhead while still finding the tools it actually needs.

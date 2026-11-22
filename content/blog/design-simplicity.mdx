@@ -1,18 +1,18 @@
 ---
 title: "The Cost of Over-Designing"
 publishedAt: "2025-08-09"
-summary: "Complexity is the enemy of good products. But simplicity isn't about removing features – it's about making the right choices. Here's how to build products that work without overwhelming users."
+summary: "A product becomes harder to use when every reasonable request adds another decision. Clear boundaries, useful defaults, and visible information help the team preserve capability without making every workflow harder."
 ---
 
 ## The Problem
 
 Product teams face a constant tension between capability and clarity. Every feature request seems reasonable in isolation. Every stakeholder has a valid use case. Every competitor has that one feature you're missing. The result is predictable: products that can do everything but nothing well.
 
-This isn't a technical problem. It's a product strategy problem. The most successful products aren't the ones with the most features – they're the ones that make the fewest wrong choices.
+Each request needs to be judged against the product's purpose and the work it adds to existing flows. Otherwise the team can approve a series of sensible local changes that produce a confusing whole.
 
 ## Why Complexity Kills Products
 
-Complexity doesn't just make products harder to use. It makes them harder to build, harder to maintain, and harder to improve. Every additional feature creates exponential complexity in the system.
+Additional behavior creates work for customers and for the team maintaining it. The cost depends on how many existing states and workflows the change affects; it does not grow at one universal rate.
 
 Consider a simple button component. In isolation, it's straightforward. But add variants for different states, sizes, and contexts. Add accessibility requirements. Add animation preferences. Add theming support. Suddenly, what started as a simple button becomes a complex system with dozens of configuration options.
 
@@ -20,7 +20,7 @@ This complexity compounds across the entire product. Each component interacts wi
 
 ## The Simplicity Principle
 
-The solution isn't to remove features arbitrarily. It's to make better choices about what to build and how to build it.
+Start with the task the customer needs to complete. Decide which choices they need to control and which the product can make on their behalf.
 
 **Simple products solve real problems with minimal cognitive load.** They don't require users to understand the system before they can use it. They don't force users to make decisions they shouldn't have to make. They just work.
 
@@ -38,7 +38,7 @@ Focus on the problems that matter most to your core users. Solve them completely
 **2. Choose the Right Abstractions**
 Every feature should have a clear, simple mental model. Users shouldn't need to understand the underlying complexity to accomplish their goals.
 
-For example, a file upload feature shouldn't expose the complexities of chunking, retry logic, and progress tracking. It should just work. The complexity should be hidden behind a simple interface.
+For example, a file upload can handle chunking and retries internally while showing progress, remaining work, and a useful error if it fails. Hiding implementation detail helps; hiding the state of the task can make the interface harder to trust.
 
 **3. Choose the Right Defaults**
 Good defaults eliminate decisions users shouldn't have to make. They reduce cognitive load and improve the user experience.
@@ -51,9 +51,9 @@ There's a common misconception that simple products should have lots of white sp
 
 Simple products show users what they need to know when they need to know it. They don't hide important information behind multiple clicks or bury it in documentation. They present information at the right level of detail for the current context.
 
-A dashboard that shows key metrics at a glance is simpler than one that requires users to navigate through multiple screens to find the same information. A form that validates input in real-time is simpler than one that shows errors only after submission.
+A dashboard that shows key metrics at a glance is simpler than one that requires users to navigate through multiple screens to find the same information. Validation helps when it arrives at a useful moment and tells the person how to recover. Interrupting incomplete input with errors can add work instead.
 
-The goal isn't minimalism for its own sake. It's clarity and efficiency.
+Judge the layout by whether someone can find the relevant information and complete the task. Empty space helps when it improves that reading order, and hurts when it pushes useful context out of reach.
 
 ## Building Systems That Scale
 
@@ -65,7 +65,7 @@ The best products feel cohesive because they are cohesive. They're built on cons
 
 ## The Stakeholder Challenge
 
-The biggest obstacle to simplicity isn't technical – it's organizational. Every stakeholder has opinions about what the product should do. Every team has priorities that seem urgent. Every competitor has features that seem essential.
+Organizational pressure can gradually expand a product beyond the boundary the team intended. Every stakeholder has opinions about what the product should do. Every team has priorities that seem urgent. Every competitor has features that seem essential.
 
 Resisting this pressure requires strong product leadership. It means making principled decisions about what to build and what not to build. It means protecting the product vision from short-term demands and competing priorities.
 
@@ -84,16 +84,12 @@ These metrics provide insight into whether the product is simple enough to use a
 
 ## The Long Game
 
-Building simple products is a long-term strategy. It requires patience and discipline. It means making choices that might not pay off immediately but will create sustainable competitive advantages over time.
+The pressure to add options returns with each new use case. A useful default today can become another configuration screen after several individually reasonable requests. Keeping the product understandable requires revisiting those accumulated decisions as the system grows.
 
-Simple products are easier to improve because they have fewer moving parts. They're easier to understand because they have clearer mental models. They're easier to extend because they have better foundations.
+Consistency helps customers carry what they already learned into the next task. Protect that continuity when adding a capability, rather than making every release ask them to learn another exception.
 
-Most importantly, simple products are easier to love. Users appreciate products that work without requiring them to think about how they work. They appreciate products that solve their problems without creating new ones.
+## Review the Decisions a Feature Adds
 
-## Conclusion
+Before accepting a feature, walk through an existing customer task with it in place. Count the new choices, inspect the extra states, and identify what someone now has to understand. Ask whether a default, a clearer model, or a narrower scope could remove that work.
 
-Simplicity isn't about removing features or reducing functionality. It's about making better choices about what to build and how to build it. It's about creating products that solve real problems with minimal cognitive load.
-
-The most successful products aren't the most complex – they're the most thoughtful. They're built by teams that understand their users' needs and have the discipline to focus on what matters most.
-
-Building simple products requires saying no to good ideas, making principled decisions, and maintaining focus on the core value proposition. It's not easy, but it's worth it.
+This gives the team a concrete way to protect clarity while retaining useful capability. The feature earns its place when the benefit survives the cost it adds to the rest of the product.

@@ -1,7 +1,7 @@
 ---
 title: "Product Entropy"
 publishedAt: "2026-04-14"
-summary: "AI has made it much easier to add features. The danger is not failed experiments. It is the steady accumulation of features that survive without making the product meaningfully better."
+summary: "Lower implementation cost makes experiments easier to run and easier to keep by default. The product still carries their support, interaction, and maintenance costs after launch."
 ---
 
 ## More Is No Longer the Constraint
@@ -14,7 +14,7 @@ But it also removes a filter.
 
 ## The Product Gets Heavier in Quiet Ways
 
-The most dangerous thing about a feature is usually not the effort it took to build. It is what happens after it exists.
+A feature starts creating obligations as soon as someone depends on it. The initial implementation estimate covers only part of that cost.
 
 Once something ships, it rarely stays isolated. It begins to touch onboarding, support, documentation, QA, analytics, edge cases, and future roadmap decisions. It becomes one more thing users can misunderstand, one more thing the team has to preserve, and one more branch every future decision has to route around.
 
@@ -22,11 +22,7 @@ This weight does not arrive all at once. That is why teams underestimate it. The
 
 ## Bad Features Are Not the Main Threat
 
-Teams often think the risk is shipping something that fails.
-
-It is not.
-
-Clear failure is healthy. A bad experiment teaches you something. A feature nobody wants can be removed. A wrong turn can be corrected.
+A clear failure can make the next decision easier. The team can inspect what happened, remove the experiment, and carry the lesson into another attempt. Ambiguous results are harder to act on because someone can usually find a reason to keep the feature.
 
 The real problem is everything that lands in the middle. Features that are not important enough to define the product, but not useless enough to be deleted. They remain because someone uses them, because removing them creates friction, or because nobody feels enough pain to challenge them.
 
@@ -38,24 +34,22 @@ In the past, the cost of building acted as a form of discipline. Teams had to ar
 
 That discipline is weakening. Agents can generate code, wire flows together, and turn vague ideas into working artifacts quickly. This is useful for exploration, but it also makes accumulation easier. When the distance between idea and implementation collapses, weak ideas make it further into the system.
 
-This changes the job. The critical question is no longer whether a feature can be built. That part is increasingly cheap. The critical question is whether the product becomes more coherent after the feature exists.
+Review what the feature does to the rest of the product. A working implementation is one input to that decision; the customer's mental model and the team's future obligations matter too.
 
 Does it sharpen the product's value, or blur it? Does it remove complexity somewhere else, or only add new complexity of its own? Does it strengthen the product's identity, or just increase its volume?
 
 Those are editorial questions. And they matter more now than ever.
 
-## Strong Products Exclude More Than They Include
+## Strong Products Exclude More than They Include
 
-Good products are not defined only by what they contain. They are also defined by what they refuse to become.
+A clear product boundary helps the team reject additions that would pull existing workflows in conflicting directions.
 
-This is why lower implementation cost should not lead to lower standards for what gets absorbed into the product. It should lead to more experimentation outside the product, not more clutter inside it. Teams should absolutely test more ideas. They should prototype aggressively. They should learn faster than before. But the core product still needs a gate.
+This is why lower implementation cost should not lead to lower standards for what gets absorbed into the product. Keep experiments separate from supported product commitments until the team has enough evidence to accept their recurring cost. Teams should absolutely test more ideas. They should prototype aggressively. They should learn faster than before. But the core product still needs a gate.
 
 Otherwise every cheap experiment leaves behind residue.
 
 ## Protect Clarity
 
-AI has made software easier to produce, but it has not made product judgment less important. If anything, it has made it more important, because the natural friction that once protected teams from overbuilding is disappearing.
+Cheap implementation gives teams more room to try ideas. It also makes it easier for an experiment to become a permanent obligation without anyone making a deliberate choice to keep it. The product starts carrying the consequences long after the prototype felt inexpensive.
 
-The danger is not that teams will try too many ideas. The danger is that too many of those ideas will quietly stay.
-
-Great products are not built by adding everything that might be useful. They are built by protecting clarity over time.
+That is where product judgment matters. Trying more can help the team learn. Letting every plausible addition stay gives those experiments control over the product's direction. Clarity has to be protected through the decisions that follow the build.

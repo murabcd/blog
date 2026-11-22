@@ -1,84 +1,61 @@
 ---
 title: "The Architecture of Autonomy"
 publishedAt: "2026-01-25"
-summary: "Most autonomous agents fail not because the models are stupid, but because the infrastructure is fragile. To build agents that actually run unattended, we must treat autonomy as a systems engineering problem, not a prompting problem."
+summary: "Unattended agents need execution that survives a disconnected user, isolated state, bounded permissions, recovery, and measurable costs. The infrastructure determines how much work can safely run on its own."
 ---
 
-## The "Laptop Leash"
+## The Laptop Test
 
-There is a simple test for whether an AI agent is truly autonomous: **Can you start it, close your laptop, get on a plane, and come back to finished work?**
+Start a task, close the laptop, and come back later. If the run stopped because a terminal closed or a local connection disappeared, the agent depended on the user's session even though the interface called it autonomous.
 
-For most "autonomous" agents today, the answer is no. They are tethered to open terminal windows, browser tabs, or local database connections. They require constant "y/n" approvals. They crash if the internet flickers.
+For work that must continue unattended, the execution loop needs an independent host and durable task state. The user should be able to reconnect, inspect progress, and interrupt the run without having to keep the process alive themselves.
 
-These aren't agents; they are high-maintenance assistants.
-
-The reason agents fail to run unattended isn't usually hallucination. It is **system design failure**. We are trying to run autonomous software inside interactive environments. To get out of the agent's way, we need to stop treating them like chatbots and start treating them like distributed systems.
+This is a systems problem alongside a model-quality problem. A capable model cannot recover work that the runtime never recorded.
 
 ## The Threat of Environment Garbage
 
-Every developer understands "Context Garbage"—if you stuff too much irrelevant data into the prompt, the model gets confused.
+Agent runs create files, install packages, change configuration, and start processes. Reusing an environment can make a later run depend on an earlier run's leftovers. A cached package may hide a missing dependency; a lingering process may occupy a port.
 
-But there is a second, equally dangerous force: **Environment Garbage.**
+Isolation helps expose those dependencies. For suitable tasks, start an ephemeral sandbox from a defined image, seed the required data, and retain the logs and artifacts needed to inspect the result. Destroying the workspace should not destroy the only evidence of what happened.
 
-When an agent runs on your local machine or a long-lived server, it leaves traces. It installs packages, creates temporary files, changes configurations, and starts processes. Over time, this accumulates.
-*   Run 1 succeeds because a specific library happened to be cached.
-*   Run 2 fails because a file from Run 1 wasn't deleted.
-*   Run 3 behaves non-deterministically because of a lingering process.
-
-Shared environments hide dependency issues. Fresh environments expose them.
-
-**The Rule of Sandboxing:** Every agent run must occur in a completely isolated, ephemeral sandbox. It spins up from zero, does the work, and is destroyed immediately after verification. If the agent needs a database, it shouldn't connect to your staging DB. It should install Postgres locally inside the sandbox, seed it, run the migration, and test against that.
-
-This guarantees that if the agent succeeds, it succeeded because the code works, not because your laptop happened to have the right version of Python installed.
+Some tasks require persistent state or access to an existing service. Keep that state explicit and separate from disposable execution. A sandbox reduces interference, but the permissions and connected systems still determine the consequences of a mistake.
 
 ## Severing the Connection
 
-True autonomy requires "headless" execution. The agent loop must be completely decoupled from the user session.
+Decouple the user interface from the worker. The client submits a task, receives progress, and can disconnect while a coordinator retains the run's state.
 
-In a correct architecture, the user is a client, not a host. You submit a goal to a remote orchestrator. You can watch the logs stream in if you want, but your presence is irrelevant. The control mechanisms shouldn't be human interventions; they should be system constraints.
-*   **Time Limits:** "Kill this container if it runs longer than 20 minutes."
-*   **Budget Limits:** "Stop if token spend exceeds $5."
-*   **Resource Limits:** "Restrict network access to these domains."
+Bound the worker's authority with explicit constraints:
 
-If an agent requires you to hit "Approve" before running a command, you haven't built an agent. You've built a fancy autocomplete.
+- **Time:** Stop a run after its allowed execution window.
+- **Cost:** Stop or request a decision when the spending limit is reached.
+- **Access:** Restrict credentials, network destinations, and writable resources.
 
-## The Case Against Frameworks
+Approval can remain appropriate for consequential actions. Decide those boundaries before execution where possible, and preserve a waiting state when the agent needs a decision. Unattended operation should fit the task's authorization rather than remove it.
 
-There is a tendency to over-engineer the interface between the model and the machine. We build complex protocols (like MCP), elaborate tool definitions, and strict graph-based execution plans.
+## Use the Interface That Fits the Work
 
-This is often a mistake. Agents struggle with indirection. They thrive on simplicity.
+For repository work, a shell can be an effective interface. Existing commands expose files, processes, HTTP requests, and exit codes in a form the agent can inspect. A small wrapper around `curl` may add little when the environment already supplies the required capability.
 
-The best interface for an agent is the one that already exists: **The Operating System.**
-*   Instead of a custom `ReadFile` tool, give it `cat`.
-*   Instead of a complex HTTP client wrapper, give it `curl`.
-*   Instead of a proprietary task runner, give it `bash`.
+Purpose-built tools can still enforce permissions, validate arguments, or provide structured results that a raw command cannot. Protocols such as MCP can connect an agent to operations outside its sandbox. Choose the interface by its reliability and boundaries, then measure it on real tasks.
 
-The OS provides process isolation, error signaling, and file storage for free. It is the ultimate abstraction layer. When you strip away the heavy agent frameworks and give the model direct, low-level access to a sandboxed CLI, reliability often goes up. The model understands Bash better than it understands your custom API.
+The operating system supplies useful primitives, but process isolation and network restrictions require actual configuration. Giving the model a shell does not establish those controls by itself.
 
-## Define Outcomes, Not Procedures
+## Define Outcomes and Constraints
 
-When we micromanage humans, they perform poorly. The same applies to agents.
+A task needs a clear definition of completion. “Fix the typo” and “make the linter pass” describe different outcomes, even if they happen to touch the same file. Preserve the user's intent when converting a request into checks.
 
-A common failure mode is trying to architect the exact "Procedure" the agent should follow (Step 1: Search, Step 2: Read, Step 3: Write). This makes the system brittle. If Step 1 returns slightly unexpected data, the hard-coded transition to Step 2 fails.
+For exploratory tasks, let the agent choose and revise a plan within defined limits. For a migration or deployment, a fixed sequence may protect important invariants. The right amount of procedural detail depends on what can fail and how reversible the work is.
 
-The shift is to define **Outcomes**.
-*   **Bad:** "Search for the file, read it, and fix the typo."
-*   **Good:** "The file `index.ts` must pass the linter."
-
-Set the goal, provide the constraints, and get out of the way. Let the agent plan the route. If it hits a dead end, let it backtrack and try a different tool. Human intervention during the execution loop almost always masks system flaws that need to be fixed in the infrastructure, not in the chat window.
+Record intermediate state so a retry can distinguish completed steps from work that needs repeating. External side effects need particular care: retrying an interrupted request must not accidentally duplicate a purchase or message.
 
 ## Benchmarks and Bills
 
-Finally, autonomy changes the economics of AI.
+An unattended loop can make calls much faster than a person reading and responding. Retries, exploration, and tool output can accumulate cost before anyone returns to the interface.
 
-An interactive chatbot is cheap because humans are slow. We read, we think, we type. We naturally throttle the API usage.
+Track spend per completed task alongside success rate, latency, and recovery behavior. Evaluate representative failures, including a lost connection or a tool timeout. A cheaper run that leaves the task incomplete may cost more once someone has to reconstruct it.
 
-An autonomous agent does not sleep. It explores, it retries, it loops. It can burn through tokens and compute at a terrifying rate. This isn't an anomaly; it's the operational reality of autonomy. You must plan for sustained cost, not spikes.
+## The Runtime Has to Carry the Task
 
-Furthermore, you cannot improve what you cannot measure. Benchmarks are often treated as a final "polish" step. In autonomous systems, benchmarks must exist from Day 1. You need a repeatable way to answer: "Is this agent actually better than the one we ran yesterday?" without relying on your intuition.
+The laptop test makes the infrastructure problem hard to avoid. An agent that needs the user to keep a terminal alive still depends on that person to carry the task through the day.
 
-## Build the Room, Not the Prompt
-
-Building autonomous agents is not about finding the perfect prompt. It is about building the infrastructure that allows a model to make mistakes, recover, and execute without taking the whole system down.
-
-If you want your agent to work, lock it in a room (sandbox), give it a job description (outcome), take away its phone (user session), and don't let it out until the job is done.
+Independent execution, durable state, isolation, and bounded recovery give the agent somewhere to work after the user leaves. A better prompt can help it use that environment. The runtime has to keep the work alive.

@@ -4,6 +4,8 @@ publishedAt: "2026-10-24"
 summary: "Inside Fev-4B: native decision scoring, typed APIs, routing, calibration, compiled inference and shared-adapter training."
 ---
 
+## A Typed Interface for Decisions
+
 I've been building **Fev-4B** around a small interface: give the model a state and a set of typed questions, and get scores over the possible answers. It is an open-weight 4B decision model that returns probability distributions without generating answer tokens. The [model package](https://huggingface.co/murabcd/fev-4b) and [runtime](https://github.com/murabcd/fev) are now available under Apache-2.0.
 
 I wanted a model I could use directly in application logic: select a route, check a condition or assign a rubric level. A language model can express those decisions as JSON, but that still leaves generation constraints, response parsing and the question of what confidence means. I built Fev's interface around scores over the supplied answers, with definitions passed at runtime and one shared checkpoint across configurations.

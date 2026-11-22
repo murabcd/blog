@@ -8,7 +8,7 @@ summary: "Traditional product management can slow down complex B2B development. 
 
 We've all been there. You're working on a product, maybe something complex. You know what problems customers have, the team is smart, but getting impactful features out the door feels like wading through mud. Progress stalls, and everyone gets frustrated.
 
-Often, the issue isn't just the technical complexity. It's how we structure the work between Product Management and Engineering. The traditional model, where PMs gather requirements, write detailed specs, and "hand them over" to engineers, can become a major bottleneck.
+The handoff between product management and engineering can add delay alongside the technical work. The traditional model, where PMs gather requirements, write detailed specs, and "hand them over" to engineers, can become a major bottleneck.
 
 ## PM as Gatekeeper
 
@@ -19,7 +19,7 @@ This might seem efficient ("let engineers code!"), but I've seen it backfire:
 - **Lost Nuance:** Engineers get a filtered view, missing crucial context about the _why_ behind a feature or the real user pain point.
 - **Technical Disconnect:** PMs, often less technical, might define solutions that are awkward or overly complex to build, not leveraging the engineers' knowledge of what's actually feasible or elegant.
 - **Slow Decisions:** PMs become the bottleneck for every question or clarification, slowing down development.
-- **Frustrated Teams:** Engineers feel like ticket-takers, not problem-solvers. PMs feel like they're just managing a backlog.
+- **Frustrated Teams:** Engineers receive decisions too late to contribute their understanding of the system. PMs feel like they're just managing a backlog.
 
 This model breaks down fast. You can't effectively spec out every detail of a feature or a complex integration without deep technical understanding.
 
@@ -27,7 +27,7 @@ This model breaks down fast. You can't effectively spec out every detail of a fe
 
 Who knows the capabilities, limitations, and potential of your complex system better than the engineers building and maintaining it every day?
 
-When we built features at [Juro](https://juro.com/), some of our best breakthroughs came not from a detailed spec, but from an engineer understanding a technical possibility or seeing a pattern across customer issues that a non-engineer might miss. They understand the trade-offs, the performance implications of different approaches, and the most direct way to solve a technical challenge.
+When we built features at [Juro](https://juro.com/), useful ideas emerged when engineers connected a technical possibility with a pattern across customer issues. Their understanding of the implementation changed the options the team could consider. They understand the trade-offs, the performance implications of different approaches, and the most direct way to solve a technical challenge.
 
 Forcing them to just implement a pre-defined spec often means missing out on simpler, faster, or more powerful solutions. If we want to build great technical products quickly, we need to let the people who understand the technology best make more of the decisions about _how_ we solve problems.
 
@@ -41,19 +41,19 @@ This means PMs need to get really good at:
 - **Market & Competitor Awareness:** Understanding the landscape, where the market is going, and what competitors are doing.
 - **Business Context:** Clearly communicating the company's goals, target markets, and key business metrics. How does this feature help us win?
 - **Data Analysis:** Digging into product analytics to understand how features are _actually_ being used (or not used) and identifying opportunities or problems.
-- **Synthesizing Feedback:** Gathering input from Sales, Support, and customers and distilling it into clear themes and problem statements, not just feature lists.
+- **Synthesizing Feedback:** Gathering input from Sales, Support, and customers and distilling it into clear themes and problem statements that preserve why the request matters.
 
 The PM's role becomes less about defining _the solution_ and more about deeply understanding and clearly articulating _the problem_, the _user_, and the _business context_. They challenge assumptions and ask hard questions, ensuring the team is heading in the right direction, but they trust engineers to chart the best technical course.
 
 ## Staying Aligned
 
-Giving engineers autonomy doesn't mean chaos. It means replacing slow, bureaucratic approval processes with faster, more effective feedback loops.
+Agree on the decisions engineers can make independently, the constraints they must preserve, and the points where product or design review is needed. Make the resulting work visible so feedback arrives while changes are still manageable.
 
 - **Clear Goals:** Instead of feature lists dictated by PMs, maybe teams set outcome-oriented goals each quarter (e.g., "Improve reliability of the voice channel," "Reduce onboarding time for new HR bot"). Engineers decide _what to build_ to hit those goals.
 - **Transparency:** Make work visible. Use shared roadmaps (maybe Now/Next/Later style), open sprint notes, accessible analytics. Let people pull the information they need.
 - **Regular Outcome Reviews:** Have structured check-ins (maybe monthly) where the team (Eng + PM + maybe leadership) reviews the _impact_ of what was shipped. Did usage go up? Did support tickets go down? Did key customers adopt it? Use data and customer feedback to assess if the decisions made are moving the needle. The team lead (often an engineer) then decides whether to stay the course or adjust.
 
-This creates accountability based on results, not on checking boxes in a process document.
+Use the review to compare the result with the intended behavior and decide what needs to change next.
 
 ## Moving Faster
 
@@ -65,6 +65,6 @@ How can we apply speed-focused ideas from fast-moving tech companies to the ofte
 
 ## Context Creates Speed
 
-Teams do not move faster because product managers make decisions sooner. They move faster when the people closest to implementation have enough customer, business, and product context to make good decisions without waiting.
+The people closest to implementation make decisions all day. When they lack customer and business context, each uncertain choice becomes a question for the PM or a guess the team has to revisit later. More pressure to ship leaves that dependency intact.
 
-That requires trust and tighter feedback loops, not less product thinking. The product role shifts from controlling each choice to building the context that makes distributed choices coherent.
+Sharing the context lets more of those decisions happen where the work is. The product role has to make the direction clear enough that people can act independently and still pull toward the same result. That is how the team gets faster without making every choice pass through one person.

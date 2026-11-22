@@ -1,65 +1,55 @@
 ---
-title: How AI Agents Can Truly Learn
+title: "How AI Agents Can Truly Learn"
 publishedAt: "2025-12-14"
-summary: "Most AI agents today don't actually learn; they just accumulate data until they crash. The future of intelligent agents isn't about updating model weights it's about mastering 'learning in token space' to create systems that improve over time."
+summary: "An agent can adapt through stored instructions, corrections, and task memory without changing model weights. That memory needs scope, review, and evidence that it improves later work."
 ---
 
-## The Missing Piece of Artificial Intelligence
+## The Same Correction Again
 
-There is a glaring gap between human intelligence and the artificial intelligence we build today. Humans learn continuously. We make mistakes, update our beliefs, acquire new skills, and refine our behavior over time. We get better.
+An assistant makes a mistake, receives a correction, and handles the immediate task better. In a later session it makes the same mistake because the correction was never stored or retrieved. The conversation improved the current response without changing the system's future behavior.
 
-Most AI agents, by contrast, are stuck in a "Groundhog Day" loop. They might have access to incredible world knowledge, but they don't meaningfully improve from their experiences. They are static entities, frozen in time at the moment they were trained.
+For deployed agents, that distinction matters. A model's weights may remain fixed while the surrounding application changes its instructions, retrieved knowledge, and remembered task state. Those text-based changes can support useful adaptation when the system manages them deliberately.
 
-The traditional answer to this problem has been to focus on the neural network's "weights" the billions of numerical parameters that define the model. Researchers have spent decades trying to figure out how to update these weights on the fly without breaking the model (a problem known as "catastrophic forgetting"). But despite all this effort, modern production LLMs are still deployed with frozen weights.
+## Weight Updates Have a Different Cost
 
-We are looking for the solution in the wrong place. The breakthrough for creating agents that truly learn doesn't lie in the complex math of weight updates. It lies in a much more accessible and powerful concept: **learning in token space**.
+Fine-tuning can change a model's behavior across many examples. It also requires suitable data, evaluation, and a deployment process. Updating a shared model with private user information creates additional isolation and governance questions.
 
-## Why Updating Weights Doesn't Work for Agents
+For a task-specific correction, changing stored context can be a more direct first step. The team can inspect the rule, limit it to the relevant workspace, and remove it when it becomes stale. This complements model training rather than establishing that weight updates have no place in agent systems.
 
-The old way of thinking assumes that "learning" equals "changing the model." But this approach has proven to be incredibly difficult for practical, deployed agents.
+## What Token-Space Learning Means
 
-1.  **It's Too Risky:** Training a model requires careful data curation and human oversight. Trying to automate this process for every single agent in real-time is a recipe for disaster. One bad update can ruin the model's performance on everything else.
-2.  **It's a Privacy Nightmare:** If you have millions of users, whose data do you use to update the model? Mixing everyone's data into a shared model risks leaking private information. Training a separate model for every user is prohibitively expensive.
-3.  **The Feedback is Too Simple:** Most weight-update methods rely on simple "thumbs up/thumbs down" rewards. This is a very low-resolution signal for complex tasks. Agents need rich, detailed feedback, not just a score.
+Here, learning in token space means changing the text the system supplies to a model on later tasks. That might be a user preference, a verified workflow constraint, or a lesson from a failed operation.
 
-## The Power of Token-Space Learning
+The representation has practical benefits:
 
-Modern AI agents are not just a model. They are a *system* composed of the model plus its **context**. This includes the system prompt (instructions), the tool definitions (capabilities), and the conversation history (memories).
+- **Inspection:** People can read the stored rule and its source.
+- **Versioning:** Changes can be compared and rolled back.
+- **Portability:** Stored knowledge can be tested with another model.
 
-Two identical models given different contexts behave like two completely different people. This realization is the key: instead of trying to change the *model* (the weights), we should focus on changing the *context* (the tokens).
+Portability does not guarantee identical behavior. A new model may interpret the same instruction differently, and a human-readable memory can still contain a wrong generalization. Evaluate the resulting behavior after a change.
 
-This approach has massive advantages:
+## A Transcript Is Not a Memory Policy
 
-*   **It's Human-Readable:** You can look at an agent's memory and see exactly what it has learned. If it learns something wrong, you can just read the text and fix it. Weights are black boxes; tokens are transparent.
-*   **It's Portable:** Memories stored as text can be moved from one model to another. When GPT-5 comes out, you don't have to retrain your agent from scratch. You just transfer its token-based memory to the new brain.
-*   **It's Controllable:** If an agent learns a bad behavior, you can simply delete the tokens that caused it. You can "roll back" an agent's memory to a previous state just like you would a text file.
+Appending every interaction preserves history but leaves the next task to find the useful parts. Conflicting instructions and old assumptions can remain beside current decisions without a clear priority.
 
-## The Problem with "Append-Only" Memory
+A memory policy should distinguish task state, durable preferences, verified facts, and tentative observations. Keep the source and scope of a lesson so an event from one project does not silently become a rule for every user.
 
-Right now, most agents use a very primitive form of token learning: they just append every new interaction to the end of the list until they run out of space.
+Retrieval also matters. A useful correction that never reaches the relevant task has no practical effect, while an irrelevant correction can make the task worse.
 
-This is not learning; it's logging.
+## Consolidate with Review
 
-Imagine if your brain worked like this. You wouldn't consolidate memories or learn lessons; you would just have a running transcript of every second of your life until you passed out. This "append-only" approach leads to "context rot," where the agent gets overwhelmed by noise and its reasoning degrades. True learning requires **refinement**, not just accumulation.
+A background process can examine recent interactions, identify repeated corrections, and propose a shorter representation. It should preserve provenance and avoid converting an uncertain interpretation into an established fact.
 
-## A New Blueprint for Continual Learning
+Give memory edits the same scrutiny as other behavior changes. Check for private information, conflicting instructions, and rules whose scope is wider than the evidence. Keep previous versions so an incorrect edit can be reversed.
 
-To build agents that actually get smarter, we need to move beyond simple logging and start treating memory management as an active, intelligent process.
+## Let the Agent Propose a Lesson
 
-### Sleep-Time Compute
+An agent can identify a recurring failure and propose a correction for future runs. The application should decide which memory locations it may edit and which instructions remain protected. Task data must not gain authority merely because it appears in a document the agent read.
 
-Humans consolidate memories while we sleep. We process what happened during the day, discard the noise, and strengthen the important connections. AI agents need a similar process.
-
-We can dedicate "sleep-time compute" to agents background processes that run when the agent isn't talking to a user. During this time, the agent can review its recent experiences, identify contradictions, abstract general patterns from specific events, and rewrite its own memory to be more efficient.
-
-### Self-Aware Memory Management
-
-Agents need to be taught to manage their own brains. Right now, models treat their system prompts as static laws. We need to train agents to understand that they can and should edit their own instructions.
-
-If an agent notices that it keeps making the same mistake, it should be able to update its own system prompt to say, "Warning: I tend to fail at X, so be extra careful when doing Y." This makes memory management a first-class tool that the agent can use to improve itself.
+For example, a correction about a repository's test command can belong in that workspace's instructions. A note from an untrusted page telling the agent to ignore its rules should not. The storage and retrieval design needs to retain that distinction.
 
 ## Learn Fast, Distill Slowly
 
-The ultimate goal isn't to choose between weights and tokens, but to use them together. Token-space memory provides the fast, flexible, and transparent layer of learning. Over time, stable and universal lessons from this token layer can be "distilled" into the model's weights for efficiency.
+Text memory gives an agent a place to retain a correction without waiting for a training run. The lesson can be inspected, changed, or removed, and it can survive replacing the model underneath it. That continuity is part of the product the team is building.
 
-This creates a powerful cycle: the agent learns quickly in text, and slowly solidifies that knowledge into its core parameters. But the most valuable asset will always be the **learned context** the persistent, evolving memory that survives even when the underlying model is replaced.
+Some stable patterns may later justify fine-tuning or other training changes. First the system needs to show that it remembers the right lesson and applies it in the right situation. Stored context becomes learning when it changes the next relevant piece of work.

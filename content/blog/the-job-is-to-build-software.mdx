@@ -1,0 +1,77 @@
+---
+title: "The Job Is to Build Software"
+publishedAt: "2026-11-10"
+summary: "Learning to code gave us a way to build software. It was never a reason to preserve every manual step. Better tools should expand what engineers can deliver, while the responsibility for the result stays with them."
+---
+
+## The Tool Became the Identity
+
+There is a strange assumption in some arguments about AI coding tools: if an engineer writes less code, they are doing less engineering.
+
+That makes sense only if writing code is the thing we are trying to preserve. A customer waiting for a broken workflow to be fixed has a different concern. They want software that works. They do not care how much of the implementation came directly from someone's keyboard.
+
+We learned to code because it gave us a way to turn ideas into working systems. Over time, the activity became an identity. Being good at a language, a framework, or a particular kind of implementation became evidence that we belonged in the profession.
+
+Now a tool can perform some of that activity, and it feels like the profession itself is being taken away.
+
+I think that feeling deserves examination. If a better way of building software makes your work feel less legitimate, what exactly have you attached your legitimacy to?
+
+## We Already Work through Abstractions
+
+Most engineers rely on an enormous amount of work they did not do themselves. Compilers translate their code. Databases handle storage and concurrency. Libraries provide behavior that would take months to reproduce. Managed services take entire operational problems off their hands.
+
+We generally accept this because it lets us work on something more useful. Understanding what happens underneath still matters, especially when something breaks. Repeating all that underlying work manually is rarely the goal.
+
+AI tools introduce different failure modes. They can produce plausible mistakes, misunderstand a requirement, or make a change whose consequences extend beyond the task. Those are good reasons to examine how we use them.
+
+But the amount of code written by hand has never been a useful measure of how much engineering happened. An engineer who removes a service, uses an existing library, or changes a design so that less code is needed may have done the most valuable work on the team.
+
+We should apply the same standard when a tool helps produce the implementation.
+
+## The Result Still Needs an Engineer
+
+Consider a feature that emails invoices when a background job runs. An agent can build the job, wire up the email service, and write tests for the expected flow.
+
+Then the process crashes after sending an email but before recording that it succeeded. The job runs again. The customer receives another invoice email.
+
+Solving that requires understanding what the system promises, where state lives, and what can happen between two operations. It also requires deciding which failure is acceptable: a delayed invoice, a duplicate message, or a case that needs someone to investigate.
+
+An agent can help reason through these choices and implement the safeguards. The engineer still has to establish which behavior is correct, inspect the evidence, and decide whether the system is ready to run for customers.
+
+That responsibility exists regardless of who produced the first version. Code that compiles and tests that pass are evidence to assess. They do not settle every question about whether the software does its job.
+
+There is plenty of engineering left after the code appears.
+
+## Your Experience Should Make the Tools More Useful
+
+Years spent learning to program can make it easier to use these tools well. You can recognize an unnecessary abstraction, spot an unsafe assumption, and notice when a small request is turning into a large architectural change.
+
+You can also ask better questions. Why does this need a queue? What happens if the request arrives twice? Can we use the system we already operate? Which part of the proposed solution creates work for the next person?
+
+That experience becomes more valuable when you use it across more attempts. You can explore an alternative, inspect how it behaves, discard it, and try a simpler approach without spending the same amount of time implementing each one.
+
+But experience does not create this advantage automatically. You have to learn how to direct the work, provide useful context, and verify the result. Familiarity with the old process does not exempt anyone from learning the new one.
+
+The investment in learning to code was worthwhile because of the understanding it built. You can keep using that understanding even when the way you produce software changes.
+
+## Keep the Standards, Change the Workflow
+
+There are valid reasons to reject an AI-generated change. It might be difficult to maintain, poorly tested, unsafe, or simply wrong. An engineer should be able to explain the problem and what would make the change acceptable.
+
+Rejecting it because the author did not manually write every line offers no such explanation. Neither does accepting it because generating it was fast.
+
+The standard should follow the software into production. Can the team understand it? Does it handle the conditions that matter? Can someone diagnose a failure and change the behavior without making the system worse?
+
+Sometimes answering those questions means writing the code yourself. Sometimes it means having an agent implement a clear approach while you inspect the difficult parts. Sometimes the best answer is to delete the proposed feature entirely.
+
+Good engineering includes choosing how the work should be done. Turning one method into a rule for every task gives up that judgment.
+
+## Build Something You Could Not Build Before
+
+Enjoying programming is a good reason to keep doing it. Writing something by hand can be satisfying, educational, and useful. But a personal preference for that process should not become a professional requirement that everyone else must preserve.
+
+The more interesting question is what these tools let you take responsibility for now. Maybe you can finally replace a fragile internal process, finish a project that was too expensive to attempt, or spend more time investigating a failure instead of implementing routine changes around it.
+
+That is where I would put the effort: learning how to deliver software that would have been out of reach with the time and resources available before.
+
+The job is to build software. Better tools give us a reason to raise our expectations of what we can build.

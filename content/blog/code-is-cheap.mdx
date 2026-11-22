@@ -1,43 +1,41 @@
 ---
-title: "Code is Cheap. Decisions are Expensive"
+title: "Code Is Cheap. Decisions Are Expensive"
 publishedAt: "2026-01-07"
-summary: "AI coding agents have driven the cost of writing software near zero. But this speed has exposed a painful new bottleneck: the slow, messy, and expensive process of humans deciding what to build in the first place."
+summary: "Faster code generation makes unresolved product decisions more visible. A team still has to choose useful work, define the behavior, and verify what it ships."
 ---
 
-## The Cost of "How" Has Collapsed
+## A Feature before the Decision
 
-For the last forty years, the biggest limit in software was implementation. If you had a great idea, the hard part was actually building it. You needed to hire expensive engineers, manage complex schedules, and wait weeks or months to see if it worked. The "How" was the most expensive part of the equation.
+An agent can produce a prototype while the team is still debating whether the feature belongs in the product. That can be useful: a working example exposes constraints a discussion missed. It can also make a weak idea look more committed than it is.
 
-That era is over. AI coding agents have collapsed the cost of implementation. Today, you can describe a feature, and an agent can write and debug the code in minutes. The barrier to entry for creating software has dropped from a wall to a speed bump. We have successfully automated the act of typing syntax.
+The cost of producing an initial implementation has fallen for many tasks. Integration, testing, security, and maintenance still take work. The practical change is that a team can generate more candidate software than it has time to judge carefully.
 
-## The New Bottleneck is "What"
+## The Decision Queue
 
-But this speed creates a new problem. When the factory floor speeds up by 100 times, piles of unfinished work start stacking up at the front door.
+When implementation speeds up, unresolved choices become visible elsewhere. Product, design, and engineering still have to agree on the problem, the boundaries, and the reason to spend attention on it.
 
-Now that shipping is instantaneous, the bottleneck has shifted upstream to **decision-making**. The "What" and the "Why" are now the most expensive parts of the process. While the AI can write the code instantly, the humans are still stuck in the same slow loops:
+A team can accumulate work while it is:
 
-*   Debating which feature matters most.
-*   Writing vague instructions that confuse the team.
-*   Sitting in meetings trying to get product, design, and engineering to agree.
+- Debating which customer problem matters most
+- Revising instructions that leave important behavior open
+- Reconciling different assumptions about the intended result
 
-The coding has accelerated, but the thinking has not. We are trying to feed a supersonic engine with a fuel line that drips at a human pace.
+Making more code does not resolve those disagreements. It may increase the cost of changing direction because there is now an implementation for someone to defend.
 
 ## Building the Wrong Thing Faster
 
-There is a danger in this new dynamic. When code is cheap, the temptation is to build *everything*. Because it costs so little to try an idea, we stop checking if the idea is actually good.
+Cheap experiments are useful when they answer a question. They become product clutter when every experiment is treated as a feature the company must carry indefinitely.
 
-This leads to a paradox where we ship more features than ever but don't actually solve more problems. We are simply building the wrong things faster. We create "instant junk" where software that works technically but serves no business purpose. It creates clutter and confusion, not because the code is bad, but because the decision to build it was rushed.
+A technically successful change can still confuse the customer, overlap with an existing flow, or create a maintenance obligation larger than its value. Review the decision to keep it with the same care as the decision to build it.
 
 ## The Value of Precision
 
-In this new world, the high-value skill is no longer knowing how to write code. It is knowing how to define it. If an agent can build anything you ask for, the most valuable person in the room is the one who knows exactly what to ask for.
+A useful specification names the intended behavior and the limits that matter. It leaves room for implementation judgment while making acceptance possible. For example, a faster approval flow still needs clear rules about who can approve and what happens when access changes.
 
-This shifts the focus to **AI Architecture**. The work is no longer about managing lines of code. It is about managing ambiguity. The new masters of the craft are the people who can:
-
-*   Create rigorously clear specifications.
-*   Define the exact logic of a system before the work begins.
-*   Get the team to agree on the "Why" so the AI can execute the "How" without making mistakes.
+The team needs to own both the reasoning and the checks. Agents can help write tests and explore alternatives, but those tests will reflect whatever assumptions the team gives them. Passing them cannot establish that the original problem was worth solving.
 
 ## Decisions Are the Work
 
-We used to value engineers for their ability to solve technical puzzles. Now, we must value them for their ability to make choices. The implementation is now a commodity. The real scarcity is found in the slow, messy, human work of figuring out what actually matters.
+When a team can produce candidate implementations faster than it can evaluate them, the slow part becomes choosing what deserves to exist. Someone still has to connect a customer problem to a specific behavior and decide whether the result is worth carrying.
+
+That is where I think more of the value moves. Technical judgment still matters, including the judgment to reject generated code. The team also needs people who can make a useful choice before another afternoon of implementation gives everyone something to defend.

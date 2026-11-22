@@ -4,108 +4,46 @@ publishedAt: "2026-04-28"
 summary: "Multi-agent systems are starting to work, but not as chaotic swarms. The useful pattern is much narrower: keep decisions centralized, let other agents add intelligence, and treat context handoff as the real architecture."
 ---
 
-## The First Version Was Too Naive
+## Independent Work Creates Shared Decisions
 
-The first wave of multi-agent systems was mostly theatre. People imagined a room full of autonomous agents debating, writing, reviewing, planning, and magically converging on the right answer.
+A coding task is split across several agents. One chooses a permission rule, another invents an error state, and a third introduces a new abstraction. Each change can look reasonable in isolation while the combined product behaves inconsistently.
 
-In practice, it usually broke.
+Parallel work includes decisions about interfaces, behavior, and architecture. A system needs a way to reconcile those decisions before treating the separate outputs as a completed task. Otherwise the integration cost can consume the time the extra workers saved.
 
-The problem was not that the models were stupid. The problem was that every agent made its own hidden decisions. One agent chose a style. Another chose a different edge case. A third invented a slightly different interpretation of the task. By the end, the system had many pieces of work, but no single mind holding the product together.
+## Give the Work an Owner
 
-This is why most useful agent systems stayed simple for a long time. One agent did the work. Other tools helped with search, retrieval, or analysis. It was not very glamorous, but it was much easier to trust.
+A useful starting point is one agent responsible for the main goal, plan, tradeoffs, and final result. Other agents can investigate a question, review an artifact, or implement a bounded piece of work. Their findings return to the owner so the plan can change coherently.
 
-## Parallel Work Creates Parallel Decisions
+The write path needs clear boundaries. Independent files or components can sometimes be changed in parallel, while shared interfaces need agreement. Decide who integrates the work and who checks that the combined behavior still matches the request.
 
-The hard part of software is rarely typing code. The hard part is making decisions.
+## Give Each Role Relevant Context
 
-When multiple agents write at the same time, they do not just produce more code. They also produce more decisions. Some of those decisions are explicit, but many are hidden inside the implementation.
+Copying the full conversation into every worker carries old assumptions and abandoned approaches alongside current decisions. A reviewer can benefit from seeing the goal and actual artifact without inheriting every explanation that made the builder comfortable with it.
 
-This is where systems become fragile.
+Supply the relevant constraints, evidence, and question. Add history when it explains a tradeoff the reviewer needs to assess. Too little context produces generic advice; too much can reproduce the confusion the second perspective was meant to resolve.
 
-An agent deciding how to handle permissions is making a product decision. An agent choosing what error state to show is making a UX decision. An agent deciding which abstraction to reuse is making an architecture decision.
+## Review Findings before Applying Them
 
-If five agents make those choices independently, you do not get five times the output. You get five competing versions of the product.
+A build-and-review loop separates generation from a fresh examination of the result. A reviewer can inspect logic, missing cases, security boundaries, and whether the implementation matches the intended behavior.
 
-## The Pattern That Works
+Review comments remain claims to investigate. The owner should reproduce a reported bug, compare a suggested change with the task, and reject work that expands the scope without a reason. Blindly applying every comment can make the product less coherent even when the reviewer finds real issues.
 
-The practical pattern is not a swarm. It is a manager.
+## Escalate a Specific Uncertainty
 
-One agent should own the main thread of work. It holds the user goal, the plan, the tradeoffs, and the final decision-making. Other agents can help, but they should contribute intelligence before the main agent takes action.
+A faster or less expensive model may handle routine work and request another perspective when a decision becomes difficult. Architecture questions, confusing failures, and security-sensitive changes can benefit from that escalation.
 
-This gives you the benefit of multiple perspectives without fragmenting ownership.
+The challenge is recognizing when to ask and framing a useful question. Send the uncertainty, relevant evidence, attempted explanations, and the decision that needs help. A stronger model given the wrong problem can still return a confident answer to it.
 
-A reviewer can inspect the diff with fresh eyes. A research agent can find missing context. A stronger model can be called in when the primary agent is uncertain. A planning agent can challenge the approach before implementation begins.
+Measure whether escalation improves completed tasks enough to justify its cost and latency. The existence of another model is only useful when the handoff lets it contribute something the current process is missing.
 
-But the write path should stay narrow.
+## Make Discoveries Change the Plan
 
-This is the difference between collaboration and chaos. The system can use many minds, but it still needs one place where judgment is synthesized.
+A worker may discover that the assigned task rests on a false assumption. The system needs a path for that discovery to reach the owner before the rest of the work continues. Reporting only the final output can make the finding arrive too late.
 
-## Clean Context Is a Feature
+Keep task state and dependencies visible. Identify which findings require a pause, which can be incorporated locally, and which need a user decision. This is especially important when workers share resources or can create external side effects.
 
-One of the most counterintuitive lessons is that agents often perform better when they do not share all the same history.
+## Coordination over Swarms
 
-This feels wrong at first. We assume that more context means better decisions. But context has a cost. Long conversations carry old assumptions, failed attempts, irrelevant details, and half-resolved ideas. The agent has to keep reading all of it and decide what still matters.
+I would start with one agent that owns the result and add other roles where the work benefits from another perspective. Research, review, debugging, and escalation can all help. Each role also creates a handoff someone has to integrate.
 
-A reviewer with clean context can be sharper because it starts from the actual output. It does not know the emotional history of the task. It does not remember why the first approach failed. It simply looks at the result and asks: does this work?
-
-That distance is useful.
-
-The same applies to planning and debugging. Sometimes the best agent is not the one that has seen everything. It is the one that sees only the right slice of the problem.
-
-## Review Loops Are Underrated
-
-The most boring multi-agent pattern is also one of the most useful: one agent builds, another reviews.
-
-This works because generation and verification are different jobs. The builder is deep in the task. It carries the plan, the constraints, and all the small compromises made along the way. The reviewer can come in cold and look for logic errors, missing edge cases, security problems, and places where the implementation does not match the intent.
-
-The important part is not that the reviewer is always right. It is not.
-
-The important part is that the main agent has to synthesize the feedback. It should not blindly apply every comment. It should compare the review against the original goal, reject out-of-scope suggestions, and fix the real issues.
-
-This is where the manager pattern matters again. Review is intelligence. The main thread still owns judgment.
-
-## The Smart Friend Pattern
-
-Another useful pattern is giving a working agent access to a smarter or more expensive model only when needed.
-
-Most tasks do not need the strongest possible model at every step. A smaller or faster model can handle routine work. But sometimes the task becomes tricky: a deep architecture question, a confusing bug, a merge conflict, a security-sensitive change, or a decision with unclear tradeoffs.
-
-In those moments, the agent can call a "smart friend."
-
-This sounds simple, but the hard part is calibration. A weaker agent needs to know when it is out of its depth. It also needs to ask the right question and send enough context for the stronger model to help.
-
-If it sends too little, the answer is generic. If it sends everything, the stronger model inherits the same messy context. If it asks the wrong question, it may get a confident answer to the wrong problem.
-
-This is why multi-agent systems are mostly context engineering. The value is not just in having another model available. The value is in designing the handoff.
-
-## Swarms Are Mostly a Distraction
-
-The internet likes the idea of agent swarms because it looks futuristic. Many agents talking to each other sounds like intelligence at scale.
-
-But most real work does not need a swarm. It needs coordination.
-
-A useful system looks more like a product team than a crowd. There is a clear owner. Work is split into understandable pieces. Each contributor has a defined role. Discoveries are reported back. Someone decides what matters.
-
-This is especially true in software, where success is not only "does it compile?" The real question is whether the result matches the product taste, business goal, existing architecture, security model, and user experience.
-
-Those things do not emerge automatically from a crowd of agents. They need direction.
-
-## The Real Bottleneck Is Communication
-
-The open problems in multi-agent systems are not only about model intelligence. They are about communication.
-
-How does one agent tell another what matters without dumping the entire context? How does a child agent surface a discovery that should change the plan? How does a reviewer point out a real bug without pulling the implementation away from the user request? How does a smaller model know when to escalate?
-
-These are product questions as much as technical questions.
-
-The best systems will not be the ones with the most agents. They will be the ones with the cleanest handoffs, the clearest ownership, and the best judgment about when to bring in another perspective.
-
-## Coordination Over Swarms
-
-Multi-agent systems are becoming useful, but the useful version is more disciplined than the popular version.
-
-Do not build a swarm first. Build a single strong agent with clear ownership. Then add other agents where they improve the work: review, research, planning, debugging, testing, or escalation to a stronger model.
-
-Keep writes controlled. Keep context clean. Treat handoffs as architecture.
-
-The future of agent systems is not a hundred independent workers making their own decisions. It is a coordinated system that scales judgment without losing coherence.
+The manager is responsible for keeping those contributions coherent: deciding which findings matter, which assumptions changed, and what the combined result should be. More workers make that responsibility more important. A system can produce a lot of individually reasonable work and still fail at the task that brought the agents together.

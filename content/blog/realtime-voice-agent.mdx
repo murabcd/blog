@@ -10,11 +10,11 @@ Traditional voice systems often struggle with latency, unnatural turn-taking, an
 
 ## Understanding the OpenAI API Architecture
 
-The Realtime API introduces a different paradigm compared to typical HTTP-based AI APIs. Its architecture is specifically designed for the demands of real-time voice communication:
+The Realtime API uses a session with events exchanged while audio is being captured and played. The design needs to account for connection state, turn detection, and interruptions alongside the generated response:
 
 **1. Stateful WebSocket Foundation**
 
-Instead of stateless requests, the API operates over a persistent WebSocket connection, enabling continuous, bidirectional communication:
+A server integration can use a persistent WebSocket connection for bidirectional events. The browser implementation below uses WebRTC for media and a data channel for events. See the [Realtime connection guide](https://platform.openai.com/docs/guides/realtime) for the supported integration paths:
 
 - **Persistent Connection:** Maintains the conversational state across multiple turns without needing to resend context repeatedly.
 - **Event-Driven Protocol:** Interactions are managed through a defined set of client-sent and server-sent events, allowing for precise control over the conversation flow.
@@ -38,7 +38,7 @@ Beyond basic audio streaming, the API provides tools for managing the conversati
 
 ## A Practical Implementation Approach
 
-To leverage the Realtime API effectively, we developed a system incorporating WebRTC for connection management, a composable agent architecture, and integrated web search capabilities. This approach is implemented in [Voice](https://github.com/murabcd/voice), an open-source realtime voice AI agent built with Next.js and OpenAI. Here's how the key components work:
+We developed a system using WebRTC, a composable agent architecture, and web search. This approach is implemented in [Voice](https://github.com/murabcd/voice), an open-source realtime voice AI agent built with Next.js and OpenAI. The excerpts below describe that implementation and omit endpoint configuration, error handling, and cleanup. They are architectural examples rather than a complete current setup guide.
 
 **1. WebRTC for Realtime Communication**
 
@@ -197,13 +197,8 @@ export async function POST(req: Request) {
   initial training data._
 </small>
 
-## Conclusion
+## Test the Conversation at Its Boundaries
 
-Developing effective voice agents with OpenAI's Realtime API requires careful consideration of the connection layer, agent architecture, tool integration, and user interface. Our approach demonstrates one way to combine these elements:
+Test a person interrupting playback, pausing mid-sentence, denying microphone access, and losing the connection during a tool call. The interface should make the state clear and preserve enough context to recover without repeating an action unexpectedly.
 
-1.  **Connection:** Utilizing WebRTC for integrated media and event handling.
-2.  **Architecture:** Employing a composable agent design for modularity and specialization.
-3.  **Tools:** Implementing dynamic agent transfers and external capabilities like web search.
-4.  **Interaction:** Managing session state and user feedback through a central UI component.
-
-This architecture provides a foundation for building sophisticated, responsive voice applications. Future work could involve expanding the range of specialized agents, refining VAD and interruption handling based on user testing, and exploring more advanced context management strategies. The Realtime API offers powerful capabilities, and thoughtful system design is key to unlocking its full potential for natural conversational AI.
+These cases reveal whether the connection, agent handoff, and tool execution behave as one coherent conversation. Measure the completed interaction, including waiting and correction, rather than judging the system only by how naturally its first response sounds.

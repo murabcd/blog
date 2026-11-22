@@ -1,27 +1,28 @@
 ---
 title: "The Illusion of the Perfect Prompt"
 publishedAt: "2025-10-02"
-summary: "The term 'prompt engineering' is a dangerous misnomer. It trivializes the real work of building with AI, which is about architecting the entire context an agent operates in. This is not a tactical skill; it is a core engineering discipline."
+summary: "A polished instruction can still fail when the agent receives stale, conflicting, or irrelevant information. Treat context selection and working state as parts of the system to design and evaluate."
 ---
 
-## The End of a Buzzword
+## A Better Prompt Can Still Use the Wrong Source
 
-For the past few years, "prompt engineering" has dominated the conversation around building with AI. The term has always felt insufficient, suggesting that the key to unlocking AI's potential was a matter of clever wordsmithing or finding a magical incantation. This has created a dangerous strategic blind spot, trivializing the deep, systematic work required to build reliable AI products.
+An agent receives a precise task and follows the wrong reference implementation because an old design note appears beside the current one. Another prompt revision may change the wording of the answer without fixing the source selection.
 
-The era of the clever prompt is over. The real work is, and always has been, **context engineering**. This is the discipline of architecting the entire universe of information that an AI agent uses to reason and act. It’s not about finding the right words; it's about curating the right world for the agent to live in. This is the framework that leading teams are now mastering.
+Treat the full input as something the system constructs: instructions, retrieved material, tool definitions, conversation history, and task state. Each part can help, conflict, or distract. The work is to select what the current decision needs and establish which source has authority.
 
-## Context is a Finite, Precious Resource
+## Choose What the Decision Needs
 
-The paradox of modern AI is that while context windows are growing larger, a model's ability to reason effectively does not scale infinitely with them. Just like human working memory, an LLM has a finite "attention budget." Every token of information you add to the context—every instruction, every piece of data, every line of conversation history—depletes this budget.
+Putting more material in the context can give an agent the evidence it needs. It can also introduce an obsolete implementation, a conflicting instruction, or ten pages that have little to do with the task. A larger window gives the system room to include information; the system still needs a way to choose and interpret it.
 
-This phenomenon, known as "context rot," means that as the volume of information increases, the model's ability to recall specific details and maintain focus decreases. More context is not always better. The goal of context engineering is to find the smallest possible set of high-signal tokens that maximize the probability of the desired outcome. It is a discipline of ruthless curation.
+Start with the evidence required for the next decision. Include enough surrounding detail to interpret it, identify which source is current, and test whether the agent uses it correctly. Removing useful context can cause a failure too, so evaluate the selection against actual tasks rather than treating a shorter input as a success by itself.
 
 ## An Architecture for Effective Context
 
-Building a reliable AI agent is an exercise in information architecture. The work can be broken down into three core pillars. A failure in any one of these pillars leads to a flawed AI feature.
+For a practical starting point, separate the input into instructions, domain material, and working state. They answer different questions: what may the agent do, what does it need to know, and what has already happened?
 
-**1. Defining the Rules of Engagement**
-This is the foundational layer. It's where we move beyond a simple instruction and provide a comprehensive brief that defines the agent's persona, objectives, and operational guardrails.
+**1. Define the Task and Its Boundaries**
+
+Describe the intended result, the evidence required, and the conditions for asking a person to take over. Tone instructions can help shape the answer, but they do little to resolve a missing policy or an unclear escalation rule.
 
 Consider an AI agent designed for financial compliance queries. The "rules of engagement" would be a detailed specification:
 
@@ -29,30 +30,32 @@ Consider an AI agent designed for financial compliance queries. The "rules of en
 -   **Objective:** "Your goal is to answer user questions by citing specific clauses from the provided regulatory documents."
 -   **Guardrails:** "You must never provide legal advice or speculate on regulations not present in the provided knowledge base. If you cannot find a direct answer, you must escalate to a human compliance officer."
 
-This is not a prompt; it is a policy document that constrains the agent's behavior and ensures it operates safely within a high-stakes environment.
+These instructions describe the intended policy. Enforce access and action boundaries outside the model where possible, and evaluate whether the assistant cites the right material and escalates when evidence is missing.
 
-**2. Providing the Agent's Domain Expertise**
-An agent without knowledge is useless. This pillar is about providing the agent with the curated, high-quality information it needs to perform its task intelligently. This is the world of Retrieval-Augmented Generation (RAG) and few-shot examples.
+**2. Supply Relevant Domain Material**
+
+Retrieve the records and documents needed for the task, with enough provenance to assess them. Examples can also show what an acceptable result looks like when a prose instruction leaves too much open to interpretation.
 
 Imagine building an AI-powered sales assistant. Its domain expertise comes from the context provided:
 
 -   **RAG:** The agent is connected to Salesforce to retrieve real-time data about a specific customer's account, and to an internal wiki to pull relevant case studies and product documentation.
 -   **Few-shot Examples:** The context includes a handful of "gold standard" examples of what a great follow-up email looks like, demonstrating the ideal tone, structure, and inclusion of relevant data points.
 
-This combination of dynamic data retrieval and canonical examples gives the agent the domain expertise it needs to move from a generic chatbot to a valuable, specialized assistant.
+Keep the roles of those inputs clear. An example email can demonstrate tone and structure; the current account record should supply the customer facts. Copying a detail from the example into the customer's email would be a context failure even if the writing looked right.
 
-**3. Giving the Agent a Working Memory**
-The most advanced challenge is enabling agents to tackle long, multi-step tasks that exceed a single context window. This is where we must give the agent a "working memory" that persists across many interactions.
+**3. Preserve Working State**
 
-Let's say an agent is tasked with a complex codebase migration. The full project scope, all related files, and every status update would overwhelm any context window. Instead of trying to stuff everything in at once ("pre-inference retrieval"), a "just-in-time" approach is more effective:
+A task that spans several sessions needs a durable record of progress. Store completed work, unresolved decisions, and the evidence behind them so the agent can resume without reconstructing everything from a long conversation.
 
--   **Structured Note-Taking:** The agent is given a tool to maintain its own state file, `AGENTS.md`. After completing a major task, it writes a summary of the outcome, key decisions, and next steps to this file. Before starting a new task, it reads `AGENTS.md` to re-orient itself.
+For a codebase migration, keep a compact task record and let the agent inspect relevant files as it reaches each part of the work:
+
+-   **Structured Note-Taking:** Keep task progress in a dedicated state file with completed steps, key decisions, and next actions. Reserve `AGENTS.md` for durable workspace instructions so temporary progress does not acquire the authority of a standing rule. Load the relevant state when resuming work.
 -   **Agentic Search:** The agent doesn't have the entire project folder in its context. Instead, it has a tool that can search the file system. When it needs a specific utility function, it actively searches, reads it, and loads only that specific document into its context for that specific task.
 
 This mirrors how an effective engineer works. They don't keep every detail in their head; they use an external system of notes and files to retrieve information as needed.
 
 ## Context Is the Architecture
 
-The competitive moat in the age of AI will not be built on the cleverness of prompts. It will be built on the quality and rigor of context architecture. This is a core engineering discipline that requires treating the information provided to AI agents with the same level of care and intentionality as the code we write.
+The input an agent sees is the result of product and engineering decisions: what to retrieve, which source to trust, what state to retain, and what to leave out. Those decisions shape the answer before the model begins producing it.
 
-The conversation must shift from "prompting" to "architecture." The teams that master the art of curating high-signal, low-noise information environments will be the ones that build the next generation of truly intelligent and reliable AI products.
+Treating that work as part of the architecture changes where the team looks when something fails. A polished instruction can sit on top of a system that supplies the wrong evidence. Improving the wording alone leaves that system in place.

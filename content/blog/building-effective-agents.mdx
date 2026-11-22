@@ -1,22 +1,20 @@
 ---
 title: "When Simple Beats Complex"
 publishedAt: "2025-05-01"
-summary: "Why the most effective AI agents aren't built on complex frameworks, but on simple, reliable patterns. Learn from real-world implementations about what actually works."
+summary: "Prompt chains, routing, parallel work, and orchestration solve different coordination problems. Choose the smallest pattern that meets the task, then measure its errors, latency, and cost."
 ---
 
 ## The Framework Trap
 
-I've spent the last year watching teams struggle with AI agent implementations. The pattern is always the same: they start by choosing a complex framework, spend months wrestling with abstractions, and end up with something that's harder to maintain than it needs to be. Meanwhile, the teams having the most success are building with surprisingly simple patterns.
+A team chooses an agent framework before it has decided which parts of the task require model judgment. The framework then shapes the work: more states, more coordination, and more behavior to debug. By the time the team tests the underlying task, the orchestration has become a project of its own.
 
-Here's the thing about AI agents: they don't need fancy frameworks to be effective. In fact, those frameworks often get in the way. Let me show you what actually works.
+I would first write down what needs to happen and where the next step depends on an uncertain result. That gives the architecture a concrete problem to solve.
 
 ## When Agents Are Overkill
 
-Before we dive into patterns, let's address the elephant in the room: you probably don't need an agent. I know, not what you expected to hear. But I've watched too many teams jump straight to building complex agent systems when a simple prompt with good retrieval would do the job better.
+Try the task with one prompt and the required context. Add retrieval or tool access where the answer depends on information outside that context. Introduce an agent loop when the system needs to choose its next action from intermediate results.
 
-The first question isn't "how do we build an agent?" but rather "do we need an agent at all?" Could a well-crafted prompt handle this? Would adding basic tool access be enough? Is the complexity worth the tradeoff in latency and cost?
-
-Remember: agents aren't free. They trade speed and simplicity for capability. Make sure that trade makes sense for your use case.
+Each additional step adds latency, cost, and a failure boundary. Compare that cost with the capability it buys using representative tasks, including the cases the smaller design cannot handle.
 
 ## Simple Patterns That Actually Work
 
@@ -32,7 +30,7 @@ I've seen this pattern work beautifully for content generation and refinement, m
 
 ## 2. The Router
 
-Sometimes the key to effectiveness isn't clever logic – it's knowing when to delegate. A router pattern is dead simple: it looks at the input and decides where it should go. This shines when different requests need different handling, when you want to optimize costs by routing simple queries to smaller models, or when you need specialized expertise for different tasks.
+A router classifies the input and sends it to a suitable path. This helps when request types need different tools, instructions, or model capacity. Keep a fallback for uncertain classifications, and measure routing errors separately from errors in the destination workflow.
 
 ![The Routing Workflow](https://oj9anrnpmq5owbkj.public.blob.vercel-storage.com/routing-T28fKg9LWI50sGm6ZDf8he5ZM5TtqX.webp)
 
@@ -56,10 +54,10 @@ The patterns I've described might seem straightforward, but implementing them in
 
 Tool design matters more than most realize. Your tools shape how your agent understands and interacts with the world. Clear interfaces, good documentation, and thoughtful constraints do more for reliability than clever architectures ever could.
 
-Error handling isn't just about catching exceptions – it's about designing systems that degrade gracefully. The best implementations I've seen treat errors as expected states rather than exceptional cases. They build feedback loops that help the agent learn from failures and adapt its behavior.
+Error handling should specify what happens after an invalid result, unavailable tool, or partial completion. Give retries a limit and preserve enough state to recover without repeating consequential side effects. Recording failures helps the team improve the workflow; the agent will not automatically retain that learning unless the system stores and uses it.
 
-## Conclusion
+## Make Each Coordination Step Earn Its Cost
 
-The key to success isn't finding the perfect framework or building the most sophisticated system. It's about choosing the right patterns for your specific needs and implementing them with a focus on simplicity and reliability.
+Use the smallest workflow as a baseline, then test the cases that motivate another layer. A router should improve assignment, parallel work should save time or improve coverage, and an orchestrator should handle dependencies the fixed workflow cannot.
 
-Start simple, measure everything, and only add complexity when it demonstrably improves outcomes. This approach might not be as exciting as building a fully autonomous system, but it's the one that consistently delivers results in production.
+Keep the added layer when those gains survive measurement alongside latency, cost, and failure recovery. That gives the team a reason for the architecture and a way to notice when it stops helping.

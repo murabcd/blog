@@ -18,6 +18,7 @@ const nextConfig: NextConfig = {
 		];
 	},
 	experimental: {
+		agentUpgrade: "security",
 		instantInsights: {
 			validationLevel: "warning",
 		},
