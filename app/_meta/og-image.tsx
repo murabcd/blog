@@ -5,7 +5,7 @@ export const defaultSize = { width: 1200, height: 630 };
 export const defaultContentType = "image/png";
 
 export function buildOgImage(title: string) {
-	return new ImageResponse(
+	const response = new ImageResponse(
 		<div
 			style={{
 				display: "flex",
@@ -67,4 +67,8 @@ export function buildOgImage(title: string) {
 			height: defaultSize.height,
 		},
 	);
+	// Let Next.js set the CDN lifetime from the route's tagged cache policy.
+	// ImageResponse's default requires revalidation on every request.
+	response.headers.delete("cache-control");
+	return response;
 }

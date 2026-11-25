@@ -58,7 +58,7 @@ describe("public content cache", () => {
 	])("applies the canonical freshness policy to %s", async (_, read, tag) => {
 		await read();
 
-		expect(mocks.cacheLife).toHaveBeenCalledExactlyOnceWith("hours");
+		expect(mocks.cacheLife).toHaveBeenCalledExactlyOnceWith("max");
 		expect(mocks.cacheTag).toHaveBeenCalledExactlyOnceWith(tag);
 		expect(mocks.fetchQuery).toHaveBeenCalledOnce();
 	});

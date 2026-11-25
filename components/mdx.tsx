@@ -1,4 +1,5 @@
 import { MDXRemote, type MDXRemoteProps } from "next-mdx-remote/rsc";
+import { cacheLife } from "next/cache";
 import {
 	Blockquote,
 	Code,
@@ -24,7 +25,11 @@ const components = {
 	blockquote: Blockquote,
 };
 
-export function CustomMDX(props: MDXRemoteProps) {
+export async function CustomMDX(props: MDXRemoteProps) {
+	"use cache";
+	// The source is part of the cache key, so edited content gets a new render.
+	cacheLife("max");
+
 	return (
 		<MDXRemote
 			{...props}

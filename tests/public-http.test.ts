@@ -231,6 +231,20 @@ describe("production HTTP contracts", () => {
 	});
 
 	test.each([
+		"/blog/taste-is-not-consensus/opengraph-image",
+		"/blog/taste-is-not-consensus/twitter-image",
+		"/talk/global-tech-voice-ai/opengraph-image",
+		"/talk/global-tech-voice-ai/twitter-image",
+	])("serves published social images from the prerender cache: %s", async (path) => {
+		const response = await fetch(`${origin}${path}`);
+		expect(response.status).toBe(200);
+		expect(response.headers.get("content-type")).toBe("image/png");
+		expect(response.headers.get("x-nextjs-cache")).toBe("HIT");
+		expect(response.headers.get("cache-control")).toMatch(/s-maxage=\d+/);
+		expect((await response.arrayBuffer()).byteLength).toBeGreaterThan(1_000);
+	});
+
+	test.each([
 		"/blog/twitter-image",
 		"/talk/twitter-image",
 	])("preserves metadata routes: %s", async (path) => {

@@ -3,44 +3,47 @@ import { cacheLife, cacheTag } from "next/cache";
 import { api } from "../convex/_generated/api";
 import { publicContentCacheTags } from "./public-content-cache-policy";
 
+// Content publication invalidates these tags before the next read.
+// The long lifetime avoids regenerating unchanged articles on crawler visits.
+
 export async function getBlogPosts() {
 	"use cache";
-	cacheLife("hours");
+	cacheLife("max");
 	cacheTag(publicContentCacheTags.blogPosts);
 	return fetchQuery(api.blog.getAllPosts);
 }
 
 export async function getBlogPost(slug: string) {
 	"use cache";
-	cacheLife("hours");
+	cacheLife("max");
 	cacheTag(publicContentCacheTags.blogPosts);
 	return fetchQuery(api.blog.getPostBySlug, { slug });
 }
 
 export async function getTalkEvents() {
 	"use cache";
-	cacheLife("hours");
+	cacheLife("max");
 	cacheTag(publicContentCacheTags.talkEvents);
 	return fetchQuery(api.talk.getAllEvents);
 }
 
 export async function getTalkEvent(slug: string) {
 	"use cache";
-	cacheLife("hours");
+	cacheLife("max");
 	cacheTag(publicContentCacheTags.talkEvents);
 	return fetchQuery(api.talk.getEventBySlug, { slug });
 }
 
 export async function getCodeProjects() {
 	"use cache";
-	cacheLife("hours");
+	cacheLife("max");
 	cacheTag(publicContentCacheTags.codeProjects);
 	return fetchQuery(api.code.getAllProjects);
 }
 
 export async function getStaticPage(slug: string) {
 	"use cache";
-	cacheLife("hours");
+	cacheLife("max");
 	cacheTag(publicContentCacheTags.staticPages);
 	return fetchQuery(api.pages.getPageBySlug, { slug });
 }
